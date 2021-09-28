@@ -16,7 +16,8 @@
 		"http-proxy-middleware": "2.0.1",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
-		"react-scripts": "4.0.3"
+		"react-scripts": "4.0.3",
+		"wouter": "2.8.0-alpha.1"
 	},
 	"browserslist": {
 		"production": [
