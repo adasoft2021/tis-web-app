@@ -5,8 +5,8 @@
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",
-		"lint": "eslint ./src/** && prettier . --check",
-		"lint:fix": "eslint ./src/** --cache --fix && prettier . --write",
+		"lint": "eslint \"./src/**\" && prettier . --check",
+		"lint:fix": "eslint \"./src/**\" --cache --fix && prettier . --write",
 		"prepare": "husky install",
 		"pre:commit": "lint-staged --config lint-staged.config.js"
 	},
