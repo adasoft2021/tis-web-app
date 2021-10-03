@@ -1,7 +1,8 @@
-import React, {Fragment, useState} from 'react'
+import React, {useState} from 'react'
 
 const Revision = () => {
     const [datos,setDatos] = useState({
+        nombreGE:'Nombre G.E.',
         one: '',       
         two:'',       
         three: '',       
@@ -23,10 +24,9 @@ const Revision = () => {
     }
 
     return (
-        <Fragment>
         <form className="card bg-dark " onSubmit={enviarDatos}  >
             <div className = "card-body text-light" style={{margin: 55}}>
-                <h1 className="card-title text-center  " style={{margin: 30}}>REVISIÓN TIS</h1> 
+                <h1 className="card-title text-center  " style={{margin: 30}}>REVISIÓN TIS: ({datos.nombreGE})</h1> 
                     {/* 1 */}
                     <div className="row " style={{margin: 10,marginTop:50}}>
                             <div className="col-md-9">
@@ -37,8 +37,11 @@ const Revision = () => {
                             </div>
                             <div className="col-md-1">
                                     <input 
-                                        type="text" 
-                                        className="form-control"              
+                                       
+                                        type="number" 
+                                        className="form-control"
+                                        min="0"
+                                        max="9"              
                                         name="one" 
                                         onChange={handleInputChange}
                                     ></input>         
@@ -57,7 +60,7 @@ const Revision = () => {
                             </div>
                             <div className="col-md-1">
                                     <input 
-                                        type="text" 
+                                        type="number" 
                                         className="form-control"              
                                         name="two" 
                                         onChange={handleInputChange}
@@ -79,7 +82,7 @@ const Revision = () => {
                             </div>
                             <div className="col-md-1">
                                     <input 
-                                        type="text" 
+                                        type="number" 
                                         className="form-control"              
                                         name="three" 
                                         onChange={handleInputChange}
@@ -101,7 +104,7 @@ const Revision = () => {
                             </div>
                             <div className="col-md-1">
                                     <input 
-                                        type="text" 
+                                        type="number" 
                                         className="form-control"              
                                         name="for" 
                                         onChange={handleInputChange}
@@ -119,7 +122,7 @@ const Revision = () => {
                             </div>
                             <div className="col-md-1">
                                     <input 
-                                        type="text" 
+                                        type="number" 
                                         className="form-control"              
                                         name="five" 
                                         onChange={handleInputChange}
@@ -137,7 +140,7 @@ const Revision = () => {
                             </div>
                             <div className="col-md-1">
                                     <input 
-                                        type="text" 
+                                        type="number" 
                                         className="form-control"              
                                         name="six" 
                                         onChange={handleInputChange}
@@ -157,8 +160,8 @@ const Revision = () => {
                                     </h4>          
                             </div>
                             <div className="col-md-1">
-                            <input 
-                                        type="text" 
+                            <input      
+                                        type="number" 
                                         className="form-control"              
                                         name="seven" 
                                         onChange={handleInputChange}
@@ -186,11 +189,9 @@ const Revision = () => {
             </div>
             
         </form>
-        </Fragment>
         
     )
 }
 
 export default Revision
-
 

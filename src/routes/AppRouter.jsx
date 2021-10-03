@@ -1,6 +1,6 @@
 import { Route, Switch } from 'wouter'
 import { WelcomeProvider } from '../context/providers/WelcomeContext'
-import { HomePage, NotFoundPage } from '../pages'
+import { HomePage, NotFoundPage, Revision } from '../pages'
 
 export default function AppRouter() {
 	return (
@@ -14,6 +14,7 @@ export default function AppRouter() {
 				)}
 			/>
 			<Route path='/404' component={NotFoundPage} />
+			<Route path='/review' component={Revision} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
