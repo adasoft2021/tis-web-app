@@ -1,197 +1,133 @@
-import React, {useState} from 'react'
-
+import React, { useState } from 'react'
+import Qualification from './qualification'
 const Revision = () => {
-    const [datos,setDatos] = useState({
-        nombreGE:'Nombre G.E.',
-        one: '',       
-        two:'',       
-        three: '',       
-        for:'',       
-        five: '',      
-        six:'', 
-        seven:'',
-        comment:''
-    })
-    const handleInputChange = (event) => {
-        setDatos({
-            ...datos,
-            [event.target.name]: event.target.value
-        })
-    }  
-    const enviarDatos = (event) =>{
-        event.preventDefault()
-        console.log('Al Backend')
-    }
+	const [datos, setDatos] = useState({
+		nombreGE: 'Nombre G.E.',
+		one: '',
+		two: '',
+		three: '',
+		for: '',
+		five: '',
+		six: '',
+		seven: '',
+		comment: '',
+	})
 
-    return (
-        <form className="card bg-dark " onSubmit={enviarDatos}  >
-            <div className = "card-body text-light" style={{margin: 55}}>
-                <h1 className="card-title text-center  " style={{margin: 30}}>REVISIÓN TIS: ({datos.nombreGE})</h1> 
-                    {/* 1 */}
-                    <div className="row " style={{margin: 10,marginTop:50}}>
-                            <div className="col-md-9">
-                                    <h4>
-                                            Cumplimiento de 
-                                            especicaciones del proponente
-                                    </h4>          
-                            </div>
-                            <div className="col-md-1">
-                                    <input 
-                                       
-                                        type="number" 
-                                        className="form-control"
-                                        min="0"
-                                        max="9"              
-                                        name="one" 
-                                        onChange={handleInputChange}
-                                    ></input>         
-                            </div>
-                            <div className="col-md-2">
-                                    <h4>/15 puntos </h4>         
-                            </div>
-                    </div>     
-                    {/* 2 */}
-                    <div className="row " style={{margin: 10}}>
-                            <div className="col-md-9">
-                                    <h4>
-                                            Claridad en la organizacion 
-                                            de la empresa proponente 
-                                    </h4>          
-                            </div>
-                            <div className="col-md-1">
-                                    <input 
-                                        type="number" 
-                                        className="form-control"              
-                                        name="two" 
-                                        onChange={handleInputChange}
-                                        
-                                    ></input>         
-                               </div>
-                            <div className="col-md-2">
-                                    <h4>/10 puntos </h4>         
-                            </div>
-                    </div>    
+	const descriptions = [
+		{
+			id: 1,
+			description: 'Cumplimiento de especicaciones del proponente',
+			points: '/15 puntos',
+			min: 0,
+			max: 15,
+			name: 'one',
+		},
+		{
+			id: 2,
+			description: 'Claridad en la organizacion de la empresa proponente',
+			points: '/10 puntos',
+			min: 0,
+			max: 10,
+			name: 'two',
+		},
+		{
+			id: 3,
+			description: 'Cumplimiento de especicaciones tecnicas',
+			points: '/30 puntos',
+			min: 0,
+			max: 30,
+			name: 'three',
+		},
+		{
+			id: 4,
+			description: 'Claridad en el proceso de desarrollo',
+			points: '/10 puntos',
+			min: 0,
+			max: 10,
+			name: 'for',
+		},
+		{
+			id: 5,
+			description: 'Plazo de ejecucion',
+			points: '/10 puntos',
+			min: 0,
+			max: 10,
+			name: 'five',
+		},
+		{
+			id: 6,
+			description: 'Precio total',
+			points: '/15 puntos',
+			min: 0,
+			max: 15,
+			name: 'six',
+		},
+		{
+			id: 7,
+			description: 'Uso de herramientas en el proceso de desarrollo',
+			points: '/10 puntos',
+			min: 0,
+			max: 10,
+			name: 'seven',
+		},
+	]
 
-                    {/* 3 */}
-                    <div className="row " style={{margin: 10}}>
-                            <div className="col-md-9">
-                                    <h4>
-                                            Claridad en la organizacion 
-                                            de la empresa proponente 
-                                    </h4>          
-                            </div>
-                            <div className="col-md-1">
-                                    <input 
-                                        type="number" 
-                                        className="form-control"              
-                                        name="three" 
-                                        onChange={handleInputChange}
-                                        
-                                    ></input>         
-                            </div>
-                            <div className="col-md-2">
-                                    <h4>/30 puntos </h4>         
-                            </div>
-                    </div> 
+	const handleInputChange = (event) => {
+		setDatos({
+			...datos,
+			[event.target.name]: event.target.value,
+		})
+	}
+	const enviarDatos = (event) => {
+		event.preventDefault()
+		console.log('Al Backend')
+	}
 
-                    {/* 4 */}
-                    <div className="row " style={{margin: 10}}>
-                            <div className="col-md-9">
-                                    <h4>
-                                            Claridad en el proceso 
-                                            de desarrollo  
-                                    </h4>          
-                            </div>
-                            <div className="col-md-1">
-                                    <input 
-                                        type="number" 
-                                        className="form-control"              
-                                        name="for" 
-                                        onChange={handleInputChange}
-                                        
-                                    ></input>        
-                            </div>
-                            <div className="col-md-2">
-                                    <h4>/10 puntos </h4>         
-                            </div>
-                    </div>  
-                    {/* 5 */}
-                    <div className="row " style={{margin: 10}}>
-                            <div className="col-md-9">
-                                    <h4>Plazo de ejecucion</h4>          
-                            </div>
-                            <div className="col-md-1">
-                                    <input 
-                                        type="number" 
-                                        className="form-control"              
-                                        name="five" 
-                                        onChange={handleInputChange}
-                                        
-                                    ></input>  
-                            </div>
-                            <div className="col-md-2">
-                                    <h4>/10 puntos </h4>         
-                            </div>
-                    </div>  
-                    {/* 6 */}
-                    <div className="row " style={{margin: 10}}>
-                            <div className="col-md-9">
-                                    <h4>Precio total </h4>          
-                            </div>
-                            <div className="col-md-1">
-                                    <input 
-                                        type="number" 
-                                        className="form-control"              
-                                        name="six" 
-                                        onChange={handleInputChange}
-                                        
-                                    ></input> 
-                            </div>
-                            <div className="col-md-2">
-                                    <h4>/15 puntos </h4>         
-                            </div>
-                    </div>  
-                    {/* 7 */}
-                    <div className="row " style={{margin: 10}}>
-                            <div className="col-md-9">
-                                    <h4>
-                                            Uso de herramientas en 
-                                            el proceso de desarrollo  
-                                    </h4>          
-                            </div>
-                            <div className="col-md-1">
-                            <input      
-                                        type="number" 
-                                        className="form-control"              
-                                        name="seven" 
-                                        onChange={handleInputChange}
-                                        
-                                    ></input> 
-                            </div>
-                            <div className="col-md-2">
-                                    <h4>/10 puntos </h4>         
-                            </div>
-                    </div>    
+	return (
+		<form className='card bg-dark ' onSubmit={enviarDatos}>
+			<div className='card-body text-light' style={{ margin: 55 }}>
+				<h1 className='card-title text-center  ' style={{ margin: 30 }}>
+					REVISIÓN TIS: ({datos.nombreGE})
+				</h1>
 
-                    <div className="" style={{marginTop:60}}>
-                            <h2>Comentario</h2>
-                            <textarea 
-                                        className="form-control" 
-                                        id="Textarea1" 
-                                        rows="3" 
-                                        name="comment"
-                                        onChange={handleInputChange}>
-                             </textarea>             
-                    </div>                                       
-                     <div className="text-center" >
-                                <button  type="submit" className="btn btn-primary btn-onle " style={{margin: 30, fontSize:24}}>REVISADO</button> 
-                     </div>
-            </div>
-            
-        </form>
-        
-    )
+				<hr style={{ margin: 50 }}></hr>
+
+				{descriptions.map((qualification) => (
+					<div key={qualification.id}>
+						<Qualification
+							descri={qualification.description}
+							points={qualification.points}
+							min={qualification.min}
+							max={qualification.max}
+							name={qualification.name}
+							onchange={handleInputChange}
+						/>
+					</div>
+				))}
+
+				<div className='' style={{ marginTop: 60 }}>
+					<h2>Comentario</h2>
+					<textarea
+						className='form-control'
+						id='Textarea1'
+						rows='3'
+						name='comment'
+						onChange={handleInputChange}
+					></textarea>
+				</div>
+				<div className='text-center'>
+					<button
+						type='submit'
+						className='btn btn-primary btn-onle '
+						style={{ margin: 30, fontSize: 24 }}
+					>
+						REVISADO
+						<h1>!{datos.three}</h1>
+					</button>
+				</div>
+			</div>
+		</form>
+	)
 }
 
 export default Revision
-
