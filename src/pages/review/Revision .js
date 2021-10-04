@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useReview } from '../../context/providers/ReviewContext'
 import Qualification from './qualification'
 const Revision = () => {
+	const { createReview, isLoading, review } = useReview()
 	const [datos, setDatos] = useState({
 		nombreGE: 'Nombre G.E.',
 		one: '',
@@ -78,8 +80,14 @@ const Revision = () => {
 			[event.target.name]: event.target.value,
 		})
 	}
-	const enviarDatos = (event) => {
+	const enviarDatos = async (event) => {
 		event.preventDefault()
+		const reviewDTO = {
+			score: parseInt(datos.one),
+			comment: datos.comment,
+			createdById: 1,
+		}
+		await createReview(reviewDTO)
 		console.log('Al Backend')
 	}
 
@@ -125,6 +133,13 @@ const Revision = () => {
 						<h1>!{datos.three}</h1>
 					</button>
 				</div>
+				{isLoading && <p>La petición se está procesando...</p>}
+				{review.title && (
+					<p>
+						<strong>Error: </strong>
+						{review.title}
+					</p>
+				)}
 			</div>
 		</form>
 	)

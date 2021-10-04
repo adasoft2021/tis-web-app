@@ -29,7 +29,7 @@ module.exports = {
 		'react/react-in-jsx-scope': 'off',
 		'react/prop-types': 'off',
 	},
-	ignorePatterns: ['*.png', '*.css', '*.json'],
+	ignorePatterns: ['*.png', '*.scss', '*.css', '*.json'],
 	settings: {
 		react: {
 			version: 'detect',
