@@ -1,4 +1,10 @@
 import { Button, Form } from 'react-bootstrap'
+import {
+	IoIosSync,
+	IoMdSend,
+	IoIosWarning,
+	IoMdCheckmark,
+} from 'react-icons/io'
 import { useState } from 'react'
 import { useWelcome } from '../../context/providers/WelcomeContext'
 import Page from '../Page'
@@ -19,7 +25,23 @@ export default function HomePage() {
 				<>
 					<h1>Respuesta de la API:</h1>
 					<p style={{ textAlign: 'center', maxWidth: '80vw' }}>
-						{isLoading ? 'Cargando...' : errorMessage || message}
+						{isLoading ? (
+							<IoIosSync />
+						) : (
+							<>
+								{errorMessage ? (
+									<>
+										<IoIosWarning className='text-warning' />{' '}
+										{errorMessage}{' '}
+									</>
+								) : (
+									<>
+										<IoMdCheckmark className='text-success' />{' '}
+										{message}
+									</>
+								)}
+							</>
+						)}
 					</p>
 				</>
 			) : (
@@ -34,7 +56,9 @@ export default function HomePage() {
 							placeholder='Ingrese su nombre de usuario'
 						/>
 					</Form.Group>
-					<Button>Enviar</Button>
+					<Button type='submit'>
+						Enviar <IoMdSend />
+					</Button>
 				</Form>
 			)}
 		</Page>
