@@ -30,7 +30,7 @@ const descriptions = [
 		description: 'Claridad en el proceso de desarrollo',
 		points: '/10 puntos',
 		max: 10,
-		name: 'fourc',
+		name: 'four',
 	},
 	{
 		id: 5,
@@ -57,7 +57,7 @@ const descriptions = [
 
 const schema = yup.object({
 	one: yup
-		.number()
+		.number('El valor tiene que ser numerico')
 		.min(0, 'Este campo no pude ser menor a 0')
 		.max(15, 'Este campo no puede ser mayor a 15'),
 	two: yup
@@ -111,6 +111,8 @@ function Popup(props) {
 					seven: '',
 					total: '',
 					comentario: '',
+					namebutton: 'GUARDAR',
+					statebutton: true,
 				}}
 				onSubmit={(values, actions) => {
 					setTimeout(() => {
@@ -118,11 +120,17 @@ function Popup(props) {
 
 						actions.setSubmitting(false)
 					}, 1000)
+					values.namebutton = 'CALIFICADO'
+					values.statebutton = false
+					alert(
+						'LOS CAMBIOS FUERON GUARDADOS Y LOS CAMPOS DESABILITADOS'
+					)
 				}}
 				validationSchema={schema}
 			>
 				{({
 					values: {
+						namebutton,
 						comentario,
 						total,
 						one,
@@ -132,6 +140,7 @@ function Popup(props) {
 						five,
 						six,
 						seven,
+						statebutton,
 					},
 					handleChange,
 					touched,
@@ -163,6 +172,7 @@ function Popup(props) {
 										label={qualification.description}
 										points={qualification.points}
 										name={qualification.name}
+										disabled={!statebutton}
 									/>
 								))}
 								<Form.Group as={Row} className='mb-3'>
@@ -177,13 +187,13 @@ function Popup(props) {
 										<Form.Control
 											name='total'
 											value={
-												one +
-												two +
-												three +
-												four +
-												five +
-												six +
-												seven
+												parseInt(one, 10) +
+												parseInt(two, 10) +
+												parseInt(three, 10) +
+												parseInt(four, 10) +
+												parseInt(five, 10) +
+												parseInt(six, 10) +
+												parseInt(seven, 10)
 											}
 										/>
 									</Col>
@@ -199,6 +209,7 @@ function Popup(props) {
 									name='comentario'
 									value={comentario}
 									onChange={handleChange}
+									disabled={!statebutton}
 								></textarea>
 								{touched.comentario && errors.comentario && (
 									<div className='error text-danger'>
@@ -207,9 +218,13 @@ function Popup(props) {
 								)}
 								<div className='Container'></div>
 								<center>
-									<Button type='submit' variant='success'>
-										GUARDAR
-										{one}
+									<Button
+										type='submit'
+										variant='success'
+										style={{ margin: 10 }}
+										disabled={!statebutton}
+									>
+										{namebutton}
 									</Button>
 								</center>
 							</Modal.Body>
