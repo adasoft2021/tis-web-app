@@ -15,6 +15,7 @@ export const reviewReducer = (state, { type, payload }) => {
 			}
 		case REVIEW_ACTIONS.LOAD_CREATE_SUCCESS:
 		case REVIEW_ACTIONS.LOAD_GET_SUCCESS:
+		case REVIEW_ACTIONS.LOAD_UPDATE_SUCCESS:
 			return {
 				...state,
 				review: payload,
@@ -23,6 +24,7 @@ export const reviewReducer = (state, { type, payload }) => {
 			}
 		case REVIEW_ACTIONS.LOAD_CREATE_ERROR:
 		case REVIEW_ACTIONS.LOAD_GET_ERROR:
+		case REVIEW_ACTIONS.LOAD_UPDATE_ERROR:
 			return {
 				...state,
 				error: payload,
