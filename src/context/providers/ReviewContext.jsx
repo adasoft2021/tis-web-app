@@ -6,6 +6,7 @@ import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
 export const ReviewContext = createContext({
 	...reviewInitialState,
 	createReview: async (reviewDTO) => reviewDTO,
+	getReview: async (reviewId) => reviewId,
 })
 
 export const useReview = () => {
@@ -33,8 +34,21 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const getReview = async (reviewId) => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const review = await reviewService.getReview(reviewId)
+			dispatch({ type: REVIEW_ACTIONS.LOAD_GET_SUCCESS, payload: review })
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
+				payload: data,
+			})
+		}
+	}
+
 	return (
-		<ReviewContext.Provider value={{ ...state, createReview }}>
+		<ReviewContext.Provider value={{ ...state, createReview, getReview }}>
 			{children}
 		</ReviewContext.Provider>
 	)
