@@ -7,6 +7,7 @@ export const ReviewContext = createContext({
 	...reviewInitialState,
 	createReview: async (reviewDTO) => reviewDTO,
 	getReview: async (reviewId) => reviewId,
+	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 })
 
 export const useReview = () => {
@@ -47,8 +48,29 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const updateReview = async ({ reviewId, reviewDTO }) => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const review = await reviewService.updateReview({
+				reviewId,
+				reviewDTO,
+			})
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_UPDATE_SUCCESS,
+				payload: review,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_UPDATE_ERROR,
+				payload: data,
+			})
+		}
+	}
+
 	return (
-		<ReviewContext.Provider value={{ ...state, createReview, getReview }}>
+		<ReviewContext.Provider
+			value={{ ...state, createReview, getReview, updateReview }}
+		>
 			{children}
 		</ReviewContext.Provider>
 	)
