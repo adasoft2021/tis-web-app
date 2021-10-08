@@ -18,7 +18,7 @@ export const ReviewProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
 	const createReview = async (reviewDTO) => {
-		dispatch({ type: REVIEW_ACTIONS.LOAD_CREATE })
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.createReview(reviewDTO)
 			dispatch({

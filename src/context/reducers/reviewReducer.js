@@ -8,7 +8,7 @@ export const reviewInitialState = {
 
 export const reviewReducer = (state, { type, payload }) => {
 	switch (type) {
-		case REVIEW_ACTIONS.LOAD_CREATE:
+		case REVIEW_ACTIONS.LOAD_REQUEST:
 			return {
 				...state,
 				isLoading: true,
