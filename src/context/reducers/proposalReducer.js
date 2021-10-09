@@ -29,7 +29,7 @@ export const proposalsReducer = (state, { type, payload }) => {
 	}
 }
 export const proposalInitialState = {
-	proposals: null,
+	proposal: null,
 	error: null,
 	isLoading: false,
 }
@@ -40,14 +40,14 @@ export const proposalReducer = (state, { type, payload }) => {
 				...state,
 				isLoading: true,
 			}
-		case PROPOSAL_ACTIONS.LOAD_PROPOSAL_SUCCESS:
+		case PROPOSAL_ACTIONS.LOAD_GET_SUCCESS:
 			return {
 				...state,
-				proposals: payload,
+				proposal: payload,
 				error: null,
 				isLoading: false,
 			}
-		case PROPOSAL_ACTIONS.LOAD_PROPOSAL_ERROR:
+		case PROPOSAL_ACTIONS.LOAD_GET_ERROR:
 			return {
 				...state,
 				error: payload,

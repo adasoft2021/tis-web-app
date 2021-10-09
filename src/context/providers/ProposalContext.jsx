@@ -5,7 +5,6 @@ import {
 	proposalsInitialState,
 	proposalsReducer,
 	proposalInitialState,
-	proposalReducer,
 } from '../reducers/proposalReducer'
 
 export const ProposalContext = createContext({
@@ -58,24 +57,4 @@ export const ProposalsProvider = ({ children }) => {
 			{children}
 		</ProposalContext.Provider>
 	)
-}
-
-export const ProposalProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(proposalReducer, proposalInitialState)
-
-	const getProposal = async (proposalId) => {
-		dispatch({ type: PROPOSAL_ACTIONS.LOAD_REQUEST })
-		try {
-			const proposal = await proposalService.getReview(proposalId)
-			dispatch({
-				type: PROPOSAL_ACTIONS.LOAD_GET_SUCCESS,
-				payload: proposal,
-			})
-		} catch ({ response: { data } }) {
-			dispatch({
-				type: PROPOSAL_ACTIONS.LOAD_CREATE_ERROR,
-				payload: data,
-			})
-		}
-	}
 }
