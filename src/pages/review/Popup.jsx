@@ -93,6 +93,12 @@ const schema = yup.object({
 })
 
 function Popup(props) {
+	/* const handleTotal = (valor) => {
+		const intone = parseInt(valor)
+
+		return Number.isInteger(intone) ? intone : 0
+	} */
+
 	return (
 		<Modal
 			{...props}
@@ -112,7 +118,7 @@ function Popup(props) {
 					total: '',
 					comentario: '',
 					namebutton: 'GUARDAR',
-					statebutton: true,
+					stateitems: true,
 				}}
 				onSubmit={(values, actions) => {
 					setTimeout(() => {
@@ -140,7 +146,7 @@ function Popup(props) {
 						five,
 						six,
 						seven,
-						statebutton,
+						stateitems,
 					},
 					handleChange,
 					touched,
@@ -172,7 +178,7 @@ function Popup(props) {
 										label={qualification.description}
 										points={qualification.points}
 										name={qualification.name}
-										disabled={!statebutton}
+										disabled={!stateitems}
 									/>
 								))}
 								<Form.Group as={Row} className='mb-3'>
@@ -187,13 +193,76 @@ function Popup(props) {
 										<Form.Control
 											name='total'
 											value={
-												parseInt(one, 10) +
-												parseInt(two, 10) +
-												parseInt(three, 10) +
-												parseInt(four, 10) +
-												parseInt(five, 10) +
-												parseInt(six, 10) +
-												parseInt(seven, 10)
+												(Number.isInteger(parseInt(one))
+													? parseInt(one)
+													: 0) +
+													(Number.isInteger(
+														parseInt(two)
+													)
+														? parseInt(two)
+														: 0) +
+													(Number.isInteger(
+														parseInt(three)
+													)
+														? parseInt(three)
+														: 0) +
+													(Number.isInteger(
+														parseInt(four)
+													)
+														? parseInt(four)
+														: 0) +
+													(Number.isInteger(
+														parseInt(five)
+													)
+														? parseInt(five)
+														: 0) +
+													(Number.isInteger(
+														parseInt(six)
+													)
+														? parseInt(six)
+														: 0) +
+													(Number.isInteger(
+														parseInt(seven)
+													)
+														? parseInt(seven)
+														: 0) >
+												100
+													? 0
+													: (Number.isInteger(
+															parseInt(one)
+													  )
+															? parseInt(one)
+															: 0) +
+													  (Number.isInteger(
+															parseInt(two)
+													  )
+															? parseInt(two)
+															: 0) +
+													  (Number.isInteger(
+															parseInt(three)
+													  )
+															? parseInt(three)
+															: 0) +
+													  (Number.isInteger(
+															parseInt(four)
+													  )
+															? parseInt(four)
+															: 0) +
+													  (Number.isInteger(
+															parseInt(five)
+													  )
+															? parseInt(five)
+															: 0) +
+													  (Number.isInteger(
+															parseInt(six)
+													  )
+															? parseInt(six)
+															: 0) +
+													  (Number.isInteger(
+															parseInt(seven)
+													  )
+															? parseInt(seven)
+															: 0)
 											}
 										/>
 									</Col>
@@ -209,7 +278,7 @@ function Popup(props) {
 									name='comentario'
 									value={comentario}
 									onChange={handleChange}
-									disabled={!statebutton}
+									disabled={!stateitems}
 								></textarea>
 								{touched.comentario && errors.comentario && (
 									<div className='error text-danger'>
@@ -222,7 +291,7 @@ function Popup(props) {
 										type='submit'
 										variant='success'
 										style={{ margin: 10 }}
-										disabled={!statebutton}
+										disabled={!stateitems}
 									>
 										{namebutton}
 									</Button>
