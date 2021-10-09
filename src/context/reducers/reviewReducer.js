@@ -9,6 +9,17 @@ export const reviewInitialState = {
 	qualificationSchema: null,
 }
 
+const getReview = ({ qualifications, ...rest }) => {
+	qualifications = qualifications.sort(
+		({ description: d1 }, { description: d2 }) => d2.length - d1.length
+	)
+
+	return {
+		...rest,
+		qualifications,
+	}
+}
+
 const createQualificationSchema = (qualifications) => {
 	return yup.object({
 		one: yup
@@ -81,7 +92,7 @@ export const reviewReducer = (state, { type, payload }) => {
 		case REVIEW_ACTIONS.LOAD_UPDATE_SUCCESS:
 			return {
 				...state,
-				review: payload,
+				review: getReview(payload),
 				qualificationSchema: createQualificationSchema(
 					payload.qualifications
 				),
