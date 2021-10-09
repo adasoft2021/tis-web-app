@@ -5,7 +5,9 @@ import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
 
 export const ReviewContext = createContext({
 	...reviewInitialState,
-	createReview: async (reviewDTO) => {},
+	createReview: async (reviewDTO) => reviewDTO,
+	getReview: async (reviewId) => reviewId,
+	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 })
 
 export const useReview = () => {
@@ -18,7 +20,7 @@ export const ReviewProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
 	const createReview = async (reviewDTO) => {
-		dispatch({ type: REVIEW_ACTIONS.LOAD_CREATE })
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.createReview(reviewDTO)
 			dispatch({
@@ -26,16 +28,49 @@ export const ReviewProvider = ({ children }) => {
 				payload: review,
 			})
 		} catch ({ response: { data } }) {
-			console.log({ data })
 			dispatch({
-				type: REVIEW_ACTIONS.LOAD_CRETE_ERROR,
+				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
+				payload: data,
+			})
+		}
+	}
+
+	const getReview = async (reviewId) => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const review = await reviewService.getReview(reviewId)
+			dispatch({ type: REVIEW_ACTIONS.LOAD_GET_SUCCESS, payload: review })
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
+				payload: data,
+			})
+		}
+	}
+
+	const updateReview = async ({ reviewId, reviewDTO }) => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const review = await reviewService.updateReview({
+				reviewId,
+				reviewDTO,
+			})
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_UPDATE_SUCCESS,
+				payload: review,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_UPDATE_ERROR,
 				payload: data,
 			})
 		}
 	}
 
 	return (
-		<ReviewContext.Provider value={{ ...state, createReview }}>
+		<ReviewContext.Provider
+			value={{ ...state, createReview, getReview, updateReview }}
+		>
 			{children}
 		</ReviewContext.Provider>
 	)

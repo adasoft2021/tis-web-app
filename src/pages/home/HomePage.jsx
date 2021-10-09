@@ -1,3 +1,10 @@
+import { Button, Form } from 'react-bootstrap'
+import {
+	IoIosSync,
+	IoMdSend,
+	IoIosWarning,
+	IoMdCheckmark,
+} from 'react-icons/io'
 import { useState } from 'react'
 import { useWelcome } from '../../context/providers/WelcomeContext'
 import Page from '../Page'
@@ -18,27 +25,41 @@ export default function HomePage() {
 				<>
 					<h1>Respuesta de la API:</h1>
 					<p style={{ textAlign: 'center', maxWidth: '80vw' }}>
-						{isLoading ? 'Cargando...' : errorMessage || message}
+						{isLoading ? (
+							<IoIosSync />
+						) : (
+							<>
+								{errorMessage ? (
+									<>
+										<IoIosWarning className='text-warning' />{' '}
+										{errorMessage}{' '}
+									</>
+								) : (
+									<>
+										<IoMdCheckmark className='text-success' />{' '}
+										{message}
+									</>
+								)}
+							</>
+						)}
 					</p>
 				</>
 			) : (
-				<form
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'start',
-						gap: '0.8rem',
-					}}
-					onSubmit={handleSubmit}
-				>
-					<label htmlFor='username'>Nombre de usuario:</label>
-					<input
-						id='username'
-						name='username'
-						placeholder='Ingrese su nombre de usuario'
-					/>
-					<button>Enviar</button>
-				</form>
+				<Form onSubmit={handleSubmit}>
+					<Form.Group className='mb-3'>
+						<Form.Label htmlFor='username'>
+							Nombre de usuario:
+						</Form.Label>
+						<Form.Control
+							id='username'
+							name='username'
+							placeholder='Ingrese su nombre de usuario'
+						/>
+					</Form.Group>
+					<Button type='submit'>
+						Enviar <IoMdSend />
+					</Button>
+				</Form>
 			)}
 		</Page>
 	)

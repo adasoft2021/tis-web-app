@@ -264,6 +264,9 @@ function Popup(props) {
 															? parseInt(seven)
 															: 0)
 											}
+											onChange={() =>
+												console.log('Cambios')
+											}
 										/>
 									</Col>
 									<Col sm='2'>
