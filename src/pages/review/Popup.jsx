@@ -5,7 +5,7 @@ import { useReview } from '../../context/providers/ReviewContext'
 
 const fields = ['one', 'two', 'three', 'four', 'five', 'six', 'seven']
 
-function Popup(props) {
+export default function Popup(props) {
 	const { review, isLoading, updateReview, qualificationSchema } = useReview()
 
 	const getTotalScore = (scores) => {
@@ -185,5 +185,3 @@ function Popup(props) {
 		</Modal>
 	)
 }
-
-export default Popup

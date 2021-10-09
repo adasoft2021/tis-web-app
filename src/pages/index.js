@@ -1,6 +1,5 @@
-import HomePage from './home'
-import Revision from './review/Revision'
+import Review from './review'
 import NotFoundPage from './NotFoundPage'
 import Board from './board'
 
-export { HomePage, NotFoundPage, Board, Revision }
+export { NotFoundPage, Board, Review }

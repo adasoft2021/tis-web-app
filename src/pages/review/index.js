@@ -1,3 +1,3 @@
-import Revision from './Revision'
+import Review from './Review'
 
-export default Revision
+export default Review

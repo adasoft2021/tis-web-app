@@ -1,8 +1,6 @@
 import { Route, Switch } from 'wouter'
-import { WelcomeProvider } from '../context/providers/WelcomeContext'
 import { ReviewProvider } from '../context/providers/ReviewContext'
-import { HomePage, Board, NotFoundPage, Revision } from '../pages'
-import Test from '../pages/Test'
+import { Board, NotFoundPage, Review } from '../pages'
 
 export default function AppRouter() {
 	return (
@@ -10,22 +8,13 @@ export default function AppRouter() {
 			<Route
 				path='/'
 				component={(props) => (
-					<WelcomeProvider>
-						<HomePage {...props} />
-					</WelcomeProvider>
-				)}
-			/>
-			<Route path='/tablero' component={Board} />
-			<Route path='/test' component={Test} />
-			<Route path='/404' component={NotFoundPage} />
-			<Route
-				path='/review'
-				component={(props) => (
 					<ReviewProvider>
-						<Revision {...props} />
+						<Review {...props} />
 					</ReviewProvider>
 				)}
 			/>
+			<Route path='/tablero' component={Board} />
+			<Route path='/404' component={NotFoundPage} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
