@@ -1,9 +1,72 @@
+import * as yup from 'yup'
+
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 
 export const reviewInitialState = {
 	review: null,
 	error: null,
-	isLoading: false,
+	isLoading: true,
+	qualificationSchema: null,
+}
+
+const createQualificationSchema = (qualifications) => {
+	return yup.object({
+		one: yup
+			.number('El valor tiene que ser numerico')
+			.min(0, 'Este campo no pude ser menor a 0')
+			.max(
+				qualifications[0].maxScore,
+				`Este campo no puede ser mayor a ${qualifications[0].maxScore}`
+			),
+		two: yup
+			.number()
+			.min(0, 'Este campo no pude ser menor a 0')
+			.max(
+				qualifications[1].maxScore,
+				`Este campo no puede ser mayor a ${qualifications[1].maxScore}`
+			),
+		three: yup
+			.number()
+			.min(0, 'Este campo no pude ser menor a 0')
+			.max(
+				qualifications[2].maxScore,
+				`Este campo no puede ser mayor a ${qualifications[2].maxScore}`
+			),
+		four: yup
+			.number()
+			.min(0, 'Este campo no pude ser menor a 0')
+			.max(
+				qualifications[3].maxScore,
+				`Este campo no puede ser mayor a ${qualifications[3].maxScore}`
+			),
+		five: yup
+			.number()
+			.min(0, 'Este campo no pude ser menor a 0')
+			.max(
+				qualifications[4].maxScore,
+				`Este campo no puede ser mayor a ${qualifications[4].maxScore}`
+			),
+		six: yup
+			.number()
+			.min(0, 'Este campo no pude ser menor a 0')
+			.max(
+				qualifications[5].maxScore,
+				`Este campo no puede ser mayor a ${qualifications[5].maxScore}`
+			),
+		seven: yup
+			.number()
+			.min(0, 'Este campo no pude ser menor a 0')
+			.max(
+				qualifications[6].maxScore,
+				`Este campo no puede ser mayor a ${qualifications[6].maxScore}`
+			),
+		comentario: yup
+			.string()
+			.max(
+				200,
+				'El comentario no puede sobrepasar la cantidad de 200 caracteres'
+			),
+	})
 }
 
 export const reviewReducer = (state, { type, payload }) => {
@@ -19,6 +82,9 @@ export const reviewReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				review: payload,
+				qualificationSchema: createQualificationSchema(
+					payload.qualifications
+				),
 				error: null,
 				isLoading: false,
 			}

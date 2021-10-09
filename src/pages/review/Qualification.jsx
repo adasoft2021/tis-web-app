@@ -28,7 +28,7 @@ export default function Qualification({ label, points, ...props }) {
 					/>
 				</Col>
 				<Col sm='2'>
-					<p className='text-light'>{points}</p>
+					<p className='text-light'>/{points}</p>
 				</Col>
 			</Form.Group>
 		</>
