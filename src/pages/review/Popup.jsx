@@ -45,31 +45,31 @@ function Popup(props) {
 						comment: comentario || null,
 						qualifications: [
 							{
-								score: rest.one || null,
+								score: rest.one === '' ? null : rest.one,
 								qualificationId: review.qualifications[0].id,
 							},
 							{
-								score: rest.two || null,
+								score: rest.two === '' ? null : rest.two,
 								qualificationId: review.qualifications[1].id,
 							},
 							{
-								score: rest.three || null,
+								score: rest.three === '' ? null : rest.three,
 								qualificationId: review.qualifications[2].id,
 							},
 							{
-								score: rest.four || null,
+								score: rest.four === '' ? null : rest.four,
 								qualificationId: review.qualifications[3].id,
 							},
 							{
-								score: rest.five || null,
+								score: rest.five === '' ? null : rest.five,
 								qualificationId: review.qualifications[4].id,
 							},
 							{
-								score: rest.six || null,
+								score: rest.six === '' ? null : rest.six,
 								qualificationId: review.qualifications[5].id,
 							},
 							{
-								score: rest.seven || null,
+								score: rest.seven === '' ? null : rest.seven,
 								qualificationId: review.qualifications[6].id,
 							},
 						],
