@@ -2,18 +2,21 @@ import { createContext, useContext, useEffect, useReducer } from 'react'
 import * as proposalService from '../../services/proposalService'
 import { PROPOSAL_ACTIONS } from '../actions/proposalActions'
 import {
+	proposalsInitialState,
+	proposalsReducer,
 	proposalInitialState,
 	proposalReducer,
 } from '../reducers/proposalReducer'
 
 export const ProposalContext = createContext({
-	...proposalInitialState,
+	...proposalsInitialState,
 	getAllAdviserProposals: async () => {},
+	proposalInitialState,
+	getProposal: async () => {},
 })
 
 export const useProposal = () => {
 	const context = useContext(ProposalContext)
-
 	return context
 }
 
@@ -28,8 +31,11 @@ export const useListProposals = () => {
 	return { error, isLoading, proposals }
 }
 
-export const ProposalProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(proposalReducer, proposalInitialState)
+export const ProposalsProvider = ({ children }) => {
+	const [state, dispatch] = useReducer(
+		proposalsReducer,
+		proposalsInitialState
+	)
 
 	const getAllAdviserProposals = async () => {
 		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
@@ -52,4 +58,24 @@ export const ProposalProvider = ({ children }) => {
 			{children}
 		</ProposalContext.Provider>
 	)
+}
+
+export const ProposalProvider = ({ children }) => {
+	const [state, dispatch] = useReducer(proposalReducer, proposalInitialState)
+
+	const getProposal = async (proposalId) => {
+		dispatch({ type: PROPOSAL_ACTIONS.LOAD_REQUEST })
+		try {
+			const proposal = await proposalService.getReview(proposalId)
+			dispatch({
+				type: PROPOSAL_ACTIONS.LOAD_GET_SUCCESS,
+				payload: proposal,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: PROPOSAL_ACTIONS.LOAD_CREATE_ERROR,
+				payload: data,
+			})
+		}
+	}
 }

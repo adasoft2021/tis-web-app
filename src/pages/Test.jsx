@@ -2,7 +2,15 @@ import Split from 'react-split-grid'
 
 import styles from './Test.module.scss'
 
+import { useProposal } from '../../context/providers/ProposalContext'
+
 export default function Test() {
+	const { proposal, isLoading } = useProposal()
+
+	if (isLoading && !proposal) {
+		return null
+	}
+
 	return (
 		<Split
 			minSize={100}
