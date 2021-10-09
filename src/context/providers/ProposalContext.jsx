@@ -73,7 +73,7 @@ export const ProposalProvider = ({ children }) => {
 			})
 		} catch ({ response: { data } }) {
 			dispatch({
-				type: PROPOSAL_ACTIONS.LOAD_CREATE_ERROR,
+				type: PROPOSAL_ACTIONS.LOAD_GET_ERROR,
 				payload: data,
 			})
 		}
