@@ -2,58 +2,55 @@ import { createContext, useContext, useEffect, useReducer } from 'react'
 import * as proposalService from '../../services/proposalService'
 import { PROPOSAL_ACTIONS } from '../actions/proposalActions'
 import {
-	proposalsInitialState,
-	proposalsReducer,
 	proposalInitialState,
+	proposalReducer,
 } from '../reducers/proposalReducer'
 
 export const ProposalContext = createContext({
-	...proposalsInitialState,
-	getAllAdviserProposals: async () => {},
-	proposalInitialState,
-	getProposal: async () => {},
+	...proposalInitialState,
+	getProposal: async ({ proposalId }) => {},
 })
 
-export const useProposal = () => {
+export function useProposal() {
 	const context = useContext(ProposalContext)
+
 	return context
 }
 
-export const useListProposals = () => {
-	const { error, getAllAdviserProposals, isLoading, proposals } =
-		useProposal()
+export function useProposalById(proposalId) {
+	const { error, getProposal, isLoading, proposal } = useProposal()
 
-	useEffect(() => {
-		getAllAdviserProposals()
+	useEffect(async () => {
+		getProposal({ proposalId })
 	}, [])
 
-	return { error, isLoading, proposals }
+	return { error, isLoading, proposal }
 }
 
-export const ProposalsProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(
-		proposalsReducer,
-		proposalsInitialState
-	)
+export const ProposalProvider = ({ children }) => {
+	const [state, dispatch] = useReducer(proposalReducer, proposalInitialState)
 
-	const getAllAdviserProposals = async () => {
-		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
+	const getProposal = async ({ proposalId }) => {
+		dispatch({ type: PROPOSAL_ACTIONS.LOAD_GET_PROPOSAL })
 		try {
-			const proposals = await proposalService.getAllAdviserProposals()
+			const proposal = await proposalService.getProposal({ proposalId })
 			dispatch({
-				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_SUCCESS,
-				payload: proposals,
+				type: PROPOSAL_ACTIONS.LOAD_GET_PROPOSAL_SUCCESS,
+				payload: proposal,
 			})
-		} catch ({ response: { data } }) {
+		} catch ({ response: { data, status }, ...rest }) {
 			dispatch({
-				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_ERROR,
-				payload: data,
+				type: PROPOSAL_ACTIONS.LOAD_GET_PROPOSAL_ERROR,
+				payload:
+					status < 500
+						? data.message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 		}
 	}
 
 	return (
-		<ProposalContext.Provider value={{ ...state, getAllAdviserProposals }}>
+		<ProposalContext.Provider value={{ ...state, getProposal }}>
 			{children}
 		</ProposalContext.Provider>
 	)

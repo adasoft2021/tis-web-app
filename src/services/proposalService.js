@@ -13,7 +13,7 @@ export async function getAllAdviserProposals({ adviserId = 1 }) {
 	return response.data
 }
 
-export async function getProposal(proposalId) {
+export async function getProposal({ proposalId }) {
 	const response = await proposalService.get(`/${proposalId}`)
 	return response.data
 }

@@ -1,29 +1,26 @@
 import { useEffect, useState } from 'react'
-import Split from 'react-split-grid'
-import { Button, Container, Nav, Navbar, Spinner } from 'react-bootstrap'
-import { useReview } from '../../context/providers/ReviewContext'
-import Grid from './Grid'
-import Popup from './Popup'
+import { Button, Container, Nav, Navbar } from 'react-bootstrap'
+import { useProposalById } from '../../context/providers/ProposalContext'
+import { useReviewById } from '../../context/providers/ReviewContext'
+import Grid from './components/Grid'
+import Popup from './components/Popup'
 
 export default function Review() {
-	const [show, setshow] = useState(false)
-	const { getReview, isLoading, error } = useReview()
+	const [showPopup, setShowPopup] = useState(false)
+	const { error } = useProposalById(1)
+	const { error: errorReview } = useReviewById(1)
 
 	useEffect(() => {
-		getReview(1)
-	}, [])
+		if (error) {
+			alert(error)
+		}
+	}, [error])
 
-	if (isLoading) {
-		return (
-			<Spinner animation='border' role='status'>
-				<span className='visually-hidden'>Loading...</span>
-			</Spinner>
-		)
-	}
-
-	if (error) {
-		return <p>{error.message}</p>
-	}
+	useEffect(() => {
+		if (errorReview) {
+			alert(errorReview)
+		}
+	}, [errorReview])
 
 	return (
 		<>
@@ -40,20 +37,22 @@ export default function Review() {
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
 					<Navbar.Collapse id='basic-navbar-nav'>
-						<Nav className='ms-auto'>
-							<Button
-								className='fw-bold rounded-pill'
-								variant='info'
-								onClick={() => setshow(!show)}
-							>
-								CALIFICAR
-							</Button>
-						</Nav>
+						{!errorReview && (
+							<Nav className='ms-auto'>
+								<Button
+									className='fw-bold rounded-pill'
+									variant='info'
+									onClick={() => setShowPopup(true)}
+								>
+									CALIFICAR
+								</Button>
+							</Nav>
+						)}
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
-			<Split minSize={100} cursor='ew-resize' render={Grid} />
-			<Popup show={show} onHide={() => setshow(false)} />
+			<Popup show={showPopup} onHide={() => setShowPopup(false)} />
+			<Grid />
 		</>
 	)
 }

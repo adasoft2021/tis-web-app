@@ -1,4 +1,6 @@
 import { Route, Switch } from 'wouter'
+import { ObservationProvider } from '../context/providers/ObservationContext'
+import { ProposalProvider } from '../context/providers/ProposalContext'
 import { ReviewProvider } from '../context/providers/ReviewContext'
 import { Board, NotFoundPage, Review } from '../pages'
 
@@ -8,9 +10,13 @@ export default function AppRouter() {
 			<Route
 				path='/'
 				component={(props) => (
-					<ReviewProvider>
-						<Review {...props} />
-					</ReviewProvider>
+					<ProposalProvider>
+						<ObservationProvider>
+							<ReviewProvider>
+								<Review {...props} />
+							</ReviewProvider>
+						</ObservationProvider>
+					</ProposalProvider>
 				)}
 			/>
 			<Route path='/tablero' component={Board} />

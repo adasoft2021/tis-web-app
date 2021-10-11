@@ -1,7 +1,7 @@
 import { Form, Modal, Button, Row, Col } from 'react-bootstrap'
 import { Formik } from 'formik'
 import Qualification from './Qualification'
-import { useReview } from '../../context/providers/ReviewContext'
+import { useReview } from '../../../context/providers/ReviewContext'
 
 const fields = ['one', 'two', 'three', 'four', 'five', 'six', 'seven']
 
@@ -18,7 +18,7 @@ export default function Popup(props) {
 		return totalScore > 100 ? 0 : totalScore
 	}
 
-	if (isLoading && !review) {
+	if ((isLoading && !review) || !review) {
 		return null
 	}
 

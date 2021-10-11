@@ -7,7 +7,7 @@ export async function createReview(reviewDTO) {
 	return response.data
 }
 
-export async function getReview(reviewId) {
+export async function getReview({ reviewId }) {
 	const response = await reviewService.get(`/${reviewId}`)
 	return response.data
 }

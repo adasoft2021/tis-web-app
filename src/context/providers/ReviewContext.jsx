@@ -1,19 +1,29 @@
-import { createContext, useContext, useReducer } from 'react'
+import { createContext, useContext, useEffect, useReducer } from 'react'
 import * as reviewService from '../../services/reviewService'
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
 
 export const ReviewContext = createContext({
 	...reviewInitialState,
-	createReview: async (reviewDTO) => reviewDTO,
-	getReview: async (reviewId) => reviewId,
-	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
+	createReview: async (reviewDTO) => {},
+	getReview: async ({ reviewId }) => {},
+	updateReview: async ({ reviewId, reviewDTO }) => {},
 })
 
 export const useReview = () => {
 	const context = useContext(ReviewContext)
 
 	return context
+}
+
+export const useReviewById = (reviewId) => {
+	const { error, getReview } = useReview()
+
+	useEffect(() => {
+		getReview({ reviewId })
+	}, [])
+
+	return { error }
 }
 
 export const ReviewProvider = ({ children }) => {
@@ -27,23 +37,29 @@ export const ReviewProvider = ({ children }) => {
 				type: REVIEW_ACTIONS.LOAD_CREATE_SUCCESS,
 				payload: review,
 			})
-		} catch ({ response: { data } }) {
+		} catch ({ response: { data, status }, ...rest }) {
 			dispatch({
 				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
-				payload: data,
+				payload:
+					status < 500
+						? data.message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 		}
 	}
 
-	const getReview = async (reviewId) => {
+	const getReview = async ({ reviewId }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
-			const review = await reviewService.getReview(reviewId)
+			const review = await reviewService.getReview({ reviewId })
 			dispatch({ type: REVIEW_ACTIONS.LOAD_GET_SUCCESS, payload: review })
-		} catch ({ response: { data } }) {
+		} catch ({ response: { data, status }, ...rest }) {
 			dispatch({
-				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
-				payload: data,
+				type: REVIEW_ACTIONS.LOAD_GET_ERROR,
+				payload:
+					status < 500
+						? data.message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 		}
 	}
@@ -59,10 +75,13 @@ export const ReviewProvider = ({ children }) => {
 				type: REVIEW_ACTIONS.LOAD_UPDATE_SUCCESS,
 				payload: review,
 			})
-		} catch ({ response: { data } }) {
+		} catch ({ response: { data, status }, ...rest }) {
 			dispatch({
 				type: REVIEW_ACTIONS.LOAD_UPDATE_ERROR,
-				payload: data,
+				payload:
+					status < 500
+						? data.message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 		}
 	}
