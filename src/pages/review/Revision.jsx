@@ -5,10 +5,11 @@ import { useReview } from '../../context/providers/ReviewContext'
 
 const Revision = () => {
 	const [show, setshow] = useState(false)
-	const { getReview } = useReview()
+	const { review, getReview } = useReview()
 
 	useEffect(() => {
 		getReview(1)
+		console.log(review)
 	}, [])
 
 	return (

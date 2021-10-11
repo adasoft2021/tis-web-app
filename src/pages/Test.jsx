@@ -1,11 +1,16 @@
 import Split from 'react-split-grid'
 
 import styles from './Test.module.scss'
-
+import { useEffect } from 'react'
 import { useProposal } from '../context/providers/ProposalContext'
 
-export default function Test() {
-	const { proposal, isLoading } = useProposal()
+const Test = () => {
+	const { proposal, getProposal, isLoading } = useProposal()
+
+	useEffect(() => {
+		getProposal(1)
+		console.log(proposal)
+	}, [])
 
 	if (isLoading && !proposal) {
 		return null
@@ -33,3 +38,4 @@ export default function Test() {
 		/>
 	)
 }
+export default Test

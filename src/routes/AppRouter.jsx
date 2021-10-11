@@ -3,6 +3,7 @@ import { WelcomeProvider } from '../context/providers/WelcomeContext'
 import { ReviewProvider } from '../context/providers/ReviewContext'
 import { HomePage, Board, NotFoundPage, Revision } from '../pages'
 import Test from '../pages/Test'
+import { ProposalProvider } from '../context/providers/ProposalContext'
 
 export default function AppRouter() {
 	return (
@@ -16,7 +17,14 @@ export default function AppRouter() {
 				)}
 			/>
 			<Route path='/tablero' component={Board} />
-			<Route path='/test' component={Test} />
+			<Route
+				path='/test'
+				component={(props) => (
+					<ProposalProvider>
+						<Test {...props} />
+					</ProposalProvider>
+				)}
+			/>
 			<Route path='/404' component={NotFoundPage} />
 			<Route
 				path='/review'

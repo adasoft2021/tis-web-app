@@ -1,8 +1,8 @@
-const { default: createInstance } = require('./http')
+import createInstance from './http'
 
 const proposalService = createInstance({ url: '/proposals' })
 
-export async function getAllAdviserProposals({ adviserId = 1 }) {
+export async function getAllAdviserProposals(adviserId) {
 	const response = await proposalService.get('', {
 		headers: {},
 		params: {
