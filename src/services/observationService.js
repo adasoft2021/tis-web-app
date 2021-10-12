@@ -12,11 +12,7 @@ export async function createObservation({ proposalId, observationDTO }) {
 }
 
 export async function deleteObservation({ observationId }) {
-	await observationService.delete('/{observationId}', {
-		params: {
-			id: observationId,
-		},
-	})
+	await observationService.delete(`/${observationId}`)
 }
 
 export async function getObservation(observationId) {
@@ -36,13 +32,8 @@ export async function getAllProposalObservations({ proposalId }) {
 
 export async function updateObservation({ observationId, observationDTO }) {
 	const response = await observationService.put(
-		'/{observationId}',
-		observationDTO,
-		{
-			params: {
-				id: observationId,
-			},
-		}
+		`/${observationId}`,
+		observationDTO
 	)
 
 	return response.data
