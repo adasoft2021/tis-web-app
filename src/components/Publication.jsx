@@ -1,93 +1,78 @@
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
+import { useAllAdviserPublications } from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
 
-const publications = [
-	{
-		id: 1,
-		title: 'Convocatoria 1',
-		date: new Date(),
-		code: 'CPTIS-0609-2021',
-		semester: '2-2021',
-		fileUrl:
-			'https://drive.google.com/file/d/1Y1UxDtPa7Qr7uPzJ32D6pB7nwbCrrXxe/view?usp=sharing',
-		createdAt: new Date(),
-		updatedAt: new Date(),
-		deleted: false,
-	},
-	{
-		id: 2,
-		title: 'Convocatoria 2',
-		date: new Date(),
-		code: 'CPTIS-0609-2021',
-		semester: '2-2021',
-		fileUrl:
-			'https://drive.google.com/file/d/1Y1UxDtPa7Qr7uPzJ32D6pB7nwbCrrXxe/view?usp=sharing',
-		createdAt: new Date(),
-		updatedAt: new Date(),
-		deleted: false,
-	},
-	{
-		id: 3,
-		title: 'Convocatoria 2',
-		date: new Date(),
-		code: 'CPTIS-0609-2021',
-		semester: '2-2021',
-		fileUrl:
-			'https://drive.google.com/file/d/1Y1UxDtPa7Qr7uPzJ32D6pB7nwbCrrXxe/view?usp=sharing',
-		createdAt: new Date(),
-		updatedAt: new Date(),
-		deleted: false,
-	},
-	{
-		id: 4,
-		title: 'Convocatoria 2',
-		date: new Date(),
-		code: 'CPTIS-0609-2021',
-		semester: '2-2021',
-		fileUrl:
-			'https://drive.google.com/file/d/1Y1UxDtPa7Qr7uPzJ32D6pB7nwbCrrXxe/view?usp=sharing',
-		createdAt: new Date(),
-		updatedAt: new Date(),
-		deleted: false,
-	},
-]
+export default function Publication({
+	title,
+	message,
+	buttonMessage,
+	publicationType,
+}) {
+	const { error, isLoading, publications } = useAllAdviserPublications({
+		adviserId: 1,
+		publicationType,
+	})
 
-export default function Publication({ title, message, buttonMessage }) {
+	if (isLoading) {
+		return (
+			<Spinner animation='border' role='status'>
+				<span className='visually-hidden'>Loading...</span>
+			</Spinner>
+		)
+	}
+
+	if (error) {
+		return <p>{error}</p>
+	}
+
 	return (
 		<Container>
 			<h2>{title}</h2>
-			{publications.length === 0 ? (
-				<div className='d-flex flex-column align-items-center m-5 gap-3'>
-					<p className='text-muted display-6'>{message}</p>
-					<Button
-						variant='info'
-						className='rounded-circle'
-						style={{ width: '56px', height: '56px' }}
-						title={buttonMessage}
-					>
-						<IoIosAdd className='text-light' size={32} />
-					</Button>
+			{isLoading ? (
+				<div className='d-flex w-100 justify-content-center m-5'>
+					<Spinner animation='border' role='status'>
+						<span className='visually-hidden'>Loading...</span>
+					</Spinner>
 				</div>
 			) : (
-				<Row className='gy-3'>
-					{publications.map(({ id, ...rest }) => (
-						<PublicationCard key={id} id={id} {...rest} />
-					))}
-					<Col
-						sm={4}
-						className='d-flex align-items-center justify-content-center'
-					>
-						<Button
-							variant='info'
-							className='rounded-circle'
-							style={{ width: '56px', height: '56px' }}
-							title={buttonMessage}
-						>
-							<IoIosAdd className='text-light' size={32} />
-						</Button>
-					</Col>
-				</Row>
+				<>
+					{publications.length === 0 ? (
+						<div className='d-flex flex-column align-items-center m-5 gap-3'>
+							<p className='text-muted display-6'>{message}</p>
+							<Button
+								variant='info'
+								className='rounded-circle'
+								style={{ width: '56px', height: '56px' }}
+								title={buttonMessage}
+							>
+								<IoIosAdd className='text-light' size={32} />
+							</Button>
+						</div>
+					) : (
+						<Row className='gy-4'>
+							{publications.map(({ id, ...rest }) => (
+								<PublicationCard key={id} id={id} {...rest} />
+							))}
+							<Col
+								sm={4}
+								className='d-flex align-items-center justify-content-center'
+							>
+								<Button
+									variant='info'
+									className='rounded-circle'
+									style={{ width: '56px', height: '56px' }}
+									title={buttonMessage}
+								>
+									<IoIosAdd
+										className='text-light'
+										size={32}
+									/>
+								</Button>
+							</Col>
+						</Row>
+					)}
+				</>
 			)}
 		</Container>
 	)

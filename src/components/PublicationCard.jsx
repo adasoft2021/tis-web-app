@@ -13,6 +13,7 @@ export default function PublicationCard({ id, title, code, date }) {
 	}
 
 	const showDate = (date) => {
+		date = new Date(date)
 		return `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
 	}
 

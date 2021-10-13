@@ -1,4 +1,4 @@
-const { default: createInstance } = require('./http')
+import createInstance from './http'
 
 const proposalService = createInstance({ url: '/proposals' })
 
