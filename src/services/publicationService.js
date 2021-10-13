@@ -29,3 +29,7 @@ export async function getAllAdviserPublications({
 
 	return response.data
 }
+
+export async function deletePublication({ publicationId }) {
+	await publicationService.delete(`/${publicationId}`)
+}
