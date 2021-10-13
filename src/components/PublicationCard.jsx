@@ -1,15 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Card, Col } from 'react-bootstrap'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { MdTimer } from 'react-icons/md'
+import { usePublication } from '../context/providers/PublicationContext'
 
 export default function PublicationCard({ id, title, code, date }) {
+	const { deletePublication, errorDeletePublication } = usePublication()
+
+	useEffect(() => {
+		if (errorDeletePublication) {
+			alert(errorDeletePublication)
+		}
+	}, [errorDeletePublication])
+
 	const handleUpdate = () => {
 		console.log(`Actualizando publicacion con ID ${id}`)
 	}
 	const handleDelete = () => {
-		console.log(`Eliminando publicacion con ID ${id}`)
+		deletePublication({ publicationId: id })
 	}
 
 	const showDate = (date) => {

@@ -9,10 +9,11 @@ export default function Publication({
 	buttonMessage,
 	publicationType,
 }) {
-	const { error, isLoading, publications } = useAllAdviserPublications({
-		adviserId: 1,
-		publicationType,
-	})
+	const { errorPublications, isLoading, publications } =
+		useAllAdviserPublications({
+			adviserId: 1,
+			publicationType,
+		})
 
 	if (isLoading) {
 		return (
@@ -22,8 +23,8 @@ export default function Publication({
 		)
 	}
 
-	if (error) {
-		return <p>{error}</p>
+	if (errorPublications) {
+		return <p>{errorPublications}</p>
 	}
 
 	return (

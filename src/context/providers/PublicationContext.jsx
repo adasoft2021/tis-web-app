@@ -10,6 +10,7 @@ import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
 const PublicationContext = createContext({
 	...publicationInitialState,
 	getAllAdviserPublications: async ({ adviserId, publicationType }) => {},
+	deletePublication: async ({ publicationId }) => {},
 })
 
 export const usePublication = () => {
@@ -19,14 +20,18 @@ export const usePublication = () => {
 }
 
 export const useAllAdviserPublications = ({ adviserId, publicationType }) => {
-	const { error, getAllAdviserPublications, isLoading, publications } =
-		usePublication()
+	const {
+		errorPublications,
+		getAllAdviserPublications,
+		isLoading,
+		publications,
+	} = usePublication()
 
 	useEffect(() => {
 		getAllAdviserPublications({ adviserId, publicationType })
 	}, [])
 
-	return { error, isLoading, publications }
+	return { errorPublications, isLoading, publications }
 }
 
 export const PublicationProvider = ({ children }) => {
@@ -58,9 +63,24 @@ export const PublicationProvider = ({ children }) => {
 		}
 	}
 
+	const deletePublication = async ({ publicationId }) => {
+		try {
+			await publicationService.deletePublication({ publicationId })
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_SUCCESS,
+				payload: publicationId,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_ERROR,
+				payload: data.message,
+			})
+		}
+	}
+
 	return (
 		<PublicationContext.Provider
-			value={{ ...state, getAllAdviserPublications }}
+			value={{ ...state, getAllAdviserPublications, deletePublication }}
 		>
 			{children}
 		</PublicationContext.Provider>
