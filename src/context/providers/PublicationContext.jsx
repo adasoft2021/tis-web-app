@@ -12,6 +12,9 @@ const PublicationContext = createContext({
 	...publicationInitialState,
 	getAllAdviserPublications: async ({ adviserId, publicationType }) => {},
 	deletePublication: async ({ publicationId }) => {},
+	loadPublicationToUpdate: ({ publicationDTO }) => {},
+	resetPublicationDTO: () => {},
+	updatePublication: async ({ publicationId, publicationDTO }) => {},
 })
 
 export const usePublication = () => {
@@ -99,9 +102,54 @@ export const PublicationProvider = ({ children }) => {
 		}
 	}
 
+	const loadPublicationToUpdate = ({ publicationDTO }) => {
+		dispatch({
+			type: PUBLICATION_ACTIONS.LOAD_UPDATE_PUBLICATION,
+			payload: publicationDTO,
+		})
+	}
+
+	const resetPublicationDTO = () => {
+		dispatch({ type: PUBLICATION_ACTIONS.RESET_PUBLICATION_DTO })
+	}
+
+	const updatePublication = async ({ publicationId, publicationDTO }) => {
+		try {
+			const publication = await publicationService.updatePublication({
+				publicationId,
+				publicationDTO,
+			})
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_UPDATE_PUBLICATION_SUCCESS,
+				payload: { publicationId, publicationDTO: publication },
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
+		}
+	}
+
 	return (
 		<PublicationContext.Provider
-			value={{ ...state, getAllAdviserPublications, deletePublication }}
+			value={{
+				...state,
+				getAllAdviserPublications,
+				deletePublication,
+				loadPublicationToUpdate,
+				resetPublicationDTO,
+				updatePublication,
+			}}
 		>
 			{children}
 		</PublicationContext.Provider>

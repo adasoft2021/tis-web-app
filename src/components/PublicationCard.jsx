@@ -4,11 +4,20 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { MdTimer } from 'react-icons/md'
 import { usePublication } from '../context/providers/PublicationContext'
 
-export default function PublicationCard({ id, title, code, date }) {
-	const { deletePublication } = usePublication()
+export default function PublicationCard({
+	id,
+	title,
+	code,
+	date,
+	fileUrl,
+	...rest
+}) {
+	const { deletePublication, loadPublicationToUpdate } = usePublication()
 
 	const handleUpdate = () => {
-		console.log(`Actualizando publicacion con ID ${id}`)
+		loadPublicationToUpdate({
+			publicationDTO: { id, title, code, date, fileUrl, ...rest },
+		})
 	}
 	const handleDelete = () => {
 		deletePublication({ publicationId: id })
@@ -23,7 +32,11 @@ export default function PublicationCard({ id, title, code, date }) {
 		<Col sm={4}>
 			<Card className='shadow p-3 bg-body rounded'>
 				<Card.Body>
-					<Card.Title>{title}</Card.Title>
+					<Card.Title>
+						<a target='_blank' href={fileUrl} className='link-dark'>
+							{title}
+						</a>
+					</Card.Title>
 					<Card.Subtitle className='mb-2 text-muted'>
 						<small>{code}</small>
 					</Card.Subtitle>
