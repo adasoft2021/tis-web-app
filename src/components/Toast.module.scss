@@ -1,0 +1,8 @@
+.toast {
+	position: absolute !important;
+	top: 64px;
+	z-index: 1;
+	width: 512px;
+	left: 50%;
+	transform: translateX(-50%);
+}
