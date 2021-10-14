@@ -1,10 +1,5 @@
 import createInstance from './http'
 
-export const PUBLICATION_TYPE = {
-	ANNOUNCEMENT: 'ANNOUNCEMENT',
-	SPECIFICATION_SHEET: 'SPECIFICATION_SHEET',
-}
-
 const publicationService = createInstance({ url: '/publications' })
 
 export async function updatePublication({ publicationId, publicationDTO }) {
