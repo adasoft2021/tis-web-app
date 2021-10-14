@@ -13,14 +13,10 @@ export const toastReducer = (state, { type, payload }) => {
 				...state,
 				color: payload.color,
 				message: payload.message,
-			}
-		case TOAST_ACTIONS.CHANGE_SHOW:
-			return {
-				...state,
-				show: payload,
+				show: true,
 			}
 		case TOAST_ACTIONS.RESET:
-			return toastInitialState
+			return { ...toastInitialState }
 		default:
 			return state
 	}
