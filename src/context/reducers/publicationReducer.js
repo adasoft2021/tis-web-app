@@ -2,8 +2,6 @@ import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
 
 export const publicationInitialState = {
 	publications: [],
-	errorPublications: null,
-	errorDeletePublication: null,
 	isLoading: false,
 }
 
@@ -21,11 +19,6 @@ export const publicationReducer = (state, { type, payload }) => {
 				errorPublications: null,
 				isLoading: false,
 			}
-		case PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_ERROR:
-			return {
-				...state,
-				errorPublications: payload,
-			}
 		case PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_SUCCESS:
 			return {
 				...state,
@@ -34,10 +27,10 @@ export const publicationReducer = (state, { type, payload }) => {
 				),
 				errorDeletePublication: null,
 			}
-		case PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_ERROR:
+		case PUBLICATION_ACTIONS.STOP_LOADING:
 			return {
 				...state,
-				errorDeletePublication: payload,
+				isLoading: false,
 			}
 		default:
 			return state

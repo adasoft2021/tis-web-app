@@ -8,3 +8,8 @@ body {
 	width: 100%;
 	height: calc(100vh - 58px);
 }
+
+.content {
+	height: 100%;
+	overflow-y: auto;
+}

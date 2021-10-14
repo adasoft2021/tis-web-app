@@ -6,6 +6,7 @@ import {
 	publicationReducer,
 } from '../reducers/publicationReducer'
 import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
+import { useToast } from './ToastContext'
 
 const PublicationContext = createContext({
 	...publicationInitialState,
@@ -20,21 +21,19 @@ export const usePublication = () => {
 }
 
 export const useAllAdviserPublications = ({ adviserId, publicationType }) => {
-	const {
-		errorPublications,
-		getAllAdviserPublications,
-		isLoading,
-		publications,
-	} = usePublication()
+	const { getAllAdviserPublications, isLoading, publications } =
+		usePublication()
 
 	useEffect(() => {
 		getAllAdviserPublications({ adviserId, publicationType })
 	}, [])
 
-	return { errorPublications, isLoading, publications }
+	return { isLoading, publications }
 }
 
 export const PublicationProvider = ({ children }) => {
+	const { showToast } = useToast()
+
 	const [state, dispatch] = useReducer(
 		publicationReducer,
 		publicationInitialState
@@ -55,11 +54,20 @@ export const PublicationProvider = ({ children }) => {
 				type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_SUCCESS,
 				payload: publications,
 			})
-		} catch ({ response: { data } }) {
-			dispatch({
-				type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_ERROR,
-				payload: data.message,
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
+			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
 		}
 	}
 
@@ -70,11 +78,24 @@ export const PublicationProvider = ({ children }) => {
 				type: PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_SUCCESS,
 				payload: publicationId,
 			})
-		} catch ({ response: { data } }) {
-			dispatch({
-				type: PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_ERROR,
-				payload: data.message,
+			showToast({
+				color: 'success',
+				message: 'La publicación se eliminó correctamente.',
 			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
 		}
 	}
 

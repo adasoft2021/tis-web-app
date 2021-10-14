@@ -67,7 +67,9 @@ export default function Page({ children }) {
 						</Link>
 					</Nav>
 				</Col>
-				<Col sm={10}>{children}</Col>
+				<Col sm={10} className={styles.content}>
+					{children}
+				</Col>
 			</Row>
 		</>
 	)
