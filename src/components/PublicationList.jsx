@@ -1,14 +1,17 @@
 import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
-
+import React, { useState } from 'react'
 import { useAllAdviserPublications } from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
+import NewPost from './NewPost'
 
 export default function PublicationList({
 	buttonMessage,
 	message,
 	publicationType,
 }) {
+	const [show, setshow] = useState(false)
+
 	const { isLoading, publications } = useAllAdviserPublications({
 		adviserId: 1,
 		publicationType,
@@ -31,9 +34,11 @@ export default function PublicationList({
 					className='rounded-circle'
 					style={{ width: '56px', height: '56px' }}
 					title={buttonMessage}
+					onClick={() => setshow(true)}
 				>
 					<IoIosAdd className='text-light' size={32} />
 				</Button>
+				<NewPost show={show} onHide={() => setshow(false)} />
 			</div>
 		)
 	}
@@ -52,9 +57,11 @@ export default function PublicationList({
 					className='rounded-circle'
 					style={{ width: '56px', height: '56px' }}
 					title={buttonMessage}
+					onClick={() => setshow(true)}
 				>
 					<IoIosAdd className='text-light' size={32} />
 				</Button>
+				<NewPost show={show} onHide={() => setshow(false)} />
 			</Col>
 		</Row>
 	)
