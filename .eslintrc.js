@@ -28,8 +28,9 @@ module.exports = {
 		],
 		'react/react-in-jsx-scope': 'off',
 		'react/prop-types': 'off',
+		'react/jsx-no-target-blank': 'off',
 	},
-	ignorePatterns: ['*.png', '*.css', '*.json'],
+	ignorePatterns: ['*.png', '*.scss', '*.json'],
 	settings: {
 		react: {
 			version: 'detect',
