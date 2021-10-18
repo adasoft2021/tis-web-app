@@ -4,6 +4,7 @@ import { Modal, Row, Button, Form, InputGroup } from 'react-bootstrap'
 import Styles from './NewPost.module.scss'
 import { useToast } from '../context/providers/ToastContext'
 import * as Yup from 'yup'
+import swal from 'sweetalert'
 // import DatePicker from 'react-datepicker'
 
 const getToDay = () => {
@@ -18,7 +19,7 @@ const SignupForm = (props) => {
 	const formik = useFormik({
 		initialValues: {
 			title: '',
-			date: getToDay(),
+			date: '',
 			code: '',
 			semester: '',
 			attachedfile: '',
@@ -51,9 +52,6 @@ const SignupForm = (props) => {
 			alert(JSON.stringify(values, null, 2))
 		},
 	})
-	const x = () => {
-		formik.setValues((value) => ({ ...value, code: '1-2022' }))
-	}
 
 	const { showToast } = useToast()
 	return (
@@ -70,11 +68,16 @@ const SignupForm = (props) => {
 						<Button
 							className='text-light btn-danger'
 							onClick={() =>
-								confirm(
-									' ¿Seguro que quiere salir? Se borrará los datos ingresados.'
-								)
-									? props.onHide()
-									: null
+								swal({
+									text: ' ¿Seguro que quiere salir? Se borrará los datos ingresados.',
+									icon: 'warning',
+									buttons: ['Seguir editando', 'Si'],
+								}).then((respuesta) => {
+									if (respuesta) {
+										props.onHide()
+										formik.handleReset()
+									}
+								})
 							}
 						>
 							X
@@ -83,10 +86,10 @@ const SignupForm = (props) => {
 					<Modal.Body className='text-light'>
 						<Row>
 							<center className='mb-3'>
-								<h2>Nueva Convocatoria</h2>
+								<h2>Nueva convocatoria</h2>
 							</center>
 							<Form.Group controlId='title'>
-								<Form.Label className='fs-4'>Titulo</Form.Label>
+								<Form.Label className='fs-4'>Título</Form.Label>
 								<InputGroup hasValidation>
 									<Form.Control
 										className='mb-2'
@@ -117,30 +120,43 @@ const SignupForm = (props) => {
 									{formik.errors.date}
 								</Form.Control.Feedback>
 							</Form.Group>
-							<Form.Label className='fs-4'>Codigo</Form.Label>
-							<Form.Control
-								className='mb-2 fluid="md"'
-								id='code'
-								name='code'
-								type='text'
-								onChange={formik.handleChange}
-								value={formik.values.code}
-							/>
-							<div className='error text-danger'>
-								{formik.errors.code}
-							</div>
-							<Form.Label className='fs-4'>Semestre</Form.Label>
-							<Form.Control
-								className='mb-2'
-								id='semester'
-								name='semester'
-								type='text'
-								onChange={formik.handleChange}
-								value={formik.values.semester}
-							/>
-							<div className='error text-danger'>
-								{formik.errors.semester}
-							</div>
+							<Form.Group controlId='code'>
+								<Form.Label className='fs-4'>Código</Form.Label>
+								<InputGroup hasValidation>
+									<Form.Control
+										className='mb-2 fluid="md"'
+										onChange={formik.handleChange}
+										value={formik.values.code}
+										isInvalid={
+											formik.touched.code &&
+											formik.errors.code
+										}
+									/>
+									<Form.Control.Feedback type='invalid'>
+										{formik.errors.code}
+									</Form.Control.Feedback>
+								</InputGroup>
+							</Form.Group>
+							<Form.Group controlId='semester'>
+								<Form.Label className='fs-4'>
+									Semestre
+								</Form.Label>
+								<InputGroup hasValidation>
+									<Form.Control
+										className='mb-2'
+										type='text'
+										onChange={formik.handleChange}
+										value={formik.values.semester}
+										isInvalid={
+											formik.touched.semester &&
+											formik.errors.semester
+										}
+									/>
+									<Form.Control.Feedback type='invalid'>
+										{formik.errors.semester}
+									</Form.Control.Feedback>
+								</InputGroup>
+							</Form.Group>
 							<div className='mt-3 mb-3'>
 								<Form.Label className='mb-2 fs-4'>
 									Archivo adjunto
@@ -194,9 +210,8 @@ const SignupForm = (props) => {
 								type='submit'
 								variant='success'
 							>
-								Publicar
+								CREAR
 							</Button>
-							<Button onClick={x}>HOLA</Button>
 						</center>
 					</Modal.Body>
 				</div>
