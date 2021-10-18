@@ -1,9 +1,10 @@
 import { Col, Container, Image, Nav, Navbar, Row } from 'react-bootstrap'
-import { Link } from 'wouter'
+import { Link, useLocation } from 'wouter'
 
 import styles from './Page.module.scss'
 
 export default function Page({ children }) {
+	const [location] = useLocation()
 	return (
 		<>
 			<Navbar bg='dark' variant='dark' expand='lg'>
@@ -37,16 +38,24 @@ export default function Page({ children }) {
 						</p>
 					</div>
 					<Nav
-						defaultActiveKey='/'
+						defaultActiveKey={location}
 						variant='pills'
 						className='flex-column'
 					>
-						<Link to='/'>
+						<Link to='/announcements'>
 							<Nav.Link
-								eventKey='/'
+								eventKey='/announcements'
 								className='p-3 ps-4 border-bottom border-light text-light'
 							>
 								Convocatorias
+							</Nav.Link>
+						</Link>
+						<Link to='/specification_sheets'>
+							<Nav.Link
+								eventKey='/specification_sheets'
+								className='p-3 ps-4 border-bottom border-light text-light'
+							>
+								Pliego de especificaciones
 							</Nav.Link>
 						</Link>
 						<Link to='/projects'>

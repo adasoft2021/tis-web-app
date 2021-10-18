@@ -28,7 +28,13 @@ export const useAllAdviserPublications = ({ adviserId, publicationType }) => {
 		usePublication()
 
 	useEffect(() => {
-		getAllAdviserPublications({ adviserId, publicationType })
+		getAllAdviserPublications({
+			adviserId,
+			publicationType: publicationType.substring(
+				0,
+				publicationType.length - 1
+			),
+		})
 	}, [])
 
 	return { isLoading, publications }
