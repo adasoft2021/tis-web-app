@@ -39,7 +39,7 @@ export default function PublicationList({
 					<IoIosAdd className='text-light' size={32} />
 				</Button>
 				<NewPost
-					Header='Hola'
+					header='Hola'
 					show={show}
 					onHide={() => setshow(false)}
 				/>
@@ -66,7 +66,7 @@ export default function PublicationList({
 					<IoIosAdd className='text-light' size={32} />
 				</Button>
 				<NewPost
-					Header='Hola'
+					header='Hola'
 					show={show}
 					onHide={() => setshow(false)}
 				/>

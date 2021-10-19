@@ -15,7 +15,7 @@ const getToDay = () => {
 	return now
 }
 
-const SignupForm = (props) => {
+const SignupForm = ({ show, onHide, header }) => {
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -56,7 +56,8 @@ const SignupForm = (props) => {
 	const { showToast } = useToast()
 	return (
 		<Modal
-			{...props}
+			show={show}
+			onHide={onHide}
 			size='lg'
 			aria-labelledby='contained-modal-title-vcenter'
 			centered
@@ -74,7 +75,7 @@ const SignupForm = (props) => {
 									buttons: ['Seguir editando', 'Si'],
 								}).then((respuesta) => {
 									if (respuesta) {
-										props.onHide()
+										onHide()
 										formik.handleReset()
 									}
 								})
@@ -86,7 +87,7 @@ const SignupForm = (props) => {
 					<Modal.Body className='text-light'>
 						<Row>
 							<center className='mb-3'>
-								<h2>Nueva convocatoria</h2>
+								<h2>{header}</h2>
 							</center>
 							<Form.Group controlId='title'>
 								<Form.Label className='fs-4'>Título</Form.Label>
