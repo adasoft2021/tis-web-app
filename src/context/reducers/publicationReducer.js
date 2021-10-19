@@ -51,6 +51,11 @@ export const publicationReducer = (state, { type, payload }) => {
 				...state,
 				publicationDTO: null,
 			}
+		case PUBLICATION_ACTIONS.LOAD_CREATE_PUBLICATION_SUCCESS:
+			return {
+				...state,
+				publications: [...state.publications, payload],
+			}
 		default:
 			return state
 	}

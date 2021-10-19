@@ -15,6 +15,7 @@ const PublicationContext = createContext({
 	loadPublicationToUpdate: ({ publicationDTO }) => {},
 	resetPublicationDTO: () => {},
 	updatePublication: async ({ publicationId, publicationDTO }) => {},
+	createPublication: async ({ publicationDTO }) => {},
 })
 
 export const usePublication = () => {
@@ -28,7 +29,13 @@ export const useAllAdviserPublications = ({ adviserId, publicationType }) => {
 		usePublication()
 
 	useEffect(() => {
-		getAllAdviserPublications({ adviserId, publicationType })
+		getAllAdviserPublications({
+			adviserId,
+			publicationType: publicationType.substring(
+				0,
+				publicationType.length - 1
+			),
+		})
 	}, [])
 
 	return { isLoading, publications }
@@ -98,7 +105,6 @@ export const PublicationProvider = ({ children }) => {
 						? message
 						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
-			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
 		}
 	}
 
@@ -136,7 +142,35 @@ export const PublicationProvider = ({ children }) => {
 						? message
 						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
-			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
+		}
+	}
+
+	const createPublication = async ({ publicationDTO }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada...',
+		})
+		try {
+			const publication = await publicationService.createPublication({
+				publicationDTO,
+			})
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_CREATE_PUBLICATION_SUCCESS,
+				payload: publication,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
 		}
 	}
 
@@ -149,6 +183,7 @@ export const PublicationProvider = ({ children }) => {
 				loadPublicationToUpdate,
 				resetPublicationDTO,
 				updatePublication,
+				createPublication,
 			}}
 		>
 			{children}

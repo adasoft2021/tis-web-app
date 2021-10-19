@@ -1,17 +1,15 @@
 import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
+import { useLocation } from 'wouter'
 
 import { useAllAdviserPublications } from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
 
-export default function PublicationList({
-	buttonMessage,
-	message,
-	publicationType,
-}) {
+export default function PublicationList({ buttonMessage, message }) {
+	const [location] = useLocation()
 	const { isLoading, publications } = useAllAdviserPublications({
 		adviserId: 1,
-		publicationType,
+		publicationType: location.toUpperCase().replace('/', ''),
 	})
 
 	if (isLoading) {
