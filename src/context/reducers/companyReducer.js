@@ -28,7 +28,7 @@ export const companyReducer = (state, { type, payload }) => {
 		case COMPANY_ACTIONS.LOAD_COMPANY_SUCCESS:
 			return {
 				...state,
-				companies: payload,
+				company: payload,
 				isLoading: false,
 			}
 		case COMPANY_ACTIONS.STOP_LOADING:

@@ -8,7 +8,7 @@ import { useToast } from './ToastContext'
 const CompanyContext = createContext({
 	...companyInitialState,
 	getAllCompanies: async () => {},
-	getCompany: async () => {},
+	getCompany: async ({ companyId }) => {},
 })
 
 export const useCompany = () => {
@@ -35,7 +35,7 @@ export const CompanyProvider = ({ children }) => {
 	const getAllCompanies = async () => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANIES_LIST })
 		try {
-			const companies = await companyService.getAll()
+			const companies = await companyService.getAllCompanies()
 			dispatch({
 				type: COMPANY_ACTIONS.LOAD_COMPANIES_LIST_SUCCESS,
 				payload: companies,
@@ -59,9 +59,7 @@ export const CompanyProvider = ({ children }) => {
 	const getCompany = async ({ companyId }) => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANY })
 		try {
-			const company = await companyService.get({
-				companyId,
-			})
+			const company = await companyService.getCompany({ companyId })
 			dispatch({
 				type: COMPANY_ACTIONS.LOAD_COMPANY_SUCCESS,
 				payload: company,

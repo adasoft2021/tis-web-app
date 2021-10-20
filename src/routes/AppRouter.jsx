@@ -1,5 +1,11 @@
 import { Route, Switch } from 'wouter'
-import { Board, NotFoundPage, Announcement, SpecificationSheet } from '../pages'
+import {
+	Board,
+	NotFoundPage,
+	Announcement,
+	SpecificationSheet,
+	CompaniesList,
+} from '../pages'
 
 export default function AppRouter() {
 	return (
@@ -11,6 +17,7 @@ export default function AppRouter() {
 				path='/specification_sheets'
 				component={SpecificationSheet}
 			/>
+			<Route path='/companies' component={CompaniesList} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)

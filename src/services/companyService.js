@@ -3,7 +3,7 @@ import createInstance from './http'
 const companyService = createInstance({ url: '/companies' })
 
 export async function getAllCompanies() {
-	const response = await companyService.get('', {})
+	const response = await companyService.get('')
 	return response.data
 }
 
