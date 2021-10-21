@@ -5,6 +5,9 @@ import { useAllAdviserPublications } from '../context/providers/PublicationConte
 import PublicationCard from './PublicationCard'
 import NewPost from './NewPost'
 
+function Prueba() {
+	alert('Nuevo Post')
+}
 export default function PublicationList({
 	buttonMessage,
 	message,
@@ -39,9 +42,11 @@ export default function PublicationList({
 					<IoIosAdd className='text-light' size={32} />
 				</Button>
 				<NewPost
-					header='Hola'
+					header='Crear Convocatoria'
 					show={show}
 					onHide={() => setshow(false)}
+					fun={() => Prueba()}
+					semester='2 - 2021'
 				/>
 			</div>
 		)
@@ -66,9 +71,10 @@ export default function PublicationList({
 					<IoIosAdd className='text-light' size={32} />
 				</Button>
 				<NewPost
-					header='Hola'
+					header='Crear convocatoria'
 					show={show}
 					onHide={() => setshow(false)}
+					semester='2 - 2021'
 				/>
 			</Col>
 		</Row>

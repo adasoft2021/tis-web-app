@@ -1,10 +1,11 @@
-import React from 'react'
 import { useFormik } from 'formik'
 import { Modal, Row, Button, Form, InputGroup } from 'react-bootstrap'
 import Styles from './NewPost.module.scss'
 import { useToast } from '../context/providers/ToastContext'
 import * as Yup from 'yup'
 import swal from 'sweetalert'
+import { app } from '../fb'
+import { useState } from 'react'
 // import DatePicker from 'react-datepicker'
 
 const getToDay = () => {
@@ -15,13 +16,45 @@ const getToDay = () => {
 	return now
 }
 
-const SignupForm = ({ show, onHide, header }) => {
+const { showToast } = useToast()
+
+const validationPDF = (e) => {
+	if (e.target.files[0].type !== 'application/pdf') {
+		showToast({
+			color: 'danger',
+			message: 'No es un archivo PDF',
+		})
+		changeFile(e)
+	} else {
+		showToast({
+			color: 'success',
+			message: 'El archivo PDF se ha cargado correctamente',
+		})
+	}
+}
+
+const [File, setFile] = useState(null)
+
+const changeFile = (e) => {
+	const reader = new FileReader()
+	reader.onload = (e) => {
+		e.preventDefault()
+		setFile(e.target.result)
+	}
+}
+const archivoHandler = async (e) => {
+	// const archivo = e.target.files[0]
+	const storageRef = app.atorage().ref()
+	const archivoPath = storageRef.child(File.name)
+	await archivoPath.put(File)
+	console.log('archivo cargado:', File.name)
+}
+const SignupForm = ({ show, onHide, header, fun, semester }) => {
 	const formik = useFormik({
 		initialValues: {
 			title: '',
 			date: '',
 			code: '',
-			semester: '',
 			attachedfile: '',
 		},
 		validationSchema: Yup.object({
@@ -50,10 +83,12 @@ const SignupForm = ({ show, onHide, header }) => {
 
 		onSubmit: (values) => {
 			alert(JSON.stringify(values, null, 2))
+			formik.handleReset()
+			fun()
+			archivoHandler()
 		},
 	})
 
-	const { showToast } = useToast()
 	return (
 		<Modal
 			show={show}
@@ -62,6 +97,7 @@ const SignupForm = ({ show, onHide, header }) => {
 			aria-labelledby='contained-modal-title-vcenter'
 			centered
 			backdrop='static'
+			keyboard={false}
 		>
 			<Form className='bg-dark' onSubmit={formik.handleSubmit} noValidate>
 				<div className='m-5'>
@@ -146,16 +182,10 @@ const SignupForm = ({ show, onHide, header }) => {
 									<Form.Control
 										className='mb-2'
 										type='text'
-										onChange={formik.handleChange}
-										value={formik.values.semester}
-										isInvalid={
-											formik.touched.semester &&
-											formik.errors.semester
-										}
+										value={semester}
+										disabled={true}
+										title='Este campo es llenado por defecto para el semestre actual'
 									/>
-									<Form.Control.Feedback type='invalid'>
-										{formik.errors.semester}
-									</Form.Control.Feedback>
 								</InputGroup>
 							</Form.Group>
 							<div className='mt-3 mb-3'>
@@ -182,24 +212,19 @@ const SignupForm = ({ show, onHide, header }) => {
 											type='file'
 											accept='application/pdf'
 											onChange={(e) => {
-												if (
-													e.target.files[0].type !==
-													'application/pdf'
-												)
-													showToast({
-														color: 'danger',
-														message:
-															'No es un archivo PDF',
-													})
-												else {
-													showToast({
-														color: 'success',
-														message:
-															'El archivo PDF se ha cargado correctamente',
-													})
-												}
+												validationPDF(e)
 											}}
 										/>
+										<input
+											type='file'
+											onChange={archivoHandler}
+										/>
+										<input
+											type='text'
+											name='nombre'
+											placeholder='nombra tu archivo'
+										/>
+										<button>Enviar</button>
 									</Form.Group>
 								</Row>
 							</div>
