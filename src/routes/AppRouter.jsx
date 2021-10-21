@@ -18,6 +18,7 @@ export default function AppRouter() {
 				component={SpecificationSheet}
 			/>
 			<Route path='/companies' component={CompaniesList} />
+
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
