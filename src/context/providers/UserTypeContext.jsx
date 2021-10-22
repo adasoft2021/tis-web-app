@@ -14,7 +14,7 @@ export const useUserType = () => {
 export const UserTypeProvider = ({ children }) => {
 	return (
 		<UserTypeContext.Provider>
-			{children}
+			{ children }
 		</UserTypeContext.Provider>
 	)
 }
