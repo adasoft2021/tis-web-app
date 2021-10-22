@@ -1,6 +1,6 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/storage'
-import 'firebase/compact/firestore'
+import 'firebase/compat/firestore'
 
 export const app = firebase.initializeApp({
 	projectId: 'tis-storage',

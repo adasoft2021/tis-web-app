@@ -8,48 +8,81 @@ import { app } from '../fb'
 import { useState } from 'react'
 // import DatePicker from 'react-datepicker'
 
-const getToDay = () => {
-	const ToDay = new Date()
-	const now = `${ToDay.getUTCFullYear()}-${
-		ToDay.getUTCMonth() + 1
-	}-${ToDay.getUTCDate()}`
-	return now
-}
-
-const { showToast } = useToast()
-
-const validationPDF = (e) => {
-	if (e.target.files[0].type !== 'application/pdf') {
-		showToast({
-			color: 'danger',
-			message: 'No es un archivo PDF',
-		})
-		changeFile(e)
-	} else {
-		showToast({
-			color: 'success',
-			message: 'El archivo PDF se ha cargado correctamente',
-		})
-	}
-}
-
-const [File, setFile] = useState(null)
-
-const changeFile = (e) => {
-	const reader = new FileReader()
-	reader.onload = (e) => {
-		e.preventDefault()
-		setFile(e.target.result)
-	}
-}
-const archivoHandler = async (e) => {
-	// const archivo = e.target.files[0]
-	const storageRef = app.atorage().ref()
-	const archivoPath = storageRef.child(File.name)
-	await archivoPath.put(File)
-	console.log('archivo cargado:', File.name)
-}
 const SignupForm = ({ show, onHide, header, fun, semester }) => {
+	const getToDay = () => {
+		const ToDay = new Date()
+		const now = `${ToDay.getUTCFullYear()}-${
+			ToDay.getUTCMonth() + 1
+		}-${ToDay.getUTCDate()}`
+		return now
+	}
+
+	const { showToast } = useToast()
+
+	const validationPDF = async (e) => {
+		if (e.target.files[0].type !== 'application/pdf') {
+			showToast({
+				color: 'danger',
+				message: 'No es un archivo PDF',
+			})
+			changeFile(e)
+		} else {
+			showToast({
+				color: 'success',
+				message: 'El archivo PDF se ha cargado correctamente',
+			})
+		}
+	}
+
+	const [fileUrl, setFileUrl] = useState('')
+
+	const changeFile = (e) => {
+		const reader = new FileReader()
+		reader.onload = (e) => {
+			e.preventDefault()
+			// setFile(e.target.result)
+		}
+	}
+
+	const uploadFile = async (e) => {
+		const file = e.target.files[0]
+		const storageRef = app.storage().ref()
+		const filePath = storageRef.child(file.name)
+		try {
+			await filePath.put(file)
+			const fileDownloadUrl = await filePath.getDownloadURL()
+			setFileUrl(fileDownloadUrl)
+		} catch {
+			showToast({
+				color: 'danger',
+				message: 'No se pudo subir el archivo',
+			})
+			return
+		}
+		console.log('archivo cargado: %s\n url:%s', file.name, fileUrl)
+	}
+
+	const saveUrl = async (e) => {
+		e.preventDefault()
+		const fileName = e.target.PDF.files[0].name
+		if (!fileName || !fileUrl) {
+			showToast({
+				color: 'danger',
+				message: !fileName
+					? 'filename vacio'
+					: '' + !fileUrl
+					? ' url vacia'
+					: '',
+			})
+			return
+		}
+		const collectionRef = app.firestore().collection('publicationFiles')
+		await collectionRef
+			.doc(fileName)
+			.set({ fileName: fileName, url: fileUrl })
+		console.log('url guardada:', fileName, 'ulr:', fileUrl)
+	}
+
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -82,10 +115,10 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 		}),
 
 		onSubmit: (values) => {
-			alert(JSON.stringify(values, null, 2))
-			formik.handleReset()
+			uploadFile()
+			saveUrl(values.title)
+			alert(JSON.stringify({ ...values, attachedfile: fileUrl }, null, 2))
 			fun()
-			archivoHandler()
 		},
 	})
 
@@ -99,6 +132,13 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 			backdrop='static'
 			keyboard={false}
 		>
+			{' '}
+			<Form onSubmit={saveUrl}>
+				<Form.Group controlId='PDF'>
+					<Form.Control type='file' onChange={uploadFile} />
+					<Button type='submit'>Enviar </Button>
+				</Form.Group>
+			</Form>
 			<Form className='bg-dark' onSubmit={formik.handleSubmit} noValidate>
 				<div className='m-5'>
 					<div className=' d-flex justify-content-end'>
@@ -211,20 +251,8 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 											}
 											type='file'
 											accept='application/pdf'
-											onChange={(e) => {
-												validationPDF(e)
-											}}
+											onChange={validationPDF}
 										/>
-										<input
-											type='file'
-											onChange={archivoHandler}
-										/>
-										<input
-											type='text'
-											name='nombre'
-											placeholder='nombra tu archivo'
-										/>
-										<button>Enviar</button>
 									</Form.Group>
 								</Row>
 							</div>
