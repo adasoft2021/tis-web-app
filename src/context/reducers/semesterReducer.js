@@ -2,7 +2,6 @@ import { SEMESTER_ACTIONS } from '../actions/semesterActions'
 
 export const semesterInitialState = {
 	semester: null,
-	semesterDTO: null,
 	isLoading: false,
 }
 
