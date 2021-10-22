@@ -52,14 +52,18 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 			await filePath.put(file)
 			const fileDownloadUrl = await filePath.getDownloadURL()
 			setFileUrl(fileDownloadUrl)
+			formik.setFieldValue('attachedfile', fileDownloadUrl)
+			console.log(
+				'archivo cargado: %s\n url:%s',
+				file.name,
+				fileDownloadUrl
+			)
 		} catch {
 			showToast({
 				color: 'danger',
 				message: 'No se pudo subir el archivo',
 			})
-			return
 		}
-		console.log('archivo cargado: %s\n url:%s', file.name, fileUrl)
 	}
 
 	const saveUrl = async (e) => {
