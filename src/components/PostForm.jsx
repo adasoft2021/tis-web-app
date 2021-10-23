@@ -1,12 +1,12 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { Modal, Row, Button, Form, InputGroup } from 'react-bootstrap'
-import Styles from './NewPost.module.scss'
+import Styles from './PostForm.module.scss'
 import { useToast } from '../context/providers/ToastContext'
 import * as Yup from 'yup'
 import swal from 'sweetalert'
 import { app } from '../fb'
-// import DatePicker from 'react-datepicker'
+
 const getToDay = () => {
 	const ToDay = new Date()
 	const now = `${ToDay.getUTCFullYear()}-${
@@ -14,7 +14,7 @@ const getToDay = () => {
 	}-${ToDay.getUTCDate()}`
 	return now
 }
-const SignupForm = ({ show, onHide, header, fun, semester }) => {
+const PostForm = ({ show, onHide, header, fun, semester }) => {
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -54,8 +54,30 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 			alert(JSON.stringify(values, null, 2))
 		},
 	})
-
 	const { showToast } = useToast()
+	const [fileUrl, setFileUrl] = useState('')
+	useEffect(() => {
+		if (fileUrl !== '') {
+			console.log('newURL: ', fileUrl)
+			formik.setValues({ ...formik.values, attachedfile: fileUrl })
+		}
+	}, [fileUrl, setFileUrl])
+
+	const uploadFile = async (e) => {
+		const file = e.target.files[0]
+		const storageRef = app.storage().ref()
+		const filePath = storageRef.child(file.name)
+		try {
+			await filePath.put(file)
+			const fileDownloadUrl = await filePath.getDownloadURL()
+			setFileUrl(fileDownloadUrl)
+		} catch {
+			showToast({
+				color: 'danger',
+				message: 'No se pudo subir el archivo',
+			})
+		}
+	}
 	const validationPDF = async (e) => {
 		if (e.target.files[0].type !== 'application/pdf') {
 			showToast({
@@ -65,30 +87,13 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 		} else {
 			showToast({
 				color: 'success',
-				message: 'El archivo PDF se ha cargado correctamente',
+				message: 'El archivo PDF se ha seleccionado correctamente',
 			})
-			uploadFile(e)
-		}
-	}
-	const uploadFile = async (e) => {
-		const file = e.target.files[0]
-		const storageRef = app.storage().ref()
-		const filePath = storageRef.child(file.name)
-		try {
-			await filePath.put(file)
-			const fileDownloadUrl = await filePath.getDownloadURL()
-			// setFileUrl(fileDownloadUrl)
-			formik.setFieldValue('attachedfile', fileDownloadUrl)
-			console.log(formik.values.attachedfile)
-		} catch {
-			showToast({
-				color: 'danger',
-				message: 'No se pudo subir el archivo',
-			})
+			await uploadFile(e)
+			console.log(formik.values)
 		}
 	}
 
-	// const { showToast } = useToast()
 	return (
 		<Modal
 			show={show}
@@ -108,8 +113,8 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 									text: ' ¿Seguro que quiere salir? Se borrará los datos ingresados.',
 									icon: 'warning',
 									buttons: ['Seguir editando', 'Si'],
-								}).then((respuesta) => {
-									if (respuesta) {
+								}).then((answer) => {
+									if (answer) {
 										onHide()
 										formik.handleReset()
 									}
@@ -197,7 +202,7 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 								<Row
 									className={`${Styles['drag-area']} rounded bg-light text-dark p-4`}
 								>
-									<Form.Group controlId='PDF' hasValidation>
+									<Form.Group controlId='PDF'>
 										<div className='d-flex flex-column align-items-center'>
 											<h4>
 												Arrastra y suelta tu archivo
@@ -207,26 +212,24 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 												Selecciona tu archivo
 											</Form.Label>
 										</div>
-										<InputGroup>
+										<InputGroup hasValidation>
 											<Form.Control
 												className={
 													Styles['file-upload-input']
 												}
 												type='file'
 												accept='application/pdf'
-												onChange={(e) => {
-													validationPDF(e)
-												}}
+												onChange={validationPDF}
 												isInvalid={
 													formik.touched
 														.attachedfile &&
 													formik.errors.attachedfile
 												}
 											/>
+											<Form.Control.Feedback type='invalid'>
+												{formik.errors.attachedfile}
+											</Form.Control.Feedback>
 										</InputGroup>
-										<Form.Control.Feedback type='invalid'>
-											{formik.errors.attachedfile}
-										</Form.Control.Feedback>
 									</Form.Group>
 								</Row>
 							</div>
@@ -247,4 +250,4 @@ const SignupForm = ({ show, onHide, header, fun, semester }) => {
 		</Modal>
 	)
 }
-export default SignupForm
+export default PostForm

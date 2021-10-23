@@ -2,6 +2,12 @@ import createInstance from './http'
 
 const publicationService = createInstance({ url: '/publications' })
 
+export async function createPublication({ publicationDTO }) {
+	const response = await publicationService.post('', publicationDTO)
+
+	return response.data
+}
+
 export async function updatePublication({ publicationId, publicationDTO }) {
 	const response = await publicationService.put(
 		`/${publicationId}`,
