@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { Modal, Row, Button, Form, InputGroup } from 'react-bootstrap'
-import Styles from './PostForm.module.scss'
+import styles from './PostForm.module.scss'
 import { useToast } from '../context/providers/ToastContext'
 import * as Yup from 'yup'
 import swal from 'sweetalert'
@@ -220,7 +220,7 @@ const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 									Archivo adjunto
 								</Form.Label>
 								<Row
-									className={`${Styles['drag-area']} rounded bg-light text-dark p-4`}
+									className={`${styles['drag-area']} rounded bg-light text-dark p-4`}
 								>
 									<Form.Group controlId='PDF'>
 										<div className='d-flex flex-column align-items-center'>
@@ -235,7 +235,7 @@ const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 										<InputGroup hasValidation>
 											<Form.Control
 												className={
-													Styles['file-upload-input']
+													styles['file-upload-input']
 												}
 												type='file'
 												accept='application/pdf'

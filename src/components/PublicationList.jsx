@@ -1,17 +1,22 @@
 import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
 import { useLocation } from 'wouter'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
 	useAllAdviserPublications,
 	usePublication,
 } from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
 import PostForm from './PostForm'
+import { useCurrentSemester } from '../context/providers/SemesterContext'
 
 const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
+	const { semester } = useCurrentSemester()
 	const { createPublication } = usePublication()
 	const [show, setshow] = useState(false)
+	useEffect(() => {
+		console.log(semester)
+	}, [semester])
 	return (
 		<center>
 			<Button
@@ -27,7 +32,7 @@ const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 				header='Crear Convocatoria'
 				show={show}
 				onHide={() => setshow(false)}
-				semester='2-2021'
+				semester={semester.semester || '2-2021'}
 				withDTO={({ publicationDTO }) =>
 					createPublication({
 						publicationDTO: {
