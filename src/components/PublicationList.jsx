@@ -23,7 +23,7 @@ const NewPostButton = ({ buttonMessage }) => {
 				header='Crear Convocatoria'
 				show={show}
 				onHide={() => setshow(false)}
-				semester='2 - 2021'
+				semester='2-2021'
 			/>
 		</Container>
 	)
