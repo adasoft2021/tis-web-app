@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { Modal, Row, Button, Form, InputGroup } from 'react-bootstrap'
 import Styles from './PostForm.module.scss'
 import { useToast } from '../context/providers/ToastContext'
 import * as Yup from 'yup'
 import swal from 'sweetalert'
-import { app } from '../fb'
+// import DatePicker from 'react-datepicker'
 
 const getToDay = () => {
 	const ToDay = new Date()
@@ -14,13 +13,14 @@ const getToDay = () => {
 	}-${ToDay.getUTCDate()}`
 	return now
 }
-const PostForm = ({ show, onHide, header, fun, semester }) => {
+
+const SignupForm = ({ show, onHide, header }) => {
 	const formik = useFormik({
 		initialValues: {
 			title: '',
 			date: '',
 			code: '',
-			semester: semester,
+			semester: '',
 			attachedfile: '',
 		},
 		validationSchema: Yup.object({
@@ -45,55 +45,14 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 					/^[12]{1}[-][0-9]{4}$/,
 					'Por favor siga el siguiente formato Ej: (1-2021)'
 				),
-			attachedfile: Yup.string().required(
-				'Es necesario subir un archivo para continuar'
-			),
 		}),
 
 		onSubmit: (values) => {
 			alert(JSON.stringify(values, null, 2))
 		},
 	})
+
 	const { showToast } = useToast()
-	const [fileUrl, setFileUrl] = useState('')
-	useEffect(() => {
-		if (fileUrl !== '') {
-			console.log('newURL: ', fileUrl)
-			formik.setValues({ ...formik.values, attachedfile: fileUrl })
-		}
-	}, [fileUrl, setFileUrl])
-
-	const uploadFile = async (e) => {
-		const file = e.target.files[0]
-		const storageRef = app.storage().ref()
-		const filePath = storageRef.child(file.name)
-		try {
-			await filePath.put(file)
-			const fileDownloadUrl = await filePath.getDownloadURL()
-			setFileUrl(fileDownloadUrl)
-		} catch {
-			showToast({
-				color: 'danger',
-				message: 'No se pudo subir el archivo',
-			})
-		}
-	}
-	const validationPDF = async (e) => {
-		if (e.target.files[0].type !== 'application/pdf') {
-			showToast({
-				color: 'danger',
-				message: 'No es un archivo PDF',
-			})
-		} else {
-			showToast({
-				color: 'success',
-				message: 'El archivo PDF se ha seleccionado correctamente',
-			})
-			await uploadFile(e)
-			console.log(formik.values)
-		}
-	}
-
 	return (
 		<Modal
 			show={show}
@@ -113,8 +72,8 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 									text: ' ¿Seguro que quiere salir? Se borrará los datos ingresados.',
 									icon: 'warning',
 									buttons: ['Seguir editando', 'Si'],
-								}).then((answer) => {
-									if (answer) {
+								}).then((respuesta) => {
+									if (respuesta) {
 										onHide()
 										formik.handleReset()
 									}
@@ -186,9 +145,12 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 									<Form.Control
 										className='mb-2'
 										type='text'
-										value={semester}
-										disabled={true}
-										title='Este campo es llenado por defecto para el semestre actual'
+										onChange={formik.handleChange}
+										value={formik.values.semester}
+										isInvalid={
+											formik.touched.semester &&
+											formik.errors.semester
+										}
 									/>
 									<Form.Control.Feedback type='invalid'>
 										{formik.errors.semester}
@@ -212,24 +174,31 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 												Selecciona tu archivo
 											</Form.Label>
 										</div>
-										<InputGroup hasValidation>
-											<Form.Control
-												className={
-													Styles['file-upload-input']
+										<Form.Control
+											className={
+												Styles['file-upload-input']
+											}
+											type='file'
+											accept='application/pdf'
+											onChange={(e) => {
+												if (
+													e.target.files[0].type !==
+													'application/pdf'
+												)
+													showToast({
+														color: 'danger',
+														message:
+															'No es un archivo PDF',
+													})
+												else {
+													showToast({
+														color: 'success',
+														message:
+															'El archivo PDF se ha cargado correctamente',
+													})
 												}
-												type='file'
-												accept='application/pdf'
-												onChange={validationPDF}
-												isInvalid={
-													formik.touched
-														.attachedfile &&
-													formik.errors.attachedfile
-												}
-											/>
-											<Form.Control.Feedback type='invalid'>
-												{formik.errors.attachedfile}
-											</Form.Control.Feedback>
-										</InputGroup>
+											}}
+										/>
 									</Form.Group>
 								</Row>
 							</div>
@@ -250,4 +219,4 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 		</Modal>
 	)
 }
-export default PostForm
+export default SignupForm
