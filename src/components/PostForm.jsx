@@ -14,14 +14,22 @@ const getToDay = () => {
 	}-${ToDay.getUTCDate()}`
 	return now
 }
-const PostForm = ({ show, onHide, header, withDTO, semester }) => {
+const PostForm = ({
+	show,
+	onHide,
+	header,
+	buttonForm,
+	withDTO,
+	semester,
+	dto,
+}) => {
 	const formik = useFormik({
 		initialValues: {
-			title: '',
-			date: '',
-			code: '',
+			title: dto ? dto.title : '',
+			date: dto ? dto.date.slice(0, 10) : '',
+			code: dto ? dto.code : '',
 			semester: semester,
-			attachedfile: '',
+			attachedfile: dto ? dto.fileUrl : '',
 		},
 		validationSchema: Yup.object({
 			title: Yup.string()
@@ -39,19 +47,16 @@ const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 					/^[A-Z0-9]+[-]{1}[A-Z0-9]+[-]{1}[A-Z0-9]+$/,
 					'Este campo solo puede contener letras mayusculas, numeros con el siguiente formato Ej: (IPTI-234A-2021)'
 				),
-			semester: Yup.string()
-				.required('Campo obligatorio')
-				.matches(
-					/^[12]{1}[-][0-9]{4}$/,
-					'Por favor siga el siguiente formato Ej: (1-2021)'
-				),
+			semester: Yup.string().matches(
+				/^[12]{1}[-][0-9]{4}$/,
+				'Por favor siga el siguiente formato Ej: (1-2021)'
+			),
 			attachedfile: Yup.string().required(
 				'Es necesario subir un archivo para continuar'
 			),
 		}),
 
 		onSubmit: (values) => {
-			alert(JSON.stringify(values, null, 2))
 			if (withDTO) {
 				withDTO({
 					publicationDTO: {
@@ -69,7 +74,6 @@ const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 	const [fileUrl, setFileUrl] = useState('')
 	useEffect(() => {
 		if (fileUrl !== '') {
-			console.log('newURL: ', fileUrl)
 			formik.setValues({ ...formik.values, attachedfile: fileUrl })
 			showToast({
 				color: 'success',
@@ -154,6 +158,7 @@ const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 									<Form.Control
 										className='mb-2'
 										onChange={formik.handleChange}
+										value={formik.values.title}
 										isInvalid={
 											formik.touched.title &&
 											formik.errors.title
@@ -205,9 +210,14 @@ const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 									<Form.Control
 										className='mb-2'
 										type='text'
-										value={semester}
+										value={formik.values.semester}
 										disabled={true}
-										title='Este campo es llenado por defecto para el semestre actual'
+										title={
+											'Este campo es llenado por defecto ' +
+											(!dto
+												? 'para el semestre actual'
+												: 'con el semestre de la convocatoria')
+										}
 										isInvalid={formik.errors.semester}
 									/>
 									<Form.Control.Feedback type='invalid'>
@@ -261,7 +271,7 @@ const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 								type='submit'
 								variant='success'
 							>
-								CREAR
+								{buttonForm}
 							</Button>
 						</center>
 					</Modal.Body>

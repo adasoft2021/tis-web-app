@@ -120,6 +120,10 @@ export const PublicationProvider = ({ children }) => {
 	}
 
 	const updatePublication = async ({ publicationId, publicationDTO }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada...',
+		})
 		try {
 			const publication = await publicationService.updatePublication({
 				publicationId,
@@ -128,6 +132,10 @@ export const PublicationProvider = ({ children }) => {
 			dispatch({
 				type: PUBLICATION_ACTIONS.LOAD_UPDATE_PUBLICATION_SUCCESS,
 				payload: { publicationId, publicationDTO: publication },
+			})
+			showToast({
+				color: 'success',
+				message: 'Guardada exitosamente',
 			})
 		} catch ({
 			response: {

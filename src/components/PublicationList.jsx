@@ -32,7 +32,8 @@ const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 				header='Crear Convocatoria'
 				show={show}
 				onHide={() => setshow(false)}
-				semester={semester.semester || '2-2021'}
+				buttonForm={'CREAR'}
+				semester={semester ? semester.semester : '2-2021'}
 				withDTO={({ publicationDTO }) =>
 					createPublication({
 						publicationDTO: {
