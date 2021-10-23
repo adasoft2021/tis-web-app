@@ -14,7 +14,7 @@ const getToDay = () => {
 	}-${ToDay.getUTCDate()}`
 	return now
 }
-const PostForm = ({ show, onHide, header, fun, semester }) => {
+const PostForm = ({ show, onHide, header, withDTO, semester }) => {
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -52,6 +52,17 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 
 		onSubmit: (values) => {
 			alert(JSON.stringify(values, null, 2))
+			if (withDTO) {
+				withDTO({
+					publicationDTO: {
+						title: values.title,
+						date: values.date + 'T00:00:00.000Z',
+						code: values.code,
+						semester: values.semester,
+						fileUrl: values.attachedfile,
+					},
+				})
+			}
 		},
 	})
 	const { showToast } = useToast()
@@ -60,6 +71,10 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 		if (fileUrl !== '') {
 			console.log('newURL: ', fileUrl)
 			formik.setValues({ ...formik.values, attachedfile: fileUrl })
+			showToast({
+				color: 'success',
+				message: 'El archivo se ha cargando correctamente',
+			})
 		}
 	}, [fileUrl, setFileUrl])
 
@@ -79,18 +94,22 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 		}
 	}
 	const validationPDF = async (e) => {
-		if (e.target.files[0].type !== 'application/pdf') {
+		if (!e.target.files[0]) {
+			showToast({
+				color: 'danger',
+				message: 'No se ha subido ningun archivo',
+			})
+		} else if (e.target.files[0].type !== 'application/pdf') {
 			showToast({
 				color: 'danger',
 				message: 'No es un archivo PDF',
 			})
 		} else {
 			showToast({
-				color: 'success',
-				message: 'El archivo PDF se ha seleccionado correctamente',
+				color: 'info',
+				message: 'El archivo PDF se esta cargando...',
 			})
-			await uploadFile(e)
-			console.log(formik.values)
+			uploadFile(e)
 		}
 	}
 
@@ -189,6 +208,7 @@ const PostForm = ({ show, onHide, header, fun, semester }) => {
 										value={semester}
 										disabled={true}
 										title='Este campo es llenado por defecto para el semestre actual'
+										isInvalid={formik.errors.semester}
 									/>
 									<Form.Control.Feedback type='invalid'>
 										{formik.errors.semester}

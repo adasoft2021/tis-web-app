@@ -1,15 +1,19 @@
-import { Button, Col, Row, Spinner, Container } from 'react-bootstrap'
+import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
 import { useLocation } from 'wouter'
 import { useState } from 'react'
-import { useAllAdviserPublications } from '../context/providers/PublicationContext'
+import {
+	useAllAdviserPublications,
+	usePublication,
+} from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
 import PostForm from './PostForm'
 
-const NewPostButton = ({ buttonMessage }) => {
+const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
+	const { createPublication } = usePublication()
 	const [show, setshow] = useState(false)
 	return (
-		<Container>
+		<center>
 			<Button
 				variant='info'
 				className='rounded-circle'
@@ -24,15 +28,30 @@ const NewPostButton = ({ buttonMessage }) => {
 				show={show}
 				onHide={() => setshow(false)}
 				semester='2-2021'
+				withDTO={({ publicationDTO }) =>
+					createPublication({
+						publicationDTO: {
+							...publicationDTO,
+							type: publicationType,
+							createdById: adviserId,
+						},
+					})
+				}
 			/>
-		</Container>
+		</center>
 	)
 }
-export default function PublicationList({ buttonMessage, message }) {
+export default function PublicationList({
+	adviserId = 1,
+	buttonMessage,
+	message,
+}) {
 	const [location] = useLocation()
+	const publicationType = location.toUpperCase().replace('/', '')
+	const type = publicationType.slice(0, -1)
 	const { isLoading, publications } = useAllAdviserPublications({
-		adviserId: 1,
-		publicationType: location.toUpperCase().replace('/', ''),
+		adviserId: adviserId,
+		publicationType: publicationType,
 	})
 
 	if (isLoading) {
@@ -47,7 +66,11 @@ export default function PublicationList({ buttonMessage, message }) {
 		return (
 			<div className='d-flex flex-column align-items-center m-5 gap-3'>
 				<p className='text-muted display-6'>{message}</p>
-				<NewPostButton buttonMessage={buttonMessage} />
+				<NewPostButton
+					buttonMessage={buttonMessage}
+					publicationType={type}
+					adviserId={adviserId}
+				/>
 			</div>
 		)
 	}
@@ -57,11 +80,12 @@ export default function PublicationList({ buttonMessage, message }) {
 			{publications.map(({ id, ...rest }) => (
 				<PublicationCard key={id} id={id} {...rest} />
 			))}
-			<Col
-				sm={4}
-				className='d-flex align-items-center justify-content-center'
-			>
-				<NewPostButton buttonMessage={buttonMessage} />
+			<Col className='d-flex align-items-center justify-content-center'>
+				<NewPostButton
+					buttonMessage={buttonMessage}
+					publicationType={type}
+					adviserId={adviserId}
+				/>
 			</Col>
 		</Row>
 	)

@@ -158,17 +158,16 @@ export const PublicationProvider = ({ children }) => {
 				type: PUBLICATION_ACTIONS.LOAD_CREATE_PUBLICATION_SUCCESS,
 				payload: publication,
 			})
-		} catch ({
-			response: {
-				data: { message },
-				status,
-			},
-		}) {
+			showToast({
+				color: 'success',
+				message: 'Creada exitosamente',
+			})
+		} catch ({ response: { data, status } }) {
 			showToast({
 				color: 'danger',
 				message:
 					status < 500
-						? message
+						? data.message
 						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 		}
