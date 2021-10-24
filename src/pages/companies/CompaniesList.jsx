@@ -5,6 +5,7 @@ import {
 	CompanyProvider,
 	useAllCompanies,
 } from '../../context/providers/CompanyContext'
+import { userTypes, useUserType } from '../../context/providers/UserTypeContext'
 
 function CompaniesAccordion() {
 	const { isLoading, companies } = useAllCompanies()
@@ -27,11 +28,16 @@ function CompaniesAccordion() {
 }
 
 export default function CompaniesList({ title = 'Lista de GE' }) {
+	const { userType } = useUserType()
 	return (
 		<Page>
 			<CompanyProvider>
 				<h1>{title}</h1>
-				<CompaniesAccordion />
+				{userType === userTypes.ADVISER ? (
+					<CompaniesAccordion />
+				) : (
+					<p> COMPONENTE TABLA </p>
+				)}
 			</CompanyProvider>
 		</Page>
 	)
