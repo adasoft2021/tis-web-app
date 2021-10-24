@@ -7,6 +7,7 @@ import PostForm from './PostForm'
 import { useState } from 'react'
 
 export default function PublicationCard({
+	buttonMessage,
 	id,
 	title,
 	code,
@@ -60,7 +61,7 @@ export default function PublicationCard({
 								<FiEdit2 />
 							</Button>
 							<PostForm
-								header='Editar Convocatoria'
+								header={'Editar ' + buttonMessage.slice(6)}
 								show={showEdit}
 								onHide={() => setShowEdit(false)}
 								buttonForm={'GUARDAR'}

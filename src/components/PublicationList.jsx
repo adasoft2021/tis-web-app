@@ -1,7 +1,7 @@
 import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
 import { useLocation } from 'wouter'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
 	useAllAdviserPublications,
 	usePublication,
@@ -14,9 +14,7 @@ const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 	const { semester } = useCurrentSemester()
 	const { createPublication } = usePublication()
 	const [show, setshow] = useState(false)
-	useEffect(() => {
-		console.log(semester)
-	}, [semester])
+
 	return (
 		<center>
 			<Button
@@ -29,7 +27,7 @@ const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 				<IoIosAdd className='text-light' size={32} />
 			</Button>
 			<PostForm
-				header='Crear Convocatoria'
+				header={'Crear ' + buttonMessage.slice(6)}
 				show={show}
 				onHide={() => setshow(false)}
 				buttonForm={'CREAR'}
@@ -84,7 +82,12 @@ export default function PublicationList({
 	return (
 		<Row className='gy-4'>
 			{publications.map(({ id, ...rest }) => (
-				<PublicationCard key={id} id={id} {...rest} />
+				<PublicationCard
+					key={id}
+					buttonMessage={buttonMessage}
+					id={id}
+					{...rest}
+				/>
 			))}
 			<Col className='d-flex align-items-center justify-content-center'>
 				<NewPostButton
