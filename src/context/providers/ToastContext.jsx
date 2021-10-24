@@ -3,14 +3,14 @@ import { TOAST_ACTIONS } from '../actions/toastActions'
 
 import { toastInitialState, toastReducer } from '../reducers/toastReducer'
 
-const ToasContext = createContext({
+const ToastContext = createContext({
 	...toastInitialState,
 	closeToast: () => {},
 	showToast: ({ color, message }) => {},
 })
 
 export const useToast = () => {
-	const context = useContext(ToasContext)
+	const context = useContext(ToastContext)
 
 	return context
 }
@@ -29,8 +29,8 @@ export const ToastProvider = ({ children }) => {
 	}
 
 	return (
-		<ToasContext.Provider value={{ ...state, closeToast, showToast }}>
+		<ToastContext.Provider value={{ ...state, closeToast, showToast }}>
 			{children}
-		</ToasContext.Provider>
+		</ToastContext.Provider>
 	)
 }

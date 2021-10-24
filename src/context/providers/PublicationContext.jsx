@@ -120,6 +120,10 @@ export const PublicationProvider = ({ children }) => {
 	}
 
 	const updatePublication = async ({ publicationId, publicationDTO }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada...',
+		})
 		try {
 			const publication = await publicationService.updatePublication({
 				publicationId,
@@ -128,6 +132,10 @@ export const PublicationProvider = ({ children }) => {
 			dispatch({
 				type: PUBLICATION_ACTIONS.LOAD_UPDATE_PUBLICATION_SUCCESS,
 				payload: { publicationId, publicationDTO: publication },
+			})
+			showToast({
+				color: 'success',
+				message: 'Guardada exitosamente',
 			})
 		} catch ({
 			response: {
@@ -158,17 +166,16 @@ export const PublicationProvider = ({ children }) => {
 				type: PUBLICATION_ACTIONS.LOAD_CREATE_PUBLICATION_SUCCESS,
 				payload: publication,
 			})
-		} catch ({
-			response: {
-				data: { message },
-				status,
-			},
-		}) {
+			showToast({
+				color: 'success',
+				message: 'Creada exitosamente',
+			})
+		} catch ({ response: { data, status } }) {
 			showToast({
 				color: 'danger',
 				message:
 					status < 500
-						? message
+						? data.message
 						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 		}

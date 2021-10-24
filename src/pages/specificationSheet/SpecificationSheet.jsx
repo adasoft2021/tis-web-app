@@ -7,9 +7,9 @@ export default function SpecificationSheet() {
 		<Page>
 			<PublicationProvider>
 				<PublicationView
-					title='Publicacion de especificaciones'
+					title='Pliegos de especificaciones'
 					message='No existen pliegos de especificaciones'
-					buttonMessage='Nuevo pliego de especificaciones'
+					buttonMessage='Nuevo Pliego de Especificaciones'
 				/>
 			</PublicationProvider>
 		</Page>

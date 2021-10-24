@@ -10,6 +10,7 @@ import {
 export default function AppRouter() {
 	return (
 		<Switch>
+			<Route path='/' component={Announcement} />
 			<Route path='/announcements' component={Announcement} />
 			<Route path='/tablero' component={Board} />
 			<Route path='/404' component={NotFoundPage} />
