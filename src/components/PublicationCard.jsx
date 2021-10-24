@@ -3,21 +3,27 @@ import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { MdTimer } from 'react-icons/md'
 import { usePublication } from '../context/providers/PublicationContext'
+import PostForm from './PostForm'
+import { useState } from 'react'
 
 export default function PublicationCard({
+	buttonMessage,
 	id,
 	title,
 	code,
 	date,
 	fileUrl,
+	semester,
 	...rest
 }) {
-	const { deletePublication, loadPublicationToUpdate } = usePublication()
+	const { updatePublication, deletePublication, loadPublicationToUpdate } =
+		usePublication()
 
 	const handleUpdate = () => {
 		loadPublicationToUpdate({
 			publicationDTO: { id, title, code, date, fileUrl, ...rest },
 		})
+		setShowEdit(true)
 	}
 	const handleDelete = () => {
 		deletePublication({ publicationId: id })
@@ -25,8 +31,10 @@ export default function PublicationCard({
 
 	const showDate = (date) => {
 		date = new Date(date)
-		return `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
+		return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 	}
+
+	const [showEdit, setShowEdit] = useState(false)
 
 	return (
 		<Col sm={4}>
@@ -52,6 +60,20 @@ export default function PublicationCard({
 							>
 								<FiEdit2 />
 							</Button>
+							<PostForm
+								header={'Editar ' + buttonMessage.slice(6)}
+								show={showEdit}
+								onHide={() => setShowEdit(false)}
+								buttonForm={'GUARDAR'}
+								semester={semester}
+								withDTO={({ publicationDTO }) =>
+									updatePublication({
+										publicationId: id,
+										publicationDTO: publicationDTO,
+									})
+								}
+								dto={{ id, title, code, date, fileUrl }}
+							/>
 							<Button
 								variant='dark'
 								className='rounded-circle'

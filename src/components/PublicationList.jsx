@@ -1,15 +1,61 @@
 import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
 import { useLocation } from 'wouter'
-
-import { useAllAdviserPublications } from '../context/providers/PublicationContext'
+import { useState } from 'react'
+import {
+	useAllAdviserPublications,
+	usePublication,
+} from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
+import PostForm from './PostForm'
+import { useCurrentSemester } from '../context/providers/SemesterContext'
 
-export default function PublicationList({ buttonMessage, message }) {
+const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
+	const { semester } = useCurrentSemester()
+	const { createPublication } = usePublication()
+	const [show, setshow] = useState(false)
+
+	return (
+		<center>
+			<Button
+				variant='info'
+				className='rounded-circle'
+				style={{ width: '56px', height: '56px' }}
+				title={buttonMessage}
+				onClick={() => setshow(true)}
+			>
+				<IoIosAdd className='text-light' size={32} />
+			</Button>
+			<PostForm
+				header={'Crear ' + buttonMessage.slice(6)}
+				show={show}
+				onHide={() => setshow(false)}
+				buttonForm={'CREAR'}
+				semester={semester ? semester.semester : '2-2021'}
+				withDTO={({ publicationDTO }) =>
+					createPublication({
+						publicationDTO: {
+							...publicationDTO,
+							type: publicationType,
+							createdById: adviserId,
+						},
+					})
+				}
+			/>
+		</center>
+	)
+}
+export default function PublicationList({
+	adviserId = 1,
+	buttonMessage,
+	message,
+}) {
 	const [location] = useLocation()
+	const publicationType = location.toUpperCase().replace('/', '')
+	const type = publicationType.slice(0, -1)
 	const { isLoading, publications } = useAllAdviserPublications({
-		adviserId: 1,
-		publicationType: location.toUpperCase().replace('/', ''),
+		adviserId: adviserId,
+		publicationType: publicationType,
 	})
 
 	if (isLoading) {
@@ -24,14 +70,11 @@ export default function PublicationList({ buttonMessage, message }) {
 		return (
 			<div className='d-flex flex-column align-items-center m-5 gap-3'>
 				<p className='text-muted display-6'>{message}</p>
-				<Button
-					variant='info'
-					className='rounded-circle'
-					style={{ width: '56px', height: '56px' }}
-					title={buttonMessage}
-				>
-					<IoIosAdd className='text-light' size={32} />
-				</Button>
+				<NewPostButton
+					buttonMessage={buttonMessage}
+					publicationType={type}
+					adviserId={adviserId}
+				/>
 			</div>
 		)
 	}
@@ -39,20 +82,19 @@ export default function PublicationList({ buttonMessage, message }) {
 	return (
 		<Row className='gy-4'>
 			{publications.map(({ id, ...rest }) => (
-				<PublicationCard key={id} id={id} {...rest} />
+				<PublicationCard
+					key={id}
+					buttonMessage={buttonMessage}
+					id={id}
+					{...rest}
+				/>
 			))}
-			<Col
-				sm={4}
-				className='d-flex align-items-center justify-content-center'
-			>
-				<Button
-					variant='info'
-					className='rounded-circle'
-					style={{ width: '56px', height: '56px' }}
-					title={buttonMessage}
-				>
-					<IoIosAdd className='text-light' size={32} />
-				</Button>
+			<Col className='d-flex align-items-center justify-content-center'>
+				<NewPostButton
+					buttonMessage={buttonMessage}
+					publicationType={type}
+					adviserId={adviserId}
+				/>
 			</Col>
 		</Row>
 	)

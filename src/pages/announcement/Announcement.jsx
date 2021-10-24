@@ -9,7 +9,7 @@ export default function Announcement() {
 				<PublicationView
 					title='Convocatorias'
 					message='No existen convocatorias'
-					buttonMessage='Nueva convocatoria'
+					buttonMessage='Nueva Convocatoria'
 				/>
 			</PublicationProvider>
 		</Page>
