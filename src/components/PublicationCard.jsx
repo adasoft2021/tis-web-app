@@ -15,6 +15,15 @@ const validateDate = (datePublication) => {
 	return datePublication.toDateString() < currentDate.toDateString()
 }
 
+const validateSemester = (semesterPublication, currentSemester) => {
+	semesterPublication = semesterPublication.split('-')
+	currentSemester = currentSemester.split('-')
+
+	return semesterPublication[1] < currentSemester[1]
+		? true
+		: semesterPublication[0] < currentSemester[0]
+}
+
 export default function PublicationCard({
 	buttonMessage,
 	id,
@@ -105,8 +114,11 @@ export default function PublicationCard({
 										</>
 									)}
 									{currentSemester &&
-										currentSemester.semester === semester &&
-										validateDate(date) && (
+										(validateSemester(
+											semester,
+											currentSemester.semester
+										) ||
+											validateDate(date)) && (
 											<Button
 												variant='dark'
 												className='rounded-circle'
