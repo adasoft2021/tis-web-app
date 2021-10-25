@@ -9,8 +9,10 @@ import {
 import PublicationCard from './PublicationCard'
 import PostForm from './PostForm'
 import { useCurrentSemester } from '../context/providers/SemesterContext'
+import { userTypes, useUserType } from '../context/providers/UserTypeContext'
 
 const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
+	const { userType } = useUserType()
 	const { semester } = useCurrentSemester()
 	const { createPublication } = usePublication()
 	const [show, setshow] = useState(false)
@@ -26,22 +28,24 @@ const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 			>
 				<IoIosAdd className='text-light' size={32} />
 			</Button>
-			<PostForm
-				header={'Crear ' + buttonMessage.slice(6)}
-				show={show}
-				onHide={() => setshow(false)}
-				buttonForm={'CREAR'}
-				semester={semester ? semester.semester : '2-2021'}
-				withDTO={({ publicationDTO }) =>
-					createPublication({
-						publicationDTO: {
-							...publicationDTO,
-							type: publicationType,
-							createdById: adviserId,
-						},
-					})
-				}
-			/>
+			{userType === userTypes.ADVISER && (
+				<PostForm
+					header={'Crear ' + buttonMessage.slice(6)}
+					show={show}
+					onHide={() => setshow(false)}
+					buttonForm={'CREAR'}
+					semester={semester ? semester.semester : '2-2021'}
+					withDTO={({ publicationDTO }) =>
+						createPublication({
+							publicationDTO: {
+								...publicationDTO,
+								type: publicationType,
+								createdById: adviserId,
+							},
+						})
+					}
+				/>
+			)}
 		</center>
 	)
 }
@@ -51,6 +55,7 @@ export default function PublicationList({
 	message,
 }) {
 	const [location] = useLocation()
+	const { userType } = useUserType()
 	const publicationType = location.toUpperCase().replace('/', '')
 	const type = publicationType.slice(0, -1)
 	const { isLoading, publications } = useAllAdviserPublications({
@@ -70,11 +75,13 @@ export default function PublicationList({
 		return (
 			<div className='d-flex flex-column align-items-center m-5 gap-3'>
 				<p className='text-muted display-6'>{message}</p>
-				<NewPostButton
-					buttonMessage={buttonMessage}
-					publicationType={type}
-					adviserId={adviserId}
-				/>
+				{userType === userTypes.ADVISER && (
+					<NewPostButton
+						buttonMessage={buttonMessage}
+						publicationType={type}
+						adviserId={adviserId}
+					/>
+				)}
 			</div>
 		)
 	}
@@ -90,11 +97,13 @@ export default function PublicationList({
 				/>
 			))}
 			<Col className='d-flex align-items-center justify-content-center'>
-				<NewPostButton
-					buttonMessage={buttonMessage}
-					publicationType={type}
-					adviserId={adviserId}
-				/>
+				{userType === userTypes.ADVISER && (
+					<NewPostButton
+						buttonMessage={buttonMessage}
+						publicationType={type}
+						adviserId={adviserId}
+					/>
+				)}
 			</Col>
 		</Row>
 	)
