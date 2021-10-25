@@ -6,6 +6,14 @@ import { usePublication } from '../context/providers/PublicationContext'
 import PostForm from './PostForm'
 import { useState } from 'react'
 import { userTypes, useUserType } from '../context/providers/UserTypeContext'
+import { useSemester } from '../context/providers/SemesterContext'
+
+const validateDate = (datePublication) => {
+	datePublication = new Date(datePublication)
+	const currentDate = new Date()
+
+	return datePublication.toDateString() < currentDate.toDateString()
+}
 
 export default function PublicationCard({
 	buttonMessage,
@@ -17,6 +25,7 @@ export default function PublicationCard({
 	semester,
 	...rest
 }) {
+	const { semester: currentSemester } = useSemester()
 	const { userType } = useUserType()
 
 	const { updatePublication, deletePublication, loadPublicationToUpdate } =
@@ -58,36 +67,54 @@ export default function PublicationCard({
 						<div className='d-flex gap-2'>
 							{userType === userTypes.ADVISER && (
 								<>
-									<Button
-										variant='dark'
-										className='rounded-circle'
-										onClick={handleUpdate}
-									>
-										<FiEdit2 />
-									</Button>
-									<PostForm
-										header={
-											'Editar ' + buttonMessage.slice(6)
-										}
-										show={showEdit}
-										onHide={() => setShowEdit(false)}
-										buttonForm={'GUARDAR'}
-										semester={semester}
-										withDTO={({ publicationDTO }) =>
-											updatePublication({
-												publicationId: id,
-												publicationDTO: publicationDTO,
-											})
-										}
-										dto={{ id, title, code, date, fileUrl }}
-									/>
-									<Button
-										variant='dark'
-										className='rounded-circle'
-										onClick={handleDelete}
-									>
-										<RiDeleteBin6Line />
-									</Button>
+									{validateDate(date) && (
+										<>
+											<Button
+												variant='dark'
+												className='rounded-circle'
+												onClick={handleUpdate}
+											>
+												<FiEdit2 />
+											</Button>
+											<PostForm
+												header={
+													'Editar ' +
+													buttonMessage.slice(6)
+												}
+												show={showEdit}
+												onHide={() =>
+													setShowEdit(false)
+												}
+												buttonForm={'GUARDAR'}
+												semester={semester}
+												withDTO={({ publicationDTO }) =>
+													updatePublication({
+														publicationId: id,
+														publicationDTO:
+															publicationDTO,
+													})
+												}
+												dto={{
+													id,
+													title,
+													code,
+													date,
+													fileUrl,
+												}}
+											/>
+										</>
+									)}
+									{currentSemester &&
+										currentSemester.semester === semester &&
+										validateDate(date) && (
+											<Button
+												variant='dark'
+												className='rounded-circle'
+												onClick={handleDelete}
+											>
+												<RiDeleteBin6Line />
+											</Button>
+										)}
 								</>
 							)}
 						</div>
