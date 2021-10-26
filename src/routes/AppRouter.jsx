@@ -1,4 +1,5 @@
 import { Route, Switch } from 'wouter'
+import { CompanyProvider } from '../context/providers/CompanyContext'
 import {
 	Board,
 	NotFoundPage,
@@ -19,7 +20,14 @@ export default function AppRouter() {
 				path='/specification_sheets'
 				component={SpecificationSheet}
 			/>
-			<Route path='/companies' component={CompaniesList} />
+			<Route
+				path='/companies'
+				component={(props) => (
+					<CompanyProvider>
+						<CompaniesList {...props} />
+					</CompanyProvider>
+				)}
+			/>
 
 			<Route component={NotFoundPage} />
 		</Switch>
