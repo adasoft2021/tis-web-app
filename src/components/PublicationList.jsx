@@ -1,15 +1,25 @@
 import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
 import { useLocation } from 'wouter'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
 	useAllAdviserPublications,
 	usePublication,
 } from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
 import PostForm from './PostForm'
-import { useCurrentSemester } from '../context/providers/SemesterContext'
+import {
+	useCurrentSemester,
+	useSemester,
+} from '../context/providers/SemesterContext'
 import { userTypes, useUserType } from '../context/providers/UserTypeContext'
+
+const validateDate = (datePublication) => {
+	datePublication = new Date(datePublication)
+	const currentDate = new Date()
+
+	return datePublication > currentDate
+}
 
 const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 	const { userType } = useUserType()
@@ -54,14 +64,33 @@ export default function PublicationList({
 	buttonMessage,
 	message,
 }) {
+	const [filteredPublications, setFilteredPublications] = useState([])
+	const { semester: currentSemester } = useSemester()
 	const [location] = useLocation()
 	const { userType } = useUserType()
-	const publicationType = location.toUpperCase().replace('/', '')
+	const publicationType =
+		location === '/'
+			? 'ANNOUNCEMENTS'
+			: location.toUpperCase().replace('/', '')
 	const type = publicationType.slice(0, -1)
 	const { isLoading, publications } = useAllAdviserPublications({
 		adviserId: adviserId,
 		publicationType: publicationType,
 	})
+
+	useEffect(() => {
+		setFilteredPublications(
+			publications.filter((publication) => {
+				if (userType === userTypes.ADVISER) {
+					return true
+				}
+				return (
+					publication.semester === currentSemester.semester &&
+					!validateDate(publication.date)
+				)
+			})
+		)
+	}, [publications, userType])
 
 	if (isLoading) {
 		return (
@@ -71,7 +100,7 @@ export default function PublicationList({
 		)
 	}
 
-	if (!publications.length) {
+	if (!filteredPublications.length) {
 		return (
 			<div className='d-flex flex-column align-items-center m-5 gap-3'>
 				<p className='text-muted display-6'>{message}</p>
@@ -88,7 +117,7 @@ export default function PublicationList({
 
 	return (
 		<Row className='gy-4'>
-			{publications.map(({ id, ...rest }) => (
+			{filteredPublications.map(({ id, ...rest }) => (
 				<PublicationCard
 					key={id}
 					buttonMessage={buttonMessage}

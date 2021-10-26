@@ -1,66 +1,24 @@
-import { Button, Form } from 'react-bootstrap'
-import {
-	IoIosSync,
-	IoMdSend,
-	IoIosWarning,
-	IoMdCheckmark,
-} from 'react-icons/io'
-import { useState } from 'react'
-import { useWelcome } from '../../context/providers/WelcomeContext'
-import Page from '../Page'
+import { Redirect } from 'wouter'
+import PublicationView from '../../components/PublicationView'
+import { PublicationProvider } from '../../context/providers/PublicationContext'
+import { useUserType } from '../../context/providers/UserTypeContext'
 
 export default function HomePage() {
-	const { errorMessage, isLoading, loadMessage, message } = useWelcome()
-	const [showMessage, setShowMessage] = useState(false)
+	const { userType } = useUserType()
 
-	const handleSubmit = async (e) => {
-		e.preventDefault()
-		await loadMessage(e.target[0].value)
-		setShowMessage(true)
+	if (userType) {
+		return <Redirect to='/announcements' />
 	}
 
 	return (
-		<Page>
-			{showMessage ? (
-				<>
-					<h1>Respuesta de la API:</h1>
-					<p style={{ textAlign: 'center', maxWidth: '80vw' }}>
-						{isLoading ? (
-							<IoIosSync />
-						) : (
-							<>
-								{errorMessage ? (
-									<>
-										<IoIosWarning className='text-warning' />{' '}
-										{errorMessage}{' '}
-									</>
-								) : (
-									<>
-										<IoMdCheckmark className='text-success' />{' '}
-										{message}
-									</>
-								)}
-							</>
-						)}
-					</p>
-				</>
-			) : (
-				<Form onSubmit={handleSubmit}>
-					<Form.Group className='mb-3'>
-						<Form.Label htmlFor='username'>
-							Nombre de usuario:
-						</Form.Label>
-						<Form.Control
-							id='username'
-							name='username'
-							placeholder='Ingrese su nombre de usuario'
-						/>
-					</Form.Group>
-					<Button type='submit'>
-						Enviar <IoMdSend />
-					</Button>
-				</Form>
-			)}
-		</Page>
+		<div className='my-5'>
+			<PublicationProvider>
+				<PublicationView
+					title='Convocatorias Publicadas'
+					message='No existen convocatorias'
+					buttonMessage='Nueva Convocatoria'
+				/>
+			</PublicationProvider>
+		</div>
 	)
 }
