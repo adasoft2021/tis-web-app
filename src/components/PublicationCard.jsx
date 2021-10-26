@@ -12,7 +12,7 @@ const validateDate = (datePublication) => {
 	datePublication = new Date(datePublication)
 	const currentDate = new Date()
 
-	return datePublication.toDateString() < currentDate.toDateString()
+	return datePublication > currentDate
 }
 
 const validateSemester = (semesterPublication, currentSemester) => {
