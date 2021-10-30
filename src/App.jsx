@@ -2,16 +2,16 @@ import Toast from './components/Toast'
 import { ToastProvider } from './context/providers/ToastContext'
 import AppRouter from './routes/AppRouter'
 import { SemesterProvider } from './context/providers/SemesterContext'
-import { UserTypeProvider } from './context/providers/UserTypeContext'
+import { UserCredentialsProvider } from './context/providers/UserCredentialsContext'
 function App() {
 	return (
 		<ToastProvider>
 			<Toast />
-			<SemesterProvider>
-				<UserTypeProvider>
+			<UserCredentialsProvider>
+				<SemesterProvider>
 					<AppRouter />
-				</UserTypeProvider>
-			</SemesterProvider>
+				</SemesterProvider>
+			</UserCredentialsProvider>
 		</ToastProvider>
 	)
 }
