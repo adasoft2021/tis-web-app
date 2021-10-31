@@ -36,6 +36,12 @@ export const companyReducer = (state, { type, payload }) => {
 				...state,
 				isLoading: false,
 			}
+		case COMPANY_ACTIONS.LOAD_REGISTER_COMPANY:
+			return {
+				...state,
+				isLoading: true,
+			}
+
 		default:
 			return state
 	}
