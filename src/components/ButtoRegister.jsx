@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from 'react-bootstrap'
-import GERegistrationForm from './GERegistrationForm'
+import CGRegistrationForm from './CGregistrationForm'
 export default function ButtonInformattionGE() {
 	const [modalShow, setModalShow] = React.useState(false)
 	return (
@@ -9,7 +9,7 @@ export default function ButtonInformattionGE() {
 				Registrar G.E.
 			</Button>
 
-			<GERegistrationForm
+			<CGRegistrationForm
 				show={modalShow}
 				onHide={() => setModalShow(false)}
 			/>
