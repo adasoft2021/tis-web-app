@@ -4,7 +4,7 @@ import { Modal, Form, Button, Row, InputGroup } from 'react-bootstrap'
 import swal from 'sweetalert'
 import * as Yup from 'yup'
 
-const InformationGE = ({ show, onHide }) => {
+const CGregistrationForm = ({ show, onHide }) => {
 	const formik = useFormik({
 		initialValues: {
 			codRegister: '',
@@ -47,7 +47,6 @@ const InformationGE = ({ show, onHide }) => {
 		}),
 		onSubmit: (values) => {
 			alert(JSON.stringify(values, null, 2))
-			console.log(InformationGE)
 		},
 	})
 	return (
@@ -200,4 +199,4 @@ const InformationGE = ({ show, onHide }) => {
 	)
 }
 
-export default InformationGE
+export default CGregistrationForm
