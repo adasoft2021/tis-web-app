@@ -9,6 +9,7 @@ const CompanyContext = createContext({
 	...companyInitialState,
 	getAllCompanies: async () => {},
 	getCompany: async ({ companyId }) => {},
+	registerCompany: async ({ registrationCode, companyDTO }) => {},
 })
 
 export const useCompany = () => {
@@ -56,6 +57,7 @@ export const CompanyProvider = ({ children }) => {
 			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
 		}
 	}
+
 	const getCompany = async ({ companyId }) => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANY })
 		try {
@@ -81,12 +83,37 @@ export const CompanyProvider = ({ children }) => {
 		}
 	}
 
+	const registerCompany = async ({ registrationCode, companyDTO }) => {
+		dispatch({ type: COMPANY_ACTIONS.LOAD_REGISTER_COMPANY })
+		try {
+			const credentials = await companyService.registerCompany({
+				registrationCode,
+				companyDTO,
+			})
+			localStorage.setItem('credentials', JSON.stringify(credentials))
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'El servicio no está disponible en estos momentos',
+			})
+			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<CompanyContext.Provider
 			value={{
 				...state,
 				getAllCompanies,
 				getCompany,
+				registerCompany,
 			}}
 		>
 			{children}
