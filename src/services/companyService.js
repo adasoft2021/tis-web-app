@@ -18,3 +18,10 @@ export async function registerCompany({ registrationCode, companyDTO }) {
 	})
 	return response.data
 }
+
+export async function updateCompany({ token, companyDTO, companyId }) {
+	const response = await companyService.put(`/${companyId}`, companyDTO, {
+		headers: { Authorization: token },
+	})
+	return response.data
+}

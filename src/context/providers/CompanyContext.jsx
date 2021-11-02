@@ -10,6 +10,7 @@ const CompanyContext = createContext({
 	getAllCompanies: async () => {},
 	getCompany: async ({ companyId }) => {},
 	registerCompany: async ({ registrationCode, companyDTO }) => {},
+	updateCompany: async ({ token, companyDTO, companyId }) => {},
 })
 
 export const useCompany = () => {
@@ -107,6 +108,35 @@ export const CompanyProvider = ({ children }) => {
 			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
 		}
 	}
+
+	const updateCompany = async ({ token, companyDTO, companyId }) => {
+		dispatch({ type: COMPANY_ACTIONS.LOAD_UPDATE_COMPANY })
+		try {
+			const company = await companyService.updateCompany({
+				token,
+				companyDTO,
+				companyId,
+			})
+			dispatch({
+				type: COMPANY_ACTIONS.LOAD_UPDATE_COMPANY_SUCCESS,
+				payload: company,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'El servicio no está disponible en estos momentos',
+			})
+			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<CompanyContext.Provider
 			value={{
@@ -114,6 +144,7 @@ export const CompanyProvider = ({ children }) => {
 				getAllCompanies,
 				getCompany,
 				registerCompany,
+				updateCompany,
 			}}
 		>
 			{children}
