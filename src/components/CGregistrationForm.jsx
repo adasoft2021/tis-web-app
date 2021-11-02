@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import { Modal, Form, Button, Row, InputGroup } from 'react-bootstrap'
 import swal from 'sweetalert'
@@ -49,153 +49,156 @@ const CGregistrationForm = ({ show, onHide }) => {
 			alert(JSON.stringify(values, null, 2))
 		},
 	})
+
+	const [activeInputs, setActiveInputs] = useState(false)
+	function update(e) {
+		formik.handleChange(e)
+		if (e.target.value) {
+			setActiveInputs(true)
+		} else {
+			setActiveInputs(false)
+		}
+	}
 	return (
-		<Modal
-			show={show}
-			onHide={onHide}
-			size='lg'
-			aria-labelledby='contained-modal-title-vcenter'
-			centered
-			backdrop='static'
-			keyboard={false}
-		>
-			<Modal.Body className=' bg-dark text-light '>
-				<Form className='p-5' onSubmit={formik.handleSubmit}>
-					<div className='mb-4'>
-						<div className=' d-flex justify-content-end'>
-							<Button
-								className='text-light btn-danger'
-								onClick={() =>
-									swal({
-										text: ' ¿Seguro que quiere salir? Se borrará los datos ingresados.',
-										icon: 'warning',
-										buttons: ['Seguir editando', 'Si'],
-									}).then((answer) => {
-										if (answer) {
-											onHide()
-											formik.handleReset()
-										}
-									})
-								}
-							>
-								X
-							</Button>
-						</div>
-					</div>
-					<Row>
-						<center className='mb-3'>
-							<h2>Registro de Grupo-Empresa</h2>
-						</center>
-
-						<Form.Group controlId='codRegister'>
-							<Form.Label className='fs-4'>
-								Cod. de Registro G.E
-							</Form.Label>
-							<InputGroup hasValidation>
-								<Form.Control
-									maxLength={11}
-									onChange={formik.handleChange}
-									value={formik.values.codRegister}
-									isInvalid={
-										formik.touched.codRegister &&
-										formik.errors.codRegister
+		<Modal.Body>
+			<Form className='p-5' onSubmit={formik.handleSubmit}>
+				<div className='mb-4'>
+					<div className=' d-flex justify-content-end'>
+						<Button
+							className='text-light btn-danger'
+							onClick={() =>
+								swal({
+									text: ' ¿Seguro que quiere salir? Se borrará los datos ingresados.',
+									icon: 'warning',
+									buttons: ['Seguir editando', 'Si'],
+								}).then((answer) => {
+									if (answer) {
+										onHide()
+										formik.handleReset()
 									}
-									onkeydown='if(this.value.length==4) return false;'
-								/>
-								<Form.Control.Feedback type='invalid'>
-									{formik.errors.codRegister}
-								</Form.Control.Feedback>
-							</InputGroup>
-						</Form.Group>
-
-						<Form.Group controlId='email'>
-							<Form.Label className='fs-4'>E-mail</Form.Label>
-							<InputGroup hasValidation>
-								<Form.Control
-									onChange={formik.handleChange}
-									value={formik.values.email}
-									isInvalid={
-										formik.touched.email &&
-										formik.errors.email
-									}
-								/>
-								<Form.Control.Feedback type='invalid'>
-									{formik.errors.email}
-								</Form.Control.Feedback>
-							</InputGroup>
-						</Form.Group>
-
-						<Form.Group controlId='shortname'>
-							<Form.Label className='fs-4'>
-								Nombre corto
-							</Form.Label>
-							<InputGroup hasValidation>
-								<Form.Control
-									onChange={formik.handleChange}
-									value={formik.values.shortname}
-									isInvalid={
-										formik.touched.shortname &&
-										formik.errors.shortname
-									}
-								/>
-								<Form.Control.Feedback type='invalid'>
-									{formik.errors.shortname}
-								</Form.Control.Feedback>
-							</InputGroup>
-						</Form.Group>
-
-						<Form.Group controlId='largename'>
-							<Form.Label className='fs-4'>
-								Nombre largo
-							</Form.Label>
-							<InputGroup hasValidation>
-								<Form.Control
-									onChange={formik.handleChange}
-									value={formik.values.largename}
-									isInvalid={
-										formik.touched.largename &&
-										formik.errors.largename
-									}
-								/>
-								<Form.Control.Feedback type='invalid'>
-									{formik.errors.largename}
-								</Form.Control.Feedback>
-							</InputGroup>
-						</Form.Group>
-						<Form.Group controlId='society'>
-							<Form.Label className='fs-4'>
-								Tipo de Sociedad
-							</Form.Label>
-							<InputGroup hasValidation>
-								<Form.Select
-									onChange={formik.handleChange}
-									value={formik.values.society}
-									isInvalid={
-										formik.touched.society &&
-										formik.errors.society
-									}
-								>
-									<option></option>
-									<option>SRL</option>
-									<option>SA</option>
-									<option>SC</option>
-									<option>RL</option>
-								</Form.Select>
-
-								<Form.Control.Feedback type='invalid'>
-									{formik.errors.society}
-								</Form.Control.Feedback>
-							</InputGroup>
-						</Form.Group>
-					</Row>
-					<center>
-						<Button className='m-4' type='submit' variant='success'>
-							REGISTRARSE
+								})
+							}
+						>
+							X
 						</Button>
+					</div>
+				</div>
+				<Row>
+					<center className='mb-3'>
+						<h2>Registro de Grupo-Empresa</h2>
 					</center>
-				</Form>
-			</Modal.Body>
-		</Modal>
+
+					<Form.Group controlId='codRegister'>
+						<Form.Label className='fs-4'>
+							Cod. de Registro G.E
+						</Form.Label>
+						<InputGroup hasValidation>
+							<Form.Control
+								maxLength={11}
+								onChange={update}
+								value={formik.values.codRegister}
+								isInvalid={
+									formik.touched.codRegister &&
+									formik.errors.codRegister
+								}
+							/>
+							<Form.Control.Feedback type='invalid'>
+								{formik.errors.codRegister}
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Form.Group>
+
+					<Form.Group controlId='email'>
+						<Form.Label className='fs-4'>E-mail</Form.Label>
+						<InputGroup hasValidation>
+							<Form.Control
+								onChange={formik.handleChange}
+								value={formik.values.email}
+								isInvalid={
+									formik.touched.email && formik.errors.email
+								}
+								disabled={!activeInputs}
+							/>
+							<Form.Control.Feedback type='invalid'>
+								{formik.errors.email}
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Form.Group>
+
+					<Form.Group controlId='shortname'>
+						<Form.Label className='fs-4'>Nombre corto</Form.Label>
+						<InputGroup hasValidation>
+							<Form.Control
+								onChange={formik.handleChange}
+								value={formik.values.shortname}
+								isInvalid={
+									formik.touched.shortname &&
+									formik.errors.shortname
+								}
+								disabled={!activeInputs}
+							/>
+							<Form.Control.Feedback type='invalid'>
+								{formik.errors.shortname}
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Form.Group>
+
+					<Form.Group controlId='largename'>
+						<Form.Label className='fs-4'>Nombre largo</Form.Label>
+						<InputGroup hasValidation>
+							<Form.Control
+								onChange={formik.handleChange}
+								value={formik.values.largename}
+								isInvalid={
+									formik.touched.largename &&
+									formik.errors.largename
+								}
+								disabled={!activeInputs}
+							/>
+							<Form.Control.Feedback type='invalid'>
+								{formik.errors.largename}
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Form.Group>
+					<Form.Group controlId='society'>
+						<Form.Label className='fs-4'>
+							Tipo de Sociedad
+						</Form.Label>
+						<InputGroup hasValidation>
+							<Form.Select
+								onChange={formik.handleChange}
+								value={formik.values.society}
+								isInvalid={
+									formik.touched.society &&
+									formik.errors.society
+								}
+								disabled={!activeInputs}
+							>
+								<option></option>
+								<option>SRL</option>
+								<option>SA</option>
+								<option>SC</option>
+								<option>RL</option>
+							</Form.Select>
+
+							<Form.Control.Feedback type='invalid'>
+								{formik.errors.society}
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Form.Group>
+				</Row>
+				<center>
+					<Button
+						disabled={!activeInputs}
+						className='m-4'
+						type='submit'
+						variant='success'
+					>
+						REGISTRARSE
+					</Button>
+				</center>
+			</Form>
+		</Modal.Body>
 	)
 }
 

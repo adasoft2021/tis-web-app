@@ -4,6 +4,7 @@ import NotFoundPage from './NotFoundPage'
 import Board from './board'
 import SpecificationSheet from './specificationSheet'
 import CompaniesList from './companies'
+import Register from './register/Register'
 
 export {
 	Announcement,
@@ -12,4 +13,5 @@ export {
 	Board,
 	SpecificationSheet,
 	CompaniesList,
+	Register,
 }
