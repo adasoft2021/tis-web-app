@@ -12,7 +12,8 @@ import {
 	useCurrentSemester,
 	useSemester,
 } from '../context/providers/SemesterContext'
-import { userTypes, useUserType } from '../context/providers/UserTypeContext'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 const validateDate = (datePublication) => {
 	datePublication = new Date(datePublication)
@@ -22,7 +23,7 @@ const validateDate = (datePublication) => {
 }
 
 const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
-	const { userType } = useUserType()
+	const { userType } = useUserCredentials()
 	const { semester } = useCurrentSemester()
 	const { createPublication } = usePublication()
 	const [show, setshow] = useState(false)
@@ -67,7 +68,7 @@ export default function PublicationList({
 	const [filteredPublications, setFilteredPublications] = useState([])
 	const { semester: currentSemester } = useSemester()
 	const [location] = useLocation()
-	const { userType } = useUserType()
+	const { userType } = useUserCredentials()
 	const publicationType =
 		location === '/'
 			? 'ANNOUNCEMENTS'

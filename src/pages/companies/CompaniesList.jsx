@@ -8,8 +8,9 @@ import {
 	Button,
 } from 'react-bootstrap'
 import { useAllCompanies } from '../../context/providers/CompanyContext'
-import { userTypes, useUserType } from '../../context/providers/UserTypeContext'
 import React, { useState } from 'react'
+import { useUserCredentials } from '../../context/providers/UserCredentialsContext'
+import { userTypes } from '../../context/reducers/userCredentialsReducer'
 
 function CompaniesAccordion({ companies }) {
 	return (
@@ -68,20 +69,17 @@ function CompaniesGE({ dataList }) {
 	)
 }
 export default function CompaniesList({ title = 'Lista de GE' }) {
-	const { userType } = useUserType()
+	const { userType } = useUserCredentials()
 	const { isLoading, companies } = useAllCompanies()
-	console.log(companies)
-	if (isLoading) {
-		return (
-			<div className='d-flex m-5 justify-content-center align-items-center'>
-				<Spinner animation='border' />
-			</div>
-		)
-	}
+
 	return (
 		<Page>
 			<h1>{title}</h1>
-			{userType === userTypes.ADVISER ? (
+			{isLoading ? (
+				<div className='d-flex m-5 justify-content-center align-items-center'>
+					<Spinner animation='border' />
+				</div>
+			) : userType === userTypes.ADVISER ? (
 				<CompaniesAccordion companies={companies} />
 			) : (
 				<CompaniesGE dataList={companies} />

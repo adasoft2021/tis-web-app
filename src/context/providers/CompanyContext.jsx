@@ -4,6 +4,7 @@ import * as companyService from '../../services/companyService'
 import { companyInitialState, companyReducer } from '../reducers/companyReducer'
 import { COMPANY_ACTIONS } from '../actions/companyActions'
 import { useToast } from './ToastContext'
+import { useUserCredentials } from './UserCredentialsContext'
 
 const CompanyContext = createContext({
 	...companyInitialState,
@@ -31,6 +32,7 @@ export const useAllCompanies = () => {
 
 export const CompanyProvider = ({ children }) => {
 	const { showToast } = useToast()
+	const { setUserCredentials } = useUserCredentials()
 
 	const [state, dispatch] = useReducer(companyReducer, companyInitialState)
 
@@ -91,7 +93,7 @@ export const CompanyProvider = ({ children }) => {
 				registrationCode,
 				companyDTO,
 			})
-			localStorage.setItem('credentials', JSON.stringify(credentials))
+			setUserCredentials(credentials)
 		} catch ({
 			response: {
 				data: { message },
