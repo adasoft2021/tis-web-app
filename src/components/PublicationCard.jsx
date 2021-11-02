@@ -5,8 +5,9 @@ import { MdTimer } from 'react-icons/md'
 import { usePublication } from '../context/providers/PublicationContext'
 import PostForm from './PostForm'
 import { useState } from 'react'
-import { userTypes, useUserType } from '../context/providers/UserTypeContext'
 import { useSemester } from '../context/providers/SemesterContext'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 const validateDate = (datePublication) => {
 	datePublication = new Date(datePublication)
@@ -35,7 +36,7 @@ export default function PublicationCard({
 	...rest
 }) {
 	const { semester: currentSemester } = useSemester()
-	const { userType } = useUserType()
+	const { userType } = useUserCredentials()
 
 	const { updatePublication, deletePublication, loadPublicationToUpdate } =
 		usePublication()
