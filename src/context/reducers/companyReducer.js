@@ -41,7 +41,17 @@ export const companyReducer = (state, { type, payload }) => {
 				...state,
 				isLoading: true,
 			}
-
+		case COMPANY_ACTIONS.LOAD_UPDATE_COMPANY:
+			return {
+				...state,
+				isLoading: true,
+			}
+		case COMPANY_ACTIONS.LOAD_UPDATE_COMPANY_SUCCESS:
+			return {
+				...state,
+				companyDTO: payload,
+				isLoading: false,
+			}
 		default:
 			return state
 	}
