@@ -7,7 +7,7 @@ export async function getAllCompanies() {
 	return response.data
 }
 
-export async function getCompany(companyId) {
+export async function getCompany({ companyId }) {
 	const response = await companyService.get(`/${companyId}`)
 	return response.data
 }
