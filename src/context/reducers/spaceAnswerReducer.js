@@ -18,6 +18,17 @@ export const spaceAnswerReducer = (state, { type, payload }) => {
 				...state,
 				spaceAnswers: [...state.spaceAnswers, payload],
 			}
+		case SPACE_ANSWER_ACTIONS.LOAD_SPACE_ANSWERS_LIST:
+			return {
+				...state,
+				isLoadig: true,
+			}
+		case SPACE_ANSWER_ACTIONS.LOAD_SPACE_ANSWERS_LIST_SUCCESS:
+			return {
+				...state,
+				spaceAnswers: payload,
+				isLoading: false,
+			}
 		case SPACE_ANSWER_ACTIONS.STOP_LOADING:
 			return {
 				...state,
