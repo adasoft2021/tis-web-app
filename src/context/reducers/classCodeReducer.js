@@ -13,8 +13,8 @@ export const classCodeReducer = (state, { type, payload }) => {
 			return { ...state, classCode: payload, isLoading: false }
 		case CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE:
 			return { ...state, isLoading: true }
-		case CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE_SUCCES:
-			return { ...state, isLoading: false }
+		case CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE_SUCCESS:
+			return { ...state, classCode: payload, isLoading: false }
 		case CLASSCODE_ACTIONS.STOP_LOADING:
 			return { ...state, classCode: null, isLoading: false }
 		default:

@@ -6,10 +6,13 @@ import * as Yup from 'yup'
 import { useToast } from '../context/providers/ToastContext'
 import styles from './PostForm.module.scss'
 import { app } from '../fb'
+import { useValidateClassCode } from '../context/providers/ClassCodeContext'
+import { useCompany } from '../context/providers/CompanyContext'
 
 // import AddInformationForm from './AddInformationForm'
 
 const CGregistrationForm = ({ show, onHide }) => {
+	const { registerCompany } = useCompany()
 	const formik = useFormik({
 		initialValues: {
 			codRegister: '',
@@ -67,7 +70,8 @@ const CGregistrationForm = ({ show, onHide }) => {
 					.required('Se requiere los nombres de al menos tres socios')
 					.matches(
 						/^[A-Za-z ]+$/,
-						'El nombre de socio solo admite letras mayusculas, minusculas y espacios'
+						'El nombre de socio solo admite letras mayusculas, ' +
+							'minusculas y espacios'
 					),
 			}),
 			partner2: Yup.string().when('check', {
@@ -76,7 +80,8 @@ const CGregistrationForm = ({ show, onHide }) => {
 					.required('Se requiere los nombres de al menos tres socios')
 					.matches(
 						/^[A-Za-z ]+$/,
-						'El nombre de socio solo admite letras mayusculas, minusculas y espacios'
+						'El nombre de socio solo admite letras mayusculas, ' +
+							'minusculas y espacios'
 					),
 			}),
 			partner3: Yup.string().when('check', {
@@ -85,62 +90,117 @@ const CGregistrationForm = ({ show, onHide }) => {
 					.required('Se requiere los nombres de al menos tres socios')
 					.matches(
 						/^[A-Za-z ]+$/,
-						'El nombre de socio solo admite letras mayusculas, minusculas y espacios'
+						'El nombre de socio solo admite letras mayusculas, ' +
+							'minusculas y espacios'
 					),
 			}),
 			partner4: Yup.string().when('check', {
 				is: true,
 				then: Yup.string().matches(
 					/^[A-Za-z ]+$/,
-					'El nombre de socio solo admite letras mayusculas, minusculas y espacios'
+					'El nombre de socio solo admite letras mayusculas, ' +
+						'minusculas y espacios'
 				),
 			}),
 			partner5: Yup.string().when('check', {
 				is: true,
 				then: Yup.string().matches(
 					/^[A-Za-z ]+$/,
-					'El nombre de socio solo admite letras mayusculas, minusculas y espacios'
+					'El nombre de socio solo admite letras mayusculas, ' +
+						'minusculas y espacios'
 				),
 			}),
-			telephone: Yup.string()
-				.required('Se requiere el teléfono de la GE')
-				.min(7, 'El teléfono debe tener minimo 7 caracteres')
-				.max(8, 'El teléfono debe tener maximo 8 caracteres')
-				.matches(/^[0-9]+$/, 'El teléfono debe tener solo numeros'),
-			address: Yup.string()
-				.required('Se requiere la dirección de la GE')
-				.min(10, 'La dirección debe tener minimo 10 caracteres')
-				.max(50, 'La dirección debe tener maximo 50 caracteres')
-				.matches(
-					/^[A-Za-z0-9./ ]+$/,
-					'La dirección debe tener solo  letras mayúsculas, minúsculas, espacios, numeros simbolos (.) y (/)'
+			telephone: Yup.string().when('check', {
+				is: true,
+				then: Yup.string()
+					.required('Se requiere el teléfono de la GE')
+					.min(7, 'El teléfono debe tener minimo 7 caracteres')
+					.max(8, 'El teléfono debe tener maximo 8 caracteres')
+					.matches(/^[0-9]+$/, 'El teléfono debe tener solo numeros'),
+			}),
+			address: Yup.string().when('check', {
+				is: true,
+				then: Yup.string()
+					.required('Se requiere la dirección de la GE')
+					.min(10, 'La dirección debe tener minimo 10 caracteres')
+					.max(50, 'La dirección debe tener maximo 50 caracteres')
+					.matches(
+						/^[A-Za-z0-9./ ]+$/,
+						'La dirección debe tener solo  letras mayúsculas, ' +
+							'minúsculas, espacios, numeros simbolos (.) y (/)'
+					),
+			}),
+			attachedfile: Yup.string().when('check', {
+				is: true,
+				then: Yup.string().required(
+					'Es necesario subir un archivo para continuar'
 				),
-			attachedfile: Yup.string().required(
-				'Es necesario subir un archivo para continuar'
-			),
+			}),
 		}),
 		onSubmit: (values) => {
 			swal({
-				text: ' ¿Seguro que quiere salir? Se borrará los datos ingresados.',
-				buttons: ['Cancelar', 'Confirmar'],
+				text: ' ¿Seguro de lo que va a enviar?',
+				buttons: ['Seguir editando', 'Sí'],
 			}).then((answer) => {
 				if (answer) {
 					alert(JSON.stringify(values, null, 2))
+					const dto = {
+						email: values.email,
+						shortName: values.shortname,
+						name: values.largename,
+						companyType: values.society,
+					}
+					const p4 =
+						values.check && values.partner4 ? [values.partner4] : []
+					const p5 =
+						values.check && values.partner5 ? [values.partner5] : []
+					registerCompany({
+						registrationCode: values.codRegister,
+						companyDTO: !values.check
+							? dto
+							: {
+									...dto,
+									address: values.address,
+									telephone: values.telephone,
+									partners: [
+										values.partner1,
+										values.partner2,
+										values.partner3,
+										...p4,
+										...p5,
+									],
+									logo: values.attachedfile,
+							  },
+					})
 				}
 			})
 		},
 	})
 
+	function codRegisterOnKeyDown(e) {
+		if (!e.key.match('[A-Za-z-]')) {
+			e.preventDefault()
+		}
+	}
 	const [activeInputs, setActiveInputs] = useState(false)
-
+	const { classCode, setCode } = useValidateClassCode()
 	function update(e) {
+		e.target.value = e.target.value.substring(0, 11)
+		e.target.value = e.target.value.toLowerCase()
 		formik.handleChange(e)
-		if (e.target.value) {
-			setActiveInputs(true)
+
+		if (e.target.value.length === 11) {
+			setCode(e.target.value)
+		}
+	}
+	useEffect(() => {
+		if (classCode) {
+			setActiveInputs(classCode.code.length === 11)
 		} else {
 			setActiveInputs(false)
 		}
-	}
+	}, [classCode])
+
 	const uploadFile = async (e) => {
 		const file = e.target.files[0]
 		const storageRef = app.storage().ref()
@@ -168,16 +228,15 @@ const CGregistrationForm = ({ show, onHide }) => {
 		}
 	}, [fileUrl, setFileUrl])
 	const validationLOGO = async (e) => {
-		console.log(e.target.files[0].type)
 		if (!e.target.files[0]) {
 			showToast({
 				color: 'danger',
 				message: 'No se ha subido ningun archivo',
 			})
-		} else if (e.target.files[0].type !== 'image/jpeg') {
+		} else if (!e.target.files[0].type.match('^image/')) {
 			showToast({
 				color: 'danger',
-				message: 'No es un archivo Imagen formato jpg',
+				message: 'No es un archivo de imagen',
 			})
 		} else {
 			showToast({
@@ -188,7 +247,7 @@ const CGregistrationForm = ({ show, onHide }) => {
 		}
 	}
 	return (
-		<Form className='p-5' onSubmit={formik.handleSubmit}>
+		<Form className='p-5' onSubmit={formik.handleSubmit} noValidate>
 			<Row>
 				<center className='mb-3'>
 					<h2>Registro de Grupo-Empresa</h2>
@@ -202,6 +261,8 @@ const CGregistrationForm = ({ show, onHide }) => {
 						<Form.Control
 							maxLength={11}
 							onChange={update}
+							onBlur={formik.handleBlur}
+							onKeyDown={codRegisterOnKeyDown}
 							value={formik.values.codRegister}
 							isInvalid={
 								formik.touched.codRegister &&
