@@ -82,6 +82,10 @@ export const ClassCodeProvider = ({ children }) => {
 
 	const validateClassCode = async ({ code }) => {
 		dispatch({ type: CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE })
+		showToast({
+			color: 'info',
+			message: 'El código de registro está siendo validado.',
+		})
 		try {
 			await classCodeService.validateClassCode({
 				code,

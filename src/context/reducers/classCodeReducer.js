@@ -2,7 +2,6 @@ import { CLASSCODE_ACTIONS } from '../actions/classCodeActions'
 
 export const classCodeInitialState = {
 	classCode: null,
-	classCodeDTO: { code: null },
 	isLoading: false,
 }
 
@@ -17,7 +16,7 @@ export const classCodeReducer = (state, { type, payload }) => {
 		case CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE_SUCCES:
 			return { ...state, isLoading: false }
 		case CLASSCODE_ACTIONS.STOP_LOADING:
-			return { ...state, isLoading: false }
+			return { ...state, classCode: null, isLoading: false }
 		default:
 			return state
 	}
