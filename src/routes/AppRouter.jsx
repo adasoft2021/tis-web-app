@@ -42,7 +42,7 @@ export default function AppRouter() {
 					)}
 				/>
 				<Route
-					path='/proyect-development/:spaceTitle/:spaceId'
+					path='/project-development/:spaceTitle/:spaceId'
 					component={({ params: { spaceId, spaceTitle } }) => (
 						<BoardFileUpload
 							spaceId={spaceId}
