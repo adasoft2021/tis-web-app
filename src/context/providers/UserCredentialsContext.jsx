@@ -31,7 +31,7 @@ export const UserCredentialsProvider = ({ children }) => {
 		} else {
 			dispatch({
 				type: USER_CREDENTIALS_ACTIONS.SET_USER_CREDENTIALS,
-				payload: { ...state, userType: 'ADVISER' },
+				payload: { ...state, userType: 'ADVISER', id: 1 },
 			})
 		}
 	}, [])

@@ -1,5 +1,6 @@
 import { Route, Switch } from 'wouter'
 import { CompanyProvider } from '../context/providers/CompanyContext'
+import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import {
 	Board,
 	NotFoundPage,
@@ -30,7 +31,35 @@ export default function AppRouter() {
 				)}
 			/>
 			<Route path='/boardFile' component={BoardFileUpload} />
-
+			<SpaceAnswerProvider>
+				<Route
+					path='/proposals-presentation/:spaceTitle/:spaceId'
+					component={({ params: { spaceId, spaceTitle } }) => (
+						<BoardFileUpload
+							spaceId={spaceId}
+							spaceTitle={decodeURI(spaceTitle)}
+						/>
+					)}
+				/>
+				<Route
+					path='/proyect-development/:spaceTitle/:spaceId'
+					component={({ params: { spaceId, spaceTitle } }) => (
+						<BoardFileUpload
+							spaceId={spaceId}
+							spaceTitle={decodeURI(spaceTitle)}
+						/>
+					)}
+				/>
+				<Route
+					path='/final-evaluation/:spaceTitle/:spaceId'
+					component={({ params: { spaceId, spaceTitle } }) => (
+						<BoardFileUpload
+							spaceId={spaceId}
+							spaceTitle={decodeURI(spaceTitle)}
+						/>
+					)}
+				/>
+			</SpaceAnswerProvider>
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
