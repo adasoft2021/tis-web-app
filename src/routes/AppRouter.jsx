@@ -7,6 +7,7 @@ import {
 	SpecificationSheet,
 	CompaniesList,
 	HomePage,
+	BoardFileUpload,
 } from '../pages'
 
 export default function AppRouter() {
@@ -28,6 +29,7 @@ export default function AppRouter() {
 					</CompanyProvider>
 				)}
 			/>
+			<Route path='/boardFile' component={BoardFileUpload} />
 
 			<Route component={NotFoundPage} />
 		</Switch>
