@@ -38,17 +38,18 @@ export const useAdviserSpaceAnswers = () => {
 
 export const SpaceAnswerProvider = ({ children }) => {
 	const { showToast } = useToast()
+	const { id, token } = useUserCredentials()
 
 	const [state, dispatch] = useReducer(
 		spaceAnswerReducer,
 		spaceAnswerInitialState
 	)
-	const { id } = useUserCredentials()
 
 	const createSpaceAnswer = async ({ spaceId, spaceAnswerDTO }) => {
 		dispatch({ type: SPACE_ANSWER_ACTIONS.LOAD_CREATE_SPACE_ANSWER })
 		try {
 			const spaceAnswer = await spaceAnswerService.createSpaceAnswer({
+				token,
 				spaceId,
 				spaceAnswerDTO,
 			})
@@ -82,6 +83,7 @@ export const SpaceAnswerProvider = ({ children }) => {
 			const spaceAnswers = await spaceAnswerService.getSpaceAnswers({
 				adviserId: id,
 				spaceId,
+				token,
 			})
 			dispatch({
 				type: SPACE_ANSWER_ACTIONS.LOAD_SPACE_ANSWERS_LIST_SUCCESS,

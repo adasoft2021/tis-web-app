@@ -5,6 +5,7 @@ import {
 	proposalInitialState,
 	proposalReducer,
 } from '../reducers/proposalReducer'
+import { useUserCredentials } from './UserCredentialsContext'
 
 export const ProposalContext = createContext({
 	...proposalInitialState,
@@ -29,12 +30,16 @@ export const useListProposals = () => {
 }
 
 export const ProposalProvider = ({ children }) => {
+	const { id, token } = useUserCredentials()
 	const [state, dispatch] = useReducer(proposalReducer, proposalInitialState)
 
 	const getAllAdviserProposals = async () => {
 		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
 		try {
-			const proposals = await proposalService.getAllAdviserProposals()
+			const proposals = await proposalService.getAllAdviserProposals({
+				token,
+				adviserId: id,
+			})
 			dispatch({
 				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_SUCCESS,
 				payload: proposals,
