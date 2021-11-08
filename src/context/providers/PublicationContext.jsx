@@ -7,6 +7,7 @@ import {
 } from '../reducers/publicationReducer'
 import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
 import { useToast } from './ToastContext'
+import { useUserCredentials } from './UserCredentialsContext'
 
 const PublicationContext = createContext({
 	...publicationInitialState,
@@ -24,13 +25,12 @@ export const usePublication = () => {
 	return context
 }
 
-export const useAllAdviserPublications = ({ adviserId, publicationType }) => {
+export const useAllAdviserPublications = (publicationType) => {
 	const { getAllAdviserPublications, isLoading, publications } =
 		usePublication()
 
 	useEffect(() => {
 		getAllAdviserPublications({
-			adviserId,
 			publicationType: publicationType.substring(
 				0,
 				publicationType.length - 1
@@ -43,21 +43,20 @@ export const useAllAdviserPublications = ({ adviserId, publicationType }) => {
 
 export const PublicationProvider = ({ children }) => {
 	const { showToast } = useToast()
+	const { id, token } = useUserCredentials()
 
 	const [state, dispatch] = useReducer(
 		publicationReducer,
 		publicationInitialState
 	)
 
-	const getAllAdviserPublications = async ({
-		adviserId,
-		publicationType,
-	}) => {
+	const getAllAdviserPublications = async ({ publicationType }) => {
 		dispatch({ type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST })
 		try {
 			const publications =
 				await publicationService.getAllAdviserPublications({
-					adviserId,
+					token,
+					adviserId: id,
 					publicationType,
 				})
 			dispatch({
@@ -83,7 +82,7 @@ export const PublicationProvider = ({ children }) => {
 
 	const deletePublication = async ({ publicationId }) => {
 		try {
-			await publicationService.deletePublication({ publicationId })
+			await publicationService.deletePublication({ token, publicationId })
 			dispatch({
 				type: PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_SUCCESS,
 				payload: publicationId,
@@ -126,6 +125,7 @@ export const PublicationProvider = ({ children }) => {
 		})
 		try {
 			const publication = await publicationService.updatePublication({
+				token,
 				publicationId,
 				publicationDTO,
 			})
@@ -160,6 +160,7 @@ export const PublicationProvider = ({ children }) => {
 		})
 		try {
 			const publication = await publicationService.createPublication({
+				token,
 				publicationDTO,
 			})
 			dispatch({

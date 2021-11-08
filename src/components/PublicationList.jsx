@@ -12,7 +12,8 @@ import {
 	useCurrentSemester,
 	useSemester,
 } from '../context/providers/SemesterContext'
-import { userTypes, useUserType } from '../context/providers/UserTypeContext'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 const validateDate = (datePublication) => {
 	datePublication = new Date(datePublication)
@@ -21,8 +22,8 @@ const validateDate = (datePublication) => {
 	return datePublication > currentDate
 }
 
-const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
-	const { userType } = useUserType()
+const NewPostButton = ({ buttonMessage, publicationType }) => {
+	const { id: adviserId, userType } = useUserCredentials()
 	const { semester } = useCurrentSemester()
 	const { createPublication } = usePublication()
 	const [show, setshow] = useState(false)
@@ -59,24 +60,18 @@ const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 		</center>
 	)
 }
-export default function PublicationList({
-	adviserId = 1,
-	buttonMessage,
-	message,
-}) {
+export default function PublicationList({ buttonMessage, message }) {
 	const [filteredPublications, setFilteredPublications] = useState([])
 	const { semester: currentSemester } = useSemester()
 	const [location] = useLocation()
-	const { userType } = useUserType()
+	const { userType } = useUserCredentials()
 	const publicationType =
 		location === '/'
 			? 'ANNOUNCEMENTS'
 			: location.toUpperCase().replace('/', '')
 	const type = publicationType.slice(0, -1)
-	const { isLoading, publications } = useAllAdviserPublications({
-		adviserId: adviserId,
-		publicationType: publicationType,
-	})
+	const { isLoading, publications } =
+		useAllAdviserPublications(publicationType)
 
 	useEffect(() => {
 		setFilteredPublications(
@@ -108,7 +103,6 @@ export default function PublicationList({
 					<NewPostButton
 						buttonMessage={buttonMessage}
 						publicationType={type}
-						adviserId={adviserId}
 					/>
 				)}
 			</div>
@@ -130,7 +124,6 @@ export default function PublicationList({
 					<NewPostButton
 						buttonMessage={buttonMessage}
 						publicationType={type}
-						adviserId={adviserId}
 					/>
 				)}
 			</Col>

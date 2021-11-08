@@ -38,7 +38,7 @@ export default function Page({ children }) {
 						</p>
 					</div>
 					<Nav
-						defaultActiveKey={location}
+						defaultActiveKey={`/${location.split('/')[1]}`}
 						variant='pills'
 						className='flex-column'
 					>
@@ -72,6 +72,32 @@ export default function Page({ children }) {
 								className='p-3 ps-4 border-bottom border-light text-light'
 							>
 								Lista de GE
+							</Nav.Link>
+						</Link>
+
+						<Link to='/proposals-presentation/Parte A/1'>
+							<Nav.Link
+								eventKey='/proposals-presentation'
+								className='p-3 ps-4 border-bottom border-light text-light'
+							>
+								Presentación de propuestas
+							</Nav.Link>
+						</Link>
+
+						<Link to='/project-development/Entregable semana 1/2'>
+							<Nav.Link
+								eventKey='/project-development'
+								className='p-3 ps-4 border-bottom border-light text-light'
+							>
+								Desarrollo de proyecto
+							</Nav.Link>
+						</Link>
+						<Link to='/final-evaluation/espacio 1/3'>
+							<Nav.Link
+								eventKey='/final-evaluation'
+								className='p-3 ps-4 border-bottom border-light text-light'
+							>
+								Evaluación final
 							</Nav.Link>
 						</Link>
 					</Nav>

@@ -4,12 +4,14 @@ import * as companyService from '../../services/companyService'
 import { companyInitialState, companyReducer } from '../reducers/companyReducer'
 import { COMPANY_ACTIONS } from '../actions/companyActions'
 import { useToast } from './ToastContext'
+import { useUserCredentials } from './UserCredentialsContext'
 
 const CompanyContext = createContext({
 	...companyInitialState,
 	getAllCompanies: async () => {},
 	getCompany: async ({ companyId }) => {},
 	registerCompany: async ({ registrationCode, companyDTO }) => {},
+	updateCompany: async ({ companyDTO, companyId }) => {},
 })
 
 export const useCompany = () => {
@@ -30,6 +32,7 @@ export const useAllCompanies = () => {
 
 export const CompanyProvider = ({ children }) => {
 	const { showToast } = useToast()
+	const { setUserCredentials, token } = useUserCredentials()
 
 	const [state, dispatch] = useReducer(companyReducer, companyInitialState)
 
@@ -61,7 +64,10 @@ export const CompanyProvider = ({ children }) => {
 	const getCompany = async ({ companyId }) => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANY })
 		try {
-			const company = await companyService.getCompany({ companyId })
+			const company = await companyService.getCompany({
+				token,
+				companyId,
+			})
 			dispatch({
 				type: COMPANY_ACTIONS.LOAD_COMPANY_SUCCESS,
 				payload: company,
@@ -90,7 +96,36 @@ export const CompanyProvider = ({ children }) => {
 				registrationCode,
 				companyDTO,
 			})
-			localStorage.setItem('credentials', JSON.stringify(credentials))
+			setUserCredentials(credentials)
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'El servicio no está disponible en estos momentos',
+			})
+			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
+		}
+	}
+
+	const updateCompany = async ({ companyDTO, companyId }) => {
+		dispatch({ type: COMPANY_ACTIONS.LOAD_UPDATE_COMPANY })
+		try {
+			const company = await companyService.updateCompany({
+				token,
+				companyDTO,
+				companyId,
+			})
+			dispatch({
+				type: COMPANY_ACTIONS.LOAD_UPDATE_COMPANY_SUCCESS,
+				payload: company,
+			})
 		} catch ({
 			response: {
 				data: { message },
@@ -114,6 +149,7 @@ export const CompanyProvider = ({ children }) => {
 				getAllCompanies,
 				getCompany,
 				registerCompany,
+				updateCompany,
 			}}
 		>
 			{children}
