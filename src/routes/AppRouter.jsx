@@ -30,7 +30,7 @@ export default function AppRouter() {
 				)}
 			/>
 			<Route path='/register' component={Register} />
-
+			<Route path='/additional-info' component={Register} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)

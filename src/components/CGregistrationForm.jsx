@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { Form, Button, Row, InputGroup, Col } from 'react-bootstrap'
 import swal from 'sweetalert'
@@ -8,26 +8,44 @@ import styles from './PostForm.module.scss'
 import { app } from '../fb'
 import { useValidateClassCode } from '../context/providers/ClassCodeContext'
 import { useCompany } from '../context/providers/CompanyContext'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import { useLocation } from 'wouter'
 
 const CGregistrationForm = ({ show, onHide }) => {
-	const { registerCompany } = useCompany()
+	const { id } = useUserCredentials()
+	const { registerCompany, getCompany, company } = useCompany()
+	const [location] = useLocation()
+	useEffect(() => {
+		if (location === '/additional-info' && id) getCompany({ companyId: id })
+	}, [id])
+	const registerInitial = {
+		codRegister: '',
+		email: '',
+		shortname: '',
+		largename: '',
+		society: '',
+		check: '',
+		partner1: '',
+		partner2: '',
+		partner3: '',
+		partner4: '',
+		partner5: '',
+		address: '',
+		telephone: '',
+		attachedfile: '',
+	}
 	const formik = useFormik({
-		initialValues: {
-			codRegister: '',
-			email: '',
-			shortname: '',
-			largename: '',
-			society: '',
-			check: '',
-			partner1: '',
-			partner2: '',
-			partner3: '',
-			partner4: '',
-			partner5: '',
-			address: '',
-			telephone: '',
-			attachedfile: '',
-		},
+		initialValues:
+			id && company
+				? {
+						...registerInitial,
+						email: company.email,
+						shortname: company.shortName,
+						check: true,
+						largename: company.name,
+						society: company.companyType,
+				  }
+				: registerInitial,
 		validationSchema: Yup.object({
 			codRegister: Yup.string()
 				.required('Campo obligatorio')

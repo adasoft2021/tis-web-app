@@ -7,7 +7,7 @@ import { userTypes } from '../context/reducers/userCredentialsReducer'
 import styles from './Page.module.scss'
 
 export default function Page({ children }) {
-	const [location] = useLocation()
+	const [location, setLocation] = useLocation()
 	const { id, userType, userName } = useUserCredentials()
 	const ShowUser = () => {
 		if (id)
@@ -23,7 +23,12 @@ export default function Page({ children }) {
 					)
 				case userTypes.COMPANY:
 					return (
-						<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
+						<div
+							className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'
+							onClick={() => {
+								setLocation('/additional-info')
+							}}
+						>
 							<Image src='/logo.png' roundedCircle width={48} />
 							<p className='m-0 text-light fw-bold'>{userName}</p>
 						</div>
