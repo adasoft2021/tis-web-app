@@ -18,12 +18,20 @@ import { useUserCredentials } from './UserCredentialsContext'
 const SpaceAnswerContext = createContext({
 	...spaceAnswerInitialState,
 	createSpaceAnswer: async ({ spaceId, dto }) => {},
-	getSpaceAnwers: async ({ spaceId }) => {},
+	getSpaceAnswers: async ({ spaceId }) => {},
 })
 
 export const useSpaceAnswer = () => {
 	const context = useContext(SpaceAnswerContext)
 	return context
+}
+
+export const useSpaceAnswerList = (spaceId) => {
+	const { getSpaceAnswers, isLoading, spaceAnswers } = useSpaceAnswer()
+	useEffect(() => {
+		getSpaceAnswers({ spaceId })
+	}, [])
+	return { isLoading, spaceAnswers }
 }
 export const useAdviserSpaceAnswers = () => {
 	const { getSpaceAnwers, isLoading, spaceAnswers } = useSpaceAnswer()
@@ -81,7 +89,7 @@ export const SpaceAnswerProvider = ({ children }) => {
 		dispatch({ type: SPACE_ANSWER_ACTIONS.LOAD_SPACE_ANSWERS_LIST })
 		try {
 			const spaceAnswers = await spaceAnswerService.getSpaceAnswers({
-				adviserId: id,
+				adviserId: id || 1,
 				spaceId,
 				token,
 			})
@@ -89,13 +97,18 @@ export const SpaceAnswerProvider = ({ children }) => {
 				type: SPACE_ANSWER_ACTIONS.LOAD_SPACE_ANSWERS_LIST_SUCCESS,
 				payload: spaceAnswers,
 			})
-		} catch ({ response }) {
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
 			showToast({
 				color: 'danger',
 				message:
-					response.status < 500
-						? response.data.message
-						: 'Ocurrio algun error con el servidor',
+					status < 500
+						? message
+						: 'El servicio no está disponible en estos momentos',
 			})
 			dispatch({ type: SPACE_ANSWER_ACTIONS.STOP_LOADING })
 		}
