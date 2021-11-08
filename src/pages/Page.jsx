@@ -1,10 +1,37 @@
 import { Col, Container, Image, Nav, Navbar, Row } from 'react-bootstrap'
 import { Link, useLocation } from 'wouter'
+import RegisterButton from '../components/RegisterButton'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 import styles from './Page.module.scss'
 
 export default function Page({ children }) {
 	const [location] = useLocation()
+	const { userType } = useUserCredentials()
+	const ShowUser = () => {
+		switch (userType) {
+			case userTypes.ADVISER:
+				return (
+					<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
+						<Image src='/logo.png' roundedCircle width={48} />
+						<p className='m-0 text-light fw-bold'>
+							Blanco Coca María Leticia
+						</p>
+					</div>
+				)
+			case userTypes.COMPANY:
+				return (
+					<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
+						<Image src='/logo.png' roundedCircle width={48} />
+						<p className='m-0 text-light fw-bold'>Company</p>
+					</div>
+				)
+			default:
+				return null
+		}
+	}
+
 	return (
 		<>
 			<Navbar bg='dark' variant='dark' expand='lg'>
@@ -24,19 +51,14 @@ export default function Page({ children }) {
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
 					<Navbar.Collapse id='basic-navbar-nav'>
 						<Nav className='ms-auto'>
-							<Nav.Link>Cerrar Sesión</Nav.Link>
+							<RegisterButton />
 						</Nav>
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
 			<Row className={styles.page}>
 				<Col sm={2} className='bg-secondary p-0'>
-					<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
-						<Image src='/logo.png' roundedCircle width={48} />
-						<p className='m-0 text-light fw-bold'>
-							Blanco Coca María Leticia
-						</p>
-					</div>
+					<ShowUser />
 					<Nav
 						defaultActiveKey={location}
 						variant='pills'
