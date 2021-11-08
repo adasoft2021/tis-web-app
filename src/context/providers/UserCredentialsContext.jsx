@@ -31,7 +31,11 @@ export const UserCredentialsProvider = ({ children }) => {
 		} else {
 			dispatch({
 				type: USER_CREDENTIALS_ACTIONS.SET_USER_CREDENTIALS,
-				payload: { ...state, userType: 'ADVISER', id: 1 },
+				payload: {
+					id: 1,
+					userType: 'ADVISER',
+					token: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIn0.DvVwBUAIoheCYq1r8-FNJaiy8qxETaGbFxxA7JxWwMk',
+				},
 			})
 		}
 	}, [])
