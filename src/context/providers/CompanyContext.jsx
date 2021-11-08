@@ -11,7 +11,7 @@ const CompanyContext = createContext({
 	getAllCompanies: async () => {},
 	getCompany: async ({ companyId }) => {},
 	registerCompany: async ({ registrationCode, companyDTO }) => {},
-	updateCompany: async ({ token, companyDTO, companyId }) => {},
+	updateCompany: async ({ companyDTO, companyId }) => {},
 })
 
 export const useCompany = () => {
@@ -32,7 +32,7 @@ export const useAllCompanies = () => {
 
 export const CompanyProvider = ({ children }) => {
 	const { showToast } = useToast()
-	const { setUserCredentials } = useUserCredentials()
+	const { setUserCredentials, token } = useUserCredentials()
 
 	const [state, dispatch] = useReducer(companyReducer, companyInitialState)
 
@@ -64,7 +64,10 @@ export const CompanyProvider = ({ children }) => {
 	const getCompany = async ({ companyId }) => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANY })
 		try {
-			const company = await companyService.getCompany({ companyId })
+			const company = await companyService.getCompany({
+				token,
+				companyId,
+			})
 			dispatch({
 				type: COMPANY_ACTIONS.LOAD_COMPANY_SUCCESS,
 				payload: company,
@@ -111,7 +114,7 @@ export const CompanyProvider = ({ children }) => {
 		}
 	}
 
-	const updateCompany = async ({ token, companyDTO, companyId }) => {
+	const updateCompany = async ({ companyDTO, companyId }) => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_UPDATE_COMPANY })
 		try {
 			const company = await companyService.updateCompany({
