@@ -8,28 +8,28 @@ import styles from './Page.module.scss'
 
 export default function Page({ children }) {
 	const [location] = useLocation()
-	const { userType } = useUserCredentials()
+	const { id, userType, userName } = useUserCredentials()
 	const ShowUser = () => {
-		switch (userType) {
-			case userTypes.ADVISER:
-				return (
-					<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
-						<Image src='/logo.png' roundedCircle width={48} />
-						<p className='m-0 text-light fw-bold'>
-							Blanco Coca María Leticia
-						</p>
-					</div>
-				)
-			case userTypes.COMPANY:
-				return (
-					<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
-						<Image src='/logo.png' roundedCircle width={48} />
-						<p className='m-0 text-light fw-bold'>Company</p>
-					</div>
-				)
-			default:
-				return null
-		}
+		if (id)
+			switch (userType) {
+				case userTypes.ADVISER:
+					return (
+						<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
+							<Image src='/logo.png' roundedCircle width={48} />
+							<p className='m-0 text-light fw-bold'>
+								Blanco Coca María Leticia
+							</p>
+						</div>
+					)
+				case userTypes.COMPANY:
+					return (
+						<div className='d-flex align-items-center justify-content-evenly p-2 border-bottom border-light'>
+							<Image src='/logo.png' roundedCircle width={48} />
+							<p className='m-0 text-light fw-bold'>{userName}</p>
+						</div>
+					)
+			}
+		return null
 	}
 
 	return (
@@ -72,22 +72,26 @@ export default function Page({ children }) {
 								Convocatorias
 							</Nav.Link>
 						</Link>
-						<Link to='/specification_sheets'>
-							<Nav.Link
-								eventKey='/specification_sheets'
-								className='p-3 ps-4 border-bottom border-light text-light'
-							>
-								Pliego de especificaciones
-							</Nav.Link>
-						</Link>
-						<Link to='/projects'>
-							<Nav.Link
-								eventKey='/projects'
-								className='p-3 ps-4 border-bottom border-light text-light'
-							>
-								Proyectos TIS
-							</Nav.Link>
-						</Link>
+						{userType ? (
+							<div>
+								<Link to='/specification_sheets'>
+									<Nav.Link
+										eventKey='/specification_sheets'
+										className='p-3 ps-4 border-bottom border-light text-light'
+									>
+										Pliego de especificaciones
+									</Nav.Link>
+								</Link>
+								<Link to='/projects'>
+									<Nav.Link
+										eventKey='/projects'
+										className='p-3 ps-4 border-bottom border-light text-light'
+									>
+										Proyectos TIS
+									</Nav.Link>
+								</Link>
+							</div>
+						) : null}
 						<Link to='/companies'>
 							<Nav.Link
 								eventKey='/companies'

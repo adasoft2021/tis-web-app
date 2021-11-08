@@ -9,8 +9,6 @@ import { app } from '../fb'
 import { useValidateClassCode } from '../context/providers/ClassCodeContext'
 import { useCompany } from '../context/providers/CompanyContext'
 
-// import AddInformationForm from './AddInformationForm'
-
 const CGregistrationForm = ({ show, onHide }) => {
 	const { registerCompany } = useCompany()
 	const formik = useFormik({
@@ -143,7 +141,6 @@ const CGregistrationForm = ({ show, onHide }) => {
 				buttons: ['Seguir editando', 'Sí'],
 			}).then((answer) => {
 				if (answer) {
-					alert(JSON.stringify(values, null, 2))
 					const dto = {
 						email: values.email,
 						shortName: values.shortname,
@@ -172,6 +169,7 @@ const CGregistrationForm = ({ show, onHide }) => {
 									logo: values.attachedfile,
 							  },
 					})
+					Object.keys(values).forEach((key) => (values[key] = ''))
 				}
 			})
 		},

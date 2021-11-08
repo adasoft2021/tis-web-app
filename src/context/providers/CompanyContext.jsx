@@ -94,6 +94,7 @@ export const CompanyProvider = ({ children }) => {
 				companyDTO,
 			})
 			setUserCredentials(credentials)
+			showToast({ color: 'success', message: 'Se ha registrado la GE' })
 		} catch ({
 			response: {
 				data: { message },

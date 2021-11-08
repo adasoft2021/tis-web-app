@@ -5,28 +5,20 @@ import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function RegisterButton() {
-	const { token, userType } = useUserCredentials(useUserCredentials)
+	const { id, userType } = useUserCredentials(useUserCredentials)
 	const [location] = useLocation()
-	if (token) {
+	if (id) {
 		switch (userType) {
 			case userTypes.ADVISER:
+			case userTypes.COMPANY:
 				return (
 					<Nav.Link>
 						<Button variant='primary'>Cerrar Sesion</Button>
 					</Nav.Link>
 				)
-
-			case userTypes.COMPANY:
-				return (
-					<Nav.Link>
-						<Button variant='primary'>
-							Subir informacion adicional
-						</Button>
-					</Nav.Link>
-				)
 		}
 	}
-	if (location === '/register') {
+	if (location === '/register' || location === '/additional-info') {
 		return null
 	}
 
