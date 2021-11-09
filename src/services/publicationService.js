@@ -48,9 +48,9 @@ export async function deletePublication({ token, publicationId }) {
 	})
 }
 
-export async function getPublishedPublications() {
+export async function getPublishedPublications({ publicationType }) {
 	const response = await publicationService.get('/published', {
-		params: { adviserId: 1, type: 'ANNOUNCEMENT', semester: '2-2021' },
+		params: { adviserId: 1, type: publicationType, semester: '2-2021' },
 	})
 	return response.data
 }

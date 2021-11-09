@@ -8,6 +8,7 @@ import {
 import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
 import { useToast } from './ToastContext'
 import { useUserCredentials } from './UserCredentialsContext'
+import { userTypes } from '../reducers/userCredentialsReducer'
 
 const PublicationContext = createContext({
 	...publicationInitialState,
@@ -17,7 +18,7 @@ const PublicationContext = createContext({
 	resetPublicationDTO: () => {},
 	updatePublication: async ({ publicationId, publicationDTO }) => {},
 	createPublication: async ({ publicationDTO }) => {},
-	getPublishedPublications: async () => {},
+	getPublishedPublications: async ({ publicationType }) => {},
 })
 
 export const usePublication = () => {
@@ -33,10 +34,10 @@ export const useAllAdviserPublications = (publicationType) => {
 		isLoading,
 		publications,
 	} = usePublication()
-	const { token } = useUserCredentials()
+	const { userType } = useUserCredentials()
 
 	useEffect(() => {
-		if (token) {
+		if (userType === userTypes.ADVISER) {
 			getAllAdviserPublications({
 				publicationType: publicationType.substring(
 					0,
@@ -44,9 +45,14 @@ export const useAllAdviserPublications = (publicationType) => {
 				),
 			})
 		} else {
-			getPublishedPublications()
+			getPublishedPublications({
+				publicationType: publicationType.substring(
+					0,
+					publicationType.length - 1
+				),
+			})
 		}
-	}, [token])
+	}, [userType])
 
 	return { isLoading, publications }
 }
@@ -192,11 +198,13 @@ export const PublicationProvider = ({ children }) => {
 		}
 	}
 
-	const getPublishedPublications = async () => {
+	const getPublishedPublications = async ({ publicationType }) => {
 		dispatch({ type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST })
 		try {
 			const publications =
-				await publicationService.getPublishedPublications()
+				await publicationService.getPublishedPublications({
+					publicationType,
+				})
 			dispatch({
 				type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_SUCCESS,
 				payload: publications,
