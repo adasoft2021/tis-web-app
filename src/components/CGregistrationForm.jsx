@@ -10,14 +10,34 @@ import { useValidateClassCode } from '../context/providers/ClassCodeContext'
 import { useCompany } from '../context/providers/CompanyContext'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import { useLocation } from 'wouter'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
-const CGregistrationForm = ({ show, onHide }) => {
-	const { id } = useUserCredentials()
-	const { registerCompany, getCompany, company } = useCompany()
+const CGregistrationForm = ({ company }) => {
+	const { id, userType } = useUserCredentials()
+	const { registerCompany, updateCompany } = useCompany()
 	const [location] = useLocation()
-	useEffect(() => {
-		if (location === '/additional-info' && id) getCompany({ companyId: id })
-	}, [id])
+	const additional =
+		userType === userTypes.COMPANY && location === '/additional-info'
+	const title =
+		location !== '/additional-info'
+			? 'Registro de Grupo-Empresa'
+			: company && !company.address
+			? 'Subir informacion adicional'
+			: 'Informacion adicional'
+
+	useEffect(async () => {
+		if (additional && company) {
+			formik.setValues({
+				...registerInitial,
+				email: company.email,
+				shortname: company.shortname,
+				largename: company.name,
+				society: company.companyType,
+				check: true,
+			})
+		}
+	}, [company])
+
 	const registerInitial = {
 		codRegister: '',
 		email: '',
@@ -35,26 +55,18 @@ const CGregistrationForm = ({ show, onHide }) => {
 		attachedfile: '',
 	}
 	const formik = useFormik({
-		initialValues:
-			id && company
-				? {
-						...registerInitial,
-						email: company.email,
-						shortname: company.shortName,
-						check: true,
-						largename: company.name,
-						society: company.companyType,
-				  }
-				: registerInitial,
+		initialValues: registerInitial,
 		validationSchema: Yup.object({
-			codRegister: Yup.string()
-				.required('Campo obligatorio')
-				.min(11, 'Este campo debe contener mínimo 11 caracteres.')
-				.max(11, 'Este campo debe contener maximo 11 caracteres.')
-				.matches(
-					/^[a-z]{3}[-][a-z]{3}[-][a-z]{3}$/,
-					'Introduzca un código de registro correcto. Ej: asd-fgh-jkl'
-				),
+			codRegister:
+				!company &&
+				Yup.string()
+					.required('Campo obligatorio')
+					.min(11, 'Este campo debe contener mínimo 11 caracteres.')
+					.max(11, 'Este campo debe contener maximo 11 caracteres.')
+					.matches(
+						/^[a-z]{3}[-][a-z]{3}[-][a-z]{3}$/,
+						'Introduzca un código de registro correcto. Ej: asd-fgh-jkl'
+					),
 			email: Yup.string()
 				.required('Campo obligatorio')
 				.min(15, 'Este campo debe contener mínimo 10 caracteres.')
@@ -169,24 +181,37 @@ const CGregistrationForm = ({ show, onHide }) => {
 						values.check && values.partner4 ? [values.partner4] : []
 					const p5 =
 						values.check && values.partner5 ? [values.partner5] : []
-					registerCompany({
-						registrationCode: values.codRegister,
-						companyDTO: !values.check
-							? dto
-							: {
-									...dto,
-									address: values.address,
-									telephone: values.telephone,
-									partners: [
-										values.partner1,
-										values.partner2,
-										values.partner3,
-										...p4,
-										...p5,
-									],
-									logo: values.attachedfile,
-							  },
-					})
+					const additionalDTO = {
+						address: values.address,
+						telephone: values.telephone,
+						partners: [
+							values.partner1,
+							values.partner2,
+							values.partner3,
+							...p4,
+							...p5,
+						],
+						logo: values.attachedfile,
+					}
+					if (!additional) {
+						registerCompany({
+							registrationCode: values.codRegister,
+							companyDTO: !values.check
+								? dto
+								: {
+										...dto,
+										...additionalDTO,
+								  },
+						})
+					} else {
+						updateCompany({
+							companyId: id,
+							companyDTO: {
+								...additionalDTO,
+								email: values.email,
+							},
+						})
+					}
 					Object.keys(values).forEach((key) => (values[key] = ''))
 				}
 			})
@@ -266,30 +291,32 @@ const CGregistrationForm = ({ show, onHide }) => {
 		<Form className='p-5' onSubmit={formik.handleSubmit} noValidate>
 			<Row>
 				<center className='mb-3'>
-					<h2>Registro de Grupo-Empresa</h2>
+					<h2>{title}</h2>
 				</center>
 
-				<Form.Group controlId='codRegister'>
-					<Form.Label className='fs-4'>
-						Cod. de Registro G.E
-					</Form.Label>
-					<InputGroup hasValidation>
-						<Form.Control
-							maxLength={11}
-							onChange={update}
-							onBlur={formik.handleBlur}
-							onKeyDown={codRegisterOnKeyDown}
-							value={formik.values.codRegister}
-							isInvalid={
-								formik.touched.codRegister &&
-								formik.errors.codRegister
-							}
-						/>
-						<Form.Control.Feedback type='invalid'>
-							{formik.errors.codRegister}
-						</Form.Control.Feedback>
-					</InputGroup>
-				</Form.Group>
+				{!company && (
+					<Form.Group controlId='codRegister'>
+						<Form.Label className='fs-4'>
+							Cod. de Registro G.E
+						</Form.Label>
+						<InputGroup hasValidation>
+							<Form.Control
+								maxLength={11}
+								onChange={update}
+								onBlur={formik.handleBlur}
+								onKeyDown={codRegisterOnKeyDown}
+								value={formik.values.codRegister}
+								isInvalid={
+									formik.touched.codRegister &&
+									formik.errors.codRegister
+								}
+							/>
+							<Form.Control.Feedback type='invalid'>
+								{formik.errors.codRegister}
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Form.Group>
+				)}
 
 				<Form.Group controlId='email'>
 					<Form.Label className='fs-4'>E-mail</Form.Label>
@@ -367,21 +394,23 @@ const CGregistrationForm = ({ show, onHide }) => {
 					</InputGroup>
 				</Form.Group>
 			</Row>
-			<Form.Group className='pt-3' controlId='check'>
-				<InputGroup hasValidation>
-					<Form.Check
-						disabled={!activeInputs}
-						type='checkbox'
-						value={formik.values.check}
-						label={'Subir informacion adicional'}
-						onChange={formik.handleChange}
-					/>
+			{!company && (
+				<Form.Group className='pt-3' controlId='check'>
+					<InputGroup hasValidation>
+						<Form.Check
+							disabled={!activeInputs}
+							type='checkbox'
+							value={formik.values.check}
+							label={'Subir informacion adicional'}
+							onChange={formik.handleChange}
+						/>
 
-					<Form.Control.Feedback type='invalid'>
-						{formik.errors.check}
-					</Form.Control.Feedback>
-				</InputGroup>
-			</Form.Group>
+						<Form.Control.Feedback type='invalid'>
+							{formik.errors.check}
+						</Form.Control.Feedback>
+					</InputGroup>
+				</Form.Group>
+			)}
 
 			<div>
 				{formik.values.check ? (
@@ -489,7 +518,6 @@ const CGregistrationForm = ({ show, onHide }) => {
 								</Form.Label>
 								<InputGroup hasValidation>
 									<Form.Control
-										maxLength={11}
 										onChange={formik.handleChange}
 										value={formik.values.address}
 										isInvalid={
@@ -509,7 +537,6 @@ const CGregistrationForm = ({ show, onHide }) => {
 								</Form.Label>
 								<InputGroup hasValidation>
 									<Form.Control
-										maxLength={11}
 										onChange={formik.handleChange}
 										value={formik.values.telephone}
 										isInvalid={
@@ -563,7 +590,10 @@ const CGregistrationForm = ({ show, onHide }) => {
 			</div>
 			<center>
 				<Button
-					disabled={!activeInputs}
+					disabled={
+						(additional && company && company.address) ||
+						(!additional && !activeInputs)
+					}
 					className='m-4'
 					type='submit'
 					variant='success'

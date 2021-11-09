@@ -8,6 +8,7 @@ import {
 	CompaniesList,
 	HomePage,
 	Register,
+	AdditionalGE,
 } from '../pages'
 
 export default function AppRouter() {
@@ -30,7 +31,7 @@ export default function AppRouter() {
 				)}
 			/>
 			<Route path='/register' component={Register} />
-			<Route path='/additional-info' component={Register} />
+			<Route path='/additional-info' component={AdditionalGE} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
