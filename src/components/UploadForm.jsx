@@ -40,7 +40,6 @@ const UploadForm = (props) => {
 	const [fileListURL, setFileListURL] = useState([])
 	const { showToast } = useToast()
 	const handleUpload = () => {
-		console.log(fileList)
 		const storageRef = app.storage().ref()
 		fileList.forEach(async (file) => {
 			const filePath = storageRef.child(file.name)
@@ -52,7 +51,6 @@ const UploadForm = (props) => {
 					{ name: file.name, url: fileDownloadUrl, deleted: false },
 				]
 				setFileListURL(updatedList)
-				console.log(fileDownloadUrl)
 			} catch {
 				showToast({
 					color: 'danger',
