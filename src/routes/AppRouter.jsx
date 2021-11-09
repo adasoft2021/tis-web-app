@@ -7,6 +7,7 @@ import {
 	SpecificationSheet,
 	CompaniesList,
 	HomePage,
+	File,
 } from '../pages'
 
 export default function AppRouter() {
@@ -28,7 +29,7 @@ export default function AppRouter() {
 					</CompanyProvider>
 				)}
 			/>
-
+			<Route path='/file' component={File} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)

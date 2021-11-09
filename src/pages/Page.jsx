@@ -74,6 +74,15 @@ export default function Page({ children }) {
 								Lista de GE
 							</Nav.Link>
 						</Link>
+
+						<Link to='/file'>
+							<Nav.Link
+								eventKey='/file'
+								className='p-3 ps-4 border-bottom border-light text-light'
+							>
+								Envio de Archivos
+							</Nav.Link>
+						</Link>
 					</Nav>
 				</Col>
 				<Col sm={10} className={styles.content}>
