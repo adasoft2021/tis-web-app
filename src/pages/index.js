@@ -4,8 +4,10 @@ import NotFoundPage from './NotFoundPage'
 import Board from './board'
 import SpecificationSheet from './specificationSheet'
 import CompaniesList from './companies'
+
 import Register from './register/Register'
 import AdditionalGE from './additionalGE'
+import BoardFileUpload from './boardFileUpload'
 
 export {
 	Announcement,
@@ -16,4 +18,5 @@ export {
 	CompaniesList,
 	Register,
 	AdditionalGE,
+	BoardFileUpload,
 }
