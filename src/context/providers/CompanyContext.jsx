@@ -9,9 +9,9 @@ import { useUserCredentials } from './UserCredentialsContext'
 const CompanyContext = createContext({
 	...companyInitialState,
 	getAllCompanies: async () => {},
-	getCompany: async ({ companyId }) => {},
+	getCompany: async () => {},
 	registerCompany: async ({ registrationCode, companyDTO }) => {},
-	updateCompany: async ({ token, companyDTO, companyId }) => {},
+	updateCompany: async ({ companyDTO, companyId }) => {},
 })
 
 export const useCompany = () => {
@@ -29,10 +29,19 @@ export const useAllCompanies = () => {
 
 	return { isLoading, companies }
 }
+export const useGetCompany = () => {
+	const { getCompany, isLoading, company } = useCompany()
+
+	useEffect(() => {
+		getCompany()
+	}, [])
+
+	return { isLoading, company }
+}
 
 export const CompanyProvider = ({ children }) => {
 	const { showToast } = useToast()
-	const { setUserCredentials } = useUserCredentials()
+	const { setUserCredentials, token, id } = useUserCredentials()
 
 	const [state, dispatch] = useReducer(companyReducer, companyInitialState)
 
@@ -61,10 +70,13 @@ export const CompanyProvider = ({ children }) => {
 		}
 	}
 
-	const getCompany = async ({ companyId }) => {
+	const getCompany = async () => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANY })
 		try {
-			const company = await companyService.getCompany({ companyId })
+			const company = await companyService.getCompany({
+				token,
+				companyId: id,
+			})
 			dispatch({
 				type: COMPANY_ACTIONS.LOAD_COMPANY_SUCCESS,
 				payload: company,
@@ -94,6 +106,7 @@ export const CompanyProvider = ({ children }) => {
 				companyDTO,
 			})
 			setUserCredentials(credentials)
+			showToast({ color: 'success', message: 'Se ha registrado la GE' })
 		} catch ({
 			response: {
 				data: { message },
@@ -111,7 +124,7 @@ export const CompanyProvider = ({ children }) => {
 		}
 	}
 
-	const updateCompany = async ({ token, companyDTO, companyId }) => {
+	const updateCompany = async ({ companyDTO, companyId }) => {
 		dispatch({ type: COMPANY_ACTIONS.LOAD_UPDATE_COMPANY })
 		try {
 			const company = await companyService.updateCompany({
