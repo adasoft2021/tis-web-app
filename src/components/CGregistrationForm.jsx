@@ -34,6 +34,13 @@ const CGregistrationForm = ({ company }) => {
 				largename: company.name,
 				society: company.companyType,
 				check: true,
+				partner1: company.partners[0] || registerInitial.partner1,
+				partner2: company.partners[1] || registerInitial.partner2,
+				partner3: company.partners[2] || registerInitial.partner3,
+				partner4: company.partners[3] || registerInitial.partner4,
+				partner5: company.partners[4] || registerInitial.partner5,
+				address: company.address,
+				telephone: company.telephone,
 			})
 		}
 	}, [company])
@@ -212,7 +219,10 @@ const CGregistrationForm = ({ company }) => {
 							},
 						})
 					}
-					Object.keys(values).forEach((key) => (values[key] = ''))
+					Object.keys(values).forEach(
+						(key) =>
+							(values[key] = key !== 'check' ? '' : values[key])
+					)
 				}
 			})
 		},
@@ -461,7 +471,7 @@ const CGregistrationForm = ({ company }) => {
 								<InputGroup hasValidation>
 									<Form.Control
 										onChange={formik.handleChange}
-										value={formik.values.socio3}
+										value={formik.values.partner3}
 										isInvalid={
 											formik.touched.partner3 &&
 											formik.errors.partner3
@@ -549,58 +559,72 @@ const CGregistrationForm = ({ company }) => {
 									</Form.Control.Feedback>
 								</InputGroup>
 							</Form.Group>
-							<Form.Label className='mb-2 fs-4'>Logo</Form.Label>
-							<Row
-								className={`${styles['drag-area']} rounded bg-light text-dark p-1 m-1`}
-							>
-								<Form.Group controlId='LOGO'>
-									<div className='d-flex flex-column align-items-center'>
-										<center>
-											<h4>
-												Arrastra y suelta tu archivo
-											</h4>
-										</center>
-										<h4>o</h4>
-										<Form.Label className='btn btn-primary'>
-											Selecciona tu archivo
-										</Form.Label>
-									</div>
-									<InputGroup hasValidation>
-										<Form.Control
-											className={
-												styles['file-upload-input']
-											}
-											type='file'
-											accept='image/*'
-											onChange={validationLOGO}
-											isInvalid={
-												formik.touched.attachedfile &&
-												formik.errors.attachedfile
-											}
-										/>
-										<Form.Control.Feedback type='invalid'>
-											{formik.errors.attachedfile}
-										</Form.Control.Feedback>
-									</InputGroup>
-								</Form.Group>
-							</Row>
+							{company && !company.address && (
+								<div>
+									<Form.Label className='mb-2 fs-4'>
+										Logo
+									</Form.Label>
+
+									<Row
+										className={`${styles['drag-area']} rounded bg-light text-dark p-1 m-1`}
+									>
+										<Form.Group controlId='LOGO'>
+											<div className='d-flex flex-column align-items-center'>
+												<center>
+													<h4>
+														Arrastra y suelta tu
+														archivo
+													</h4>
+												</center>
+												<h4>o</h4>
+												<Form.Label className='btn btn-primary'>
+													Selecciona tu archivo
+												</Form.Label>
+											</div>
+											<InputGroup hasValidation>
+												<Form.Control
+													className={
+														styles[
+															'file-upload-input'
+														]
+													}
+													type='file'
+													accept='image/*'
+													onChange={validationLOGO}
+													isInvalid={
+														formik.touched
+															.attachedfile &&
+														formik.errors
+															.attachedfile
+													}
+												/>
+												<Form.Control.Feedback type='invalid'>
+													{formik.errors.attachedfile}
+												</Form.Control.Feedback>
+											</InputGroup>
+										</Form.Group>
+									</Row>
+								</div>
+							)}
 						</Col>
 					</Row>
 				) : null}
 			</div>
-			<center>
-				<Button
-					disabled={
-						(additional && company && company.address) ||
-						(!additional && !activeInputs)
-					}
-					className='m-4'
-					type='submit'
-					variant='success'
-				>
-					REGISTRARSE
-				</Button>
-			</center>
+			{(!additional || (company && !company.address)) && (
+				<center>
+					<Button
+						disabled={
+							(additional && company && company.address) ||
+							(!additional && !activeInputs)
+						}
+						className='m-4'
+						type='submit'
+						variant='success'
+					>
+						REGISTRARSE
+					</Button>
+				</center>
+			)}
 		</Form>
 	)
 }
