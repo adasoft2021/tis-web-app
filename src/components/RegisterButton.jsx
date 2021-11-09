@@ -5,7 +5,7 @@ import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function RegisterButton() {
-	const { id, userType, setUserCredentials } =
+	const { id, userType, deleteUserCredentials } =
 		useUserCredentials(useUserCredentials)
 	const [location] = useLocation()
 	if (id) {
@@ -17,11 +17,7 @@ export default function RegisterButton() {
 						<Button
 							variant='primary'
 							onClick={() => {
-								setUserCredentials({
-									id: null,
-									token: null,
-									userType: null,
-								})
+								deleteUserCredentials()
 							}}
 						>
 							Cerrar Sesion

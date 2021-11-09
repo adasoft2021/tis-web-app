@@ -18,5 +18,9 @@ export const userCredentialsReducer = (state, { type, payload }) => {
 				...state,
 				...payload,
 			}
+		case USER_CREDENTIALS_ACTIONS.DELETE_USER_CREDENTIALS:
+			return userCredentialsInitialState
+		default:
+			return state
 	}
 }
