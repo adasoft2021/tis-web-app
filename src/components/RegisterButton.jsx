@@ -5,7 +5,8 @@ import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function RegisterButton() {
-	const { id, userType } = useUserCredentials(useUserCredentials)
+	const { id, userType, deleteUserCredentials } =
+		useUserCredentials(useUserCredentials)
 	const [location] = useLocation()
 	if (id) {
 		switch (userType) {
@@ -13,7 +14,14 @@ export default function RegisterButton() {
 			case userTypes.COMPANY:
 				return (
 					<Nav.Link>
-						<Button variant='primary'>Cerrar Sesion</Button>
+						<Button
+							variant='primary'
+							onClick={() => {
+								deleteUserCredentials()
+							}}
+						>
+							Cerrar Sesion
+						</Button>
 					</Nav.Link>
 				)
 		}

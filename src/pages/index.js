@@ -5,6 +5,7 @@ import Board from './board'
 import SpecificationSheet from './specificationSheet'
 import CompaniesList from './companies'
 import Register from './register/Register'
+import AdditionalGE from './additionalGE'
 
 export {
 	Announcement,
@@ -14,4 +15,5 @@ export {
 	SpecificationSheet,
 	CompaniesList,
 	Register,
+	AdditionalGE,
 }

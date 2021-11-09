@@ -8,6 +8,7 @@ import {
 const UserCredentialsContext = createContext({
 	...userCredentialsInitialState,
 	setUserCredentials: (credentials) => {},
+	deleteUserCredentials: () => {},
 })
 
 export const useUserCredentials = () => {
@@ -31,7 +32,11 @@ export const UserCredentialsProvider = ({ children }) => {
 		} else {
 			dispatch({
 				type: USER_CREDENTIALS_ACTIONS.SET_USER_CREDENTIALS,
-				payload: { ...state, userType: 'ADVISER' },
+				payload: {
+					id: 1,
+					userType: 'ADVISER',
+					token: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIn0.DvVwBUAIoheCYq1r8-FNJaiy8qxETaGbFxxA7JxWwMk',
+				},
 			})
 		}
 	}, [])
@@ -52,9 +57,16 @@ export const UserCredentialsProvider = ({ children }) => {
 		localStorage.setItem('credentials', JSON.stringify(credentials))
 	}
 
+	const deleteUserCredentials = () => {
+		dispatch({
+			type: USER_CREDENTIALS_ACTIONS.DELETE_USER_CREDENTIALS,
+		})
+		localStorage.removeItem('credentials')
+	}
+
 	return (
 		<UserCredentialsContext.Provider
-			value={{ ...state, setUserCredentials }}
+			value={{ ...state, setUserCredentials, deleteUserCredentials }}
 		>
 			{children}
 		</UserCredentialsContext.Provider>

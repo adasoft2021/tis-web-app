@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { Form, Button, Row, InputGroup, Col } from 'react-bootstrap'
 import swal from 'sweetalert'
@@ -8,35 +8,72 @@ import styles from './PostForm.module.scss'
 import { app } from '../fb'
 import { useValidateClassCode } from '../context/providers/ClassCodeContext'
 import { useCompany } from '../context/providers/CompanyContext'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import { useLocation } from 'wouter'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
-const CGregistrationForm = ({ show, onHide }) => {
-	const { registerCompany } = useCompany()
+const CGregistrationForm = ({ company }) => {
+	const { id, userType } = useUserCredentials()
+	const { registerCompany, updateCompany } = useCompany()
+	const [location] = useLocation()
+	const additional =
+		userType === userTypes.COMPANY && location === '/additional-info'
+	const title =
+		location !== '/additional-info'
+			? 'Registro de Grupo-Empresa'
+			: company && !company.address
+			? 'Subir informacion adicional'
+			: 'Informacion adicional'
+
+	useEffect(async () => {
+		if (additional && company) {
+			formik.setValues({
+				...registerInitial,
+				email: company.email,
+				shortname: company.shortname,
+				largename: company.name,
+				society: company.companyType,
+				check: true,
+				partner1: company.partners[0] || registerInitial.partner1,
+				partner2: company.partners[1] || registerInitial.partner2,
+				partner3: company.partners[2] || registerInitial.partner3,
+				partner4: company.partners[3] || registerInitial.partner4,
+				partner5: company.partners[4] || registerInitial.partner5,
+				address: company.address,
+				telephone: company.telephone,
+			})
+		}
+	}, [company])
+
+	const registerInitial = {
+		codRegister: '',
+		email: '',
+		shortname: '',
+		largename: '',
+		society: '',
+		check: '',
+		partner1: '',
+		partner2: '',
+		partner3: '',
+		partner4: '',
+		partner5: '',
+		address: '',
+		telephone: '',
+		attachedfile: '',
+	}
 	const formik = useFormik({
-		initialValues: {
-			codRegister: '',
-			email: '',
-			shortname: '',
-			largename: '',
-			society: '',
-			check: '',
-			partner1: '',
-			partner2: '',
-			partner3: '',
-			partner4: '',
-			partner5: '',
-			address: '',
-			telephone: '',
-			attachedfile: '',
-		},
+		initialValues: registerInitial,
 		validationSchema: Yup.object({
-			codRegister: Yup.string()
-				.required('Campo obligatorio')
-				.min(11, 'Este campo debe contener mínimo 11 caracteres.')
-				.max(11, 'Este campo debe contener maximo 11 caracteres.')
-				.matches(
-					/^[a-z]{3}[-][a-z]{3}[-][a-z]{3}$/,
-					'Introduzca un código de registro correcto. Ej: asd-fgh-jkl'
-				),
+			codRegister:
+				!company &&
+				Yup.string()
+					.required('Campo obligatorio')
+					.min(11, 'Este campo debe contener mínimo 11 caracteres.')
+					.max(11, 'Este campo debe contener maximo 11 caracteres.')
+					.matches(
+						/^[a-z]{3}[-][a-z]{3}[-][a-z]{3}$/,
+						'Introduzca un código de registro correcto. Ej: asd-fgh-jkl'
+					),
 			email: Yup.string()
 				.required('Campo obligatorio')
 				.min(15, 'Este campo debe contener mínimo 10 caracteres.')
@@ -151,25 +188,41 @@ const CGregistrationForm = ({ show, onHide }) => {
 						values.check && values.partner4 ? [values.partner4] : []
 					const p5 =
 						values.check && values.partner5 ? [values.partner5] : []
-					registerCompany({
-						registrationCode: values.codRegister,
-						companyDTO: !values.check
-							? dto
-							: {
-									...dto,
-									address: values.address,
-									telephone: values.telephone,
-									partners: [
-										values.partner1,
-										values.partner2,
-										values.partner3,
-										...p4,
-										...p5,
-									],
-									logo: values.attachedfile,
-							  },
-					})
-					Object.keys(values).forEach((key) => (values[key] = ''))
+					const additionalDTO = {
+						address: values.address,
+						telephone: values.telephone,
+						partners: [
+							values.partner1,
+							values.partner2,
+							values.partner3,
+							...p4,
+							...p5,
+						],
+						logo: values.attachedfile,
+					}
+					if (!additional) {
+						registerCompany({
+							registrationCode: values.codRegister,
+							companyDTO: !values.check
+								? dto
+								: {
+										...dto,
+										...additionalDTO,
+								  },
+						})
+					} else {
+						updateCompany({
+							companyId: id,
+							companyDTO: {
+								...additionalDTO,
+								email: values.email,
+							},
+						})
+					}
+					Object.keys(values).forEach(
+						(key) =>
+							(values[key] = key !== 'check' ? '' : values[key])
+					)
 				}
 			})
 		},
@@ -248,30 +301,32 @@ const CGregistrationForm = ({ show, onHide }) => {
 		<Form className='p-5' onSubmit={formik.handleSubmit} noValidate>
 			<Row>
 				<center className='mb-3'>
-					<h2>Registro de Grupo-Empresa</h2>
+					<h2>{title}</h2>
 				</center>
 
-				<Form.Group controlId='codRegister'>
-					<Form.Label className='fs-4'>
-						Cod. de Registro G.E
-					</Form.Label>
-					<InputGroup hasValidation>
-						<Form.Control
-							maxLength={11}
-							onChange={update}
-							onBlur={formik.handleBlur}
-							onKeyDown={codRegisterOnKeyDown}
-							value={formik.values.codRegister}
-							isInvalid={
-								formik.touched.codRegister &&
-								formik.errors.codRegister
-							}
-						/>
-						<Form.Control.Feedback type='invalid'>
-							{formik.errors.codRegister}
-						</Form.Control.Feedback>
-					</InputGroup>
-				</Form.Group>
+				{!company && (
+					<Form.Group controlId='codRegister'>
+						<Form.Label className='fs-4'>
+							Cod. de Registro G.E
+						</Form.Label>
+						<InputGroup hasValidation>
+							<Form.Control
+								maxLength={11}
+								onChange={update}
+								onBlur={formik.handleBlur}
+								onKeyDown={codRegisterOnKeyDown}
+								value={formik.values.codRegister}
+								isInvalid={
+									formik.touched.codRegister &&
+									formik.errors.codRegister
+								}
+							/>
+							<Form.Control.Feedback type='invalid'>
+								{formik.errors.codRegister}
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Form.Group>
+				)}
 
 				<Form.Group controlId='email'>
 					<Form.Label className='fs-4'>E-mail</Form.Label>
@@ -349,21 +404,23 @@ const CGregistrationForm = ({ show, onHide }) => {
 					</InputGroup>
 				</Form.Group>
 			</Row>
-			<Form.Group className='pt-3' controlId='check'>
-				<InputGroup hasValidation>
-					<Form.Check
-						disabled={!activeInputs}
-						type='checkbox'
-						value={formik.values.check}
-						label={'Subir informacion adicional'}
-						onChange={formik.handleChange}
-					/>
+			{!company && (
+				<Form.Group className='pt-3' controlId='check'>
+					<InputGroup hasValidation>
+						<Form.Check
+							disabled={!activeInputs}
+							type='checkbox'
+							value={formik.values.check}
+							label={'Subir informacion adicional'}
+							onChange={formik.handleChange}
+						/>
 
-					<Form.Control.Feedback type='invalid'>
-						{formik.errors.check}
-					</Form.Control.Feedback>
-				</InputGroup>
-			</Form.Group>
+						<Form.Control.Feedback type='invalid'>
+							{formik.errors.check}
+						</Form.Control.Feedback>
+					</InputGroup>
+				</Form.Group>
+			)}
 
 			<div>
 				{formik.values.check ? (
@@ -414,7 +471,7 @@ const CGregistrationForm = ({ show, onHide }) => {
 								<InputGroup hasValidation>
 									<Form.Control
 										onChange={formik.handleChange}
-										value={formik.values.socio3}
+										value={formik.values.partner3}
 										isInvalid={
 											formik.touched.partner3 &&
 											formik.errors.partner3
@@ -471,7 +528,6 @@ const CGregistrationForm = ({ show, onHide }) => {
 								</Form.Label>
 								<InputGroup hasValidation>
 									<Form.Control
-										maxLength={11}
 										onChange={formik.handleChange}
 										value={formik.values.address}
 										isInvalid={
@@ -491,7 +547,6 @@ const CGregistrationForm = ({ show, onHide }) => {
 								</Form.Label>
 								<InputGroup hasValidation>
 									<Form.Control
-										maxLength={11}
 										onChange={formik.handleChange}
 										value={formik.values.telephone}
 										isInvalid={
@@ -504,55 +559,72 @@ const CGregistrationForm = ({ show, onHide }) => {
 									</Form.Control.Feedback>
 								</InputGroup>
 							</Form.Group>
-							<Form.Label className='mb-2 fs-4'>Logo</Form.Label>
-							<Row
-								className={`${styles['drag-area']} rounded bg-light text-dark p-1 m-1`}
-							>
-								<Form.Group controlId='LOGO'>
-									<div className='d-flex flex-column align-items-center'>
-										<center>
-											<h4>
-												Arrastra y suelta tu archivo
-											</h4>
-										</center>
-										<h4>o</h4>
-										<Form.Label className='btn btn-primary'>
-											Selecciona tu archivo
-										</Form.Label>
-									</div>
-									<InputGroup hasValidation>
-										<Form.Control
-											className={
-												styles['file-upload-input']
-											}
-											type='file'
-											accept='image/*'
-											onChange={validationLOGO}
-											isInvalid={
-												formik.touched.attachedfile &&
-												formik.errors.attachedfile
-											}
-										/>
-										<Form.Control.Feedback type='invalid'>
-											{formik.errors.attachedfile}
-										</Form.Control.Feedback>
-									</InputGroup>
-								</Form.Group>
-							</Row>
+							{company && !company.address && (
+								<div>
+									<Form.Label className='mb-2 fs-4'>
+										Logo
+									</Form.Label>
+
+									<Row
+										className={`${styles['drag-area']} rounded bg-light text-dark p-1 m-1`}
+									>
+										<Form.Group controlId='LOGO'>
+											<div className='d-flex flex-column align-items-center'>
+												<center>
+													<h4>
+														Arrastra y suelta tu
+														archivo
+													</h4>
+												</center>
+												<h4>o</h4>
+												<Form.Label className='btn btn-primary'>
+													Selecciona tu archivo
+												</Form.Label>
+											</div>
+											<InputGroup hasValidation>
+												<Form.Control
+													className={
+														styles[
+															'file-upload-input'
+														]
+													}
+													type='file'
+													accept='image/*'
+													onChange={validationLOGO}
+													isInvalid={
+														formik.touched
+															.attachedfile &&
+														formik.errors
+															.attachedfile
+													}
+												/>
+												<Form.Control.Feedback type='invalid'>
+													{formik.errors.attachedfile}
+												</Form.Control.Feedback>
+											</InputGroup>
+										</Form.Group>
+									</Row>
+								</div>
+							)}
 						</Col>
 					</Row>
 				) : null}
 			</div>
-			<center>
-				<Button
-					disabled={!activeInputs}
-					className='m-4'
-					type='submit'
-					variant='success'
-				>
-					REGISTRARSE
-				</Button>
-			</center>
+			{(!additional || (company && !company.address)) && (
+				<center>
+					<Button
+						disabled={
+							(additional && company && company.address) ||
+							(!additional && !activeInputs)
+						}
+						className='m-4'
+						type='submit'
+						variant='success'
+					>
+						REGISTRARSE
+					</Button>
+				</center>
+			)}
 		</Form>
 	)
 }
