@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Button } from 'react-bootstrap'
 import './drop-file-input.scss'
 import Swal from 'sweetalert2'
+import { app } from '../fb'
 
 import { ImageConfig } from '../config/ImageConfig'
 import uploadImg from '../assets/cloud1.png'
@@ -33,7 +34,20 @@ const UploadForm = (props) => {
 		setFileList(updatedList)
 		props.onFileChange(updatedList)
 	}
-
+	const handleUpload = () => {
+		fileList.forEach(async (file) => {
+			const storageRef = app.storage().ref()
+			const filePath = storageRef.child(file.name)
+			await filePath.put(file)
+			const fileDownloadUrl = filePath.getDownloadURL()
+			fileRemove(file)
+			const updatedList = [
+				...fileList,
+				{ name: file.name, url: fileDownloadUrl },
+			]
+			setFileList(updatedList)
+		})
+	}
 	return (
 		<>
 			<div
@@ -92,6 +106,7 @@ const UploadForm = (props) => {
 								confirmButtonText: 'Subir',
 							}).then((result) => {
 								if (result.isConfirmed) {
+									handleUpload()
 									Swal.fire('Subido!', '', 'success')
 								}
 							})
