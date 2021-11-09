@@ -65,7 +65,7 @@ export const ClassCodeProvider = ({ children }) => {
 				adviserId: id,
 			})
 			dispatch({
-				type: CLASSCODE_ACTIONS.LOAD_CREATE_CLASSCODE_SUCESS,
+				type: CLASSCODE_ACTIONS.LOAD_CREATE_CLASSCODE_SUCCESS,
 				payload: { code },
 			})
 		} catch ({ response }) {
@@ -81,24 +81,31 @@ export const ClassCodeProvider = ({ children }) => {
 	}
 
 	const validateClassCode = async ({ code }) => {
-		dispatch({ type: CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE })
 		showToast({
 			color: 'info',
 			message: 'El código de registro está siendo validado.',
 		})
+		dispatch({ type: CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE })
 		try {
 			await classCodeService.validateClassCode({
 				code,
 			})
+			showToast({
+				color: 'success',
+				message: 'Se ha validado el código de registro.',
+			})
 			dispatch({
-				type: CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE_SUCESS,
+				type: CLASSCODE_ACTIONS.LOAD_VALIDATE_CLASSCODE_SUCCESS,
+				payload: { code },
 			})
 		} catch ({ response }) {
 			showToast({
 				color: 'danger',
 				message:
 					response.status < 500
-						? response.message
+						? response.status === 404
+							? 'El código de registro es inválido.'
+							: response.message
 						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 			dispatch({ type: CLASSCODE_ACTIONS.STOP_LOADING })

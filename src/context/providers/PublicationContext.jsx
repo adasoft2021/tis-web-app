@@ -17,6 +17,7 @@ const PublicationContext = createContext({
 	resetPublicationDTO: () => {},
 	updatePublication: async ({ publicationId, publicationDTO }) => {},
 	createPublication: async ({ publicationDTO }) => {},
+	getPublishedPublications: async () => {},
 })
 
 export const usePublication = () => {
@@ -26,17 +27,26 @@ export const usePublication = () => {
 }
 
 export const useAllAdviserPublications = (publicationType) => {
-	const { getAllAdviserPublications, isLoading, publications } =
-		usePublication()
+	const {
+		getAllAdviserPublications,
+		getPublishedPublications,
+		isLoading,
+		publications,
+	} = usePublication()
+	const { token } = useUserCredentials()
 
 	useEffect(() => {
-		getAllAdviserPublications({
-			publicationType: publicationType.substring(
-				0,
-				publicationType.length - 1
-			),
-		})
-	}, [])
+		if (token) {
+			getAllAdviserPublications({
+				publicationType: publicationType.substring(
+					0,
+					publicationType.length - 1
+				),
+			})
+		} else {
+			getPublishedPublications()
+		}
+	}, [token])
 
 	return { isLoading, publications }
 }
@@ -182,6 +192,32 @@ export const PublicationProvider = ({ children }) => {
 		}
 	}
 
+	const getPublishedPublications = async () => {
+		dispatch({ type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST })
+		try {
+			const publications =
+				await publicationService.getPublishedPublications()
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_SUCCESS,
+				payload: publications,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
+		}
+	}
+
 	return (
 		<PublicationContext.Provider
 			value={{
@@ -192,6 +228,7 @@ export const PublicationProvider = ({ children }) => {
 				resetPublicationDTO,
 				updatePublication,
 				createPublication,
+				getPublishedPublications,
 			}}
 		>
 			{children}

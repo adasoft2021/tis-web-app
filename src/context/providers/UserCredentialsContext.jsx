@@ -8,6 +8,7 @@ import {
 const UserCredentialsContext = createContext({
 	...userCredentialsInitialState,
 	setUserCredentials: (credentials) => {},
+	deleteUserCredentials: () => {},
 })
 
 export const useUserCredentials = () => {
@@ -56,9 +57,16 @@ export const UserCredentialsProvider = ({ children }) => {
 		localStorage.setItem('credentials', JSON.stringify(credentials))
 	}
 
+	const deleteUserCredentials = () => {
+		dispatch({
+			type: USER_CREDENTIALS_ACTIONS.DELETE_USER_CREDENTIALS,
+		})
+		localStorage.removeItem('credentials')
+	}
+
 	return (
 		<UserCredentialsContext.Provider
-			value={{ ...state, setUserCredentials }}
+			value={{ ...state, setUserCredentials, deleteUserCredentials }}
 		>
 			{children}
 		</UserCredentialsContext.Provider>

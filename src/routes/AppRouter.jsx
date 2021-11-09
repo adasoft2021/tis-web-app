@@ -8,6 +8,8 @@ import {
 	SpecificationSheet,
 	CompaniesList,
 	HomePage,
+	Register,
+	AdditionalGE,
 	BoardFileUpload,
 } from '../pages'
 
@@ -30,7 +32,9 @@ export default function AppRouter() {
 					</CompanyProvider>
 				)}
 			/>
-			<Route path='/boardFile' component={BoardFileUpload} />
+			<Route path='/register' component={Register} />
+			<Route path='/additional-info' component={AdditionalGE} />
+     	<Route path='/boardFile' component={BoardFileUpload} />
 			<SpaceAnswerProvider>
 				<Route
 					path='/proposals-presentation/:spaceTitle/:spaceId'

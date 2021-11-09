@@ -70,6 +70,7 @@ export default function PublicationList({ buttonMessage, message }) {
 			? 'ANNOUNCEMENTS'
 			: location.toUpperCase().replace('/', '')
 	const type = publicationType.slice(0, -1)
+
 	const { isLoading, publications } =
 		useAllAdviserPublications(publicationType)
 
