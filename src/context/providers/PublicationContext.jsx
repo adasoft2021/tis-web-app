@@ -7,6 +7,8 @@ import {
 } from '../reducers/publicationReducer'
 import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
 import { useToast } from './ToastContext'
+import { useUserCredentials } from './UserCredentialsContext'
+import { userTypes } from '../reducers/userCredentialsReducer'
 
 const PublicationContext = createContext({
 	...publicationInitialState,
@@ -16,6 +18,7 @@ const PublicationContext = createContext({
 	resetPublicationDTO: () => {},
 	updatePublication: async ({ publicationId, publicationDTO }) => {},
 	createPublication: async ({ publicationDTO }) => {},
+	getPublishedPublications: async ({ publicationType }) => {},
 })
 
 export const usePublication = () => {
@@ -24,40 +27,52 @@ export const usePublication = () => {
 	return context
 }
 
-export const useAllAdviserPublications = ({ adviserId, publicationType }) => {
-	const { getAllAdviserPublications, isLoading, publications } =
-		usePublication()
+export const useAllAdviserPublications = (publicationType) => {
+	const {
+		getAllAdviserPublications,
+		getPublishedPublications,
+		isLoading,
+		publications,
+	} = usePublication()
+	const { userType } = useUserCredentials()
 
 	useEffect(() => {
-		getAllAdviserPublications({
-			adviserId,
-			publicationType: publicationType.substring(
-				0,
-				publicationType.length - 1
-			),
-		})
-	}, [])
+		if (userType === userTypes.ADVISER) {
+			getAllAdviserPublications({
+				publicationType: publicationType.substring(
+					0,
+					publicationType.length - 1
+				),
+			})
+		} else {
+			getPublishedPublications({
+				publicationType: publicationType.substring(
+					0,
+					publicationType.length - 1
+				),
+			})
+		}
+	}, [userType])
 
 	return { isLoading, publications }
 }
 
 export const PublicationProvider = ({ children }) => {
 	const { showToast } = useToast()
+	const { id, token } = useUserCredentials()
 
 	const [state, dispatch] = useReducer(
 		publicationReducer,
 		publicationInitialState
 	)
 
-	const getAllAdviserPublications = async ({
-		adviserId,
-		publicationType,
-	}) => {
+	const getAllAdviserPublications = async ({ publicationType }) => {
 		dispatch({ type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST })
 		try {
 			const publications =
 				await publicationService.getAllAdviserPublications({
-					adviserId,
+					token,
+					adviserId: id,
 					publicationType,
 				})
 			dispatch({
@@ -83,7 +98,7 @@ export const PublicationProvider = ({ children }) => {
 
 	const deletePublication = async ({ publicationId }) => {
 		try {
-			await publicationService.deletePublication({ publicationId })
+			await publicationService.deletePublication({ token, publicationId })
 			dispatch({
 				type: PUBLICATION_ACTIONS.LOAD_DELETE_PUBLICATION_SUCCESS,
 				payload: publicationId,
@@ -126,6 +141,7 @@ export const PublicationProvider = ({ children }) => {
 		})
 		try {
 			const publication = await publicationService.updatePublication({
+				token,
 				publicationId,
 				publicationDTO,
 			})
@@ -160,6 +176,7 @@ export const PublicationProvider = ({ children }) => {
 		})
 		try {
 			const publication = await publicationService.createPublication({
+				token,
 				publicationDTO,
 			})
 			dispatch({
@@ -181,6 +198,34 @@ export const PublicationProvider = ({ children }) => {
 		}
 	}
 
+	const getPublishedPublications = async ({ publicationType }) => {
+		dispatch({ type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST })
+		try {
+			const publications =
+				await publicationService.getPublishedPublications({
+					publicationType,
+				})
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_SUCCESS,
+				payload: publications,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
+		}
+	}
+
 	return (
 		<PublicationContext.Provider
 			value={{
@@ -191,6 +236,7 @@ export const PublicationProvider = ({ children }) => {
 				resetPublicationDTO,
 				updatePublication,
 				createPublication,
+				getPublishedPublications,
 			}}
 		>
 			{children}

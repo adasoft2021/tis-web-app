@@ -8,22 +8,12 @@ import {
 } from '../context/providers/PublicationContext'
 import PublicationCard from './PublicationCard'
 import PostForm from './PostForm'
-import {
-	useCurrentSemester,
-	useSemester,
-} from '../context/providers/SemesterContext'
+import { useCurrentSemester } from '../context/providers/SemesterContext'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import { userTypes } from '../context/reducers/userCredentialsReducer'
 
-const validateDate = (datePublication) => {
-	datePublication = new Date(datePublication)
-	const currentDate = new Date()
-
-	return datePublication > currentDate
-}
-
-const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
-	const { userType } = useUserCredentials()
+const NewPostButton = ({ buttonMessage, publicationType }) => {
+	const { id: adviserId, userType } = useUserCredentials()
 	const { semester } = useCurrentSemester()
 	const { createPublication } = usePublication()
 	const [show, setshow] = useState(false)
@@ -60,13 +50,9 @@ const NewPostButton = ({ buttonMessage, publicationType, adviserId }) => {
 		</center>
 	)
 }
-export default function PublicationList({
-	adviserId = 1,
-	buttonMessage,
-	message,
-}) {
+export default function PublicationList({ buttonMessage, message }) {
 	const [filteredPublications, setFilteredPublications] = useState([])
-	const { semester: currentSemester } = useSemester()
+
 	const [location] = useLocation()
 	const { userType } = useUserCredentials()
 	const publicationType =
@@ -74,23 +60,12 @@ export default function PublicationList({
 			? 'ANNOUNCEMENTS'
 			: location.toUpperCase().replace('/', '')
 	const type = publicationType.slice(0, -1)
-	const { isLoading, publications } = useAllAdviserPublications({
-		adviserId: adviserId,
-		publicationType: publicationType,
-	})
+
+	const { isLoading, publications } =
+		useAllAdviserPublications(publicationType)
 
 	useEffect(() => {
-		setFilteredPublications(
-			publications.filter((publication) => {
-				if (userType === userTypes.ADVISER) {
-					return true
-				}
-				return (
-					publication.semester === currentSemester.semester &&
-					!validateDate(publication.date)
-				)
-			})
-		)
+		setFilteredPublications(publications)
 	}, [publications, userType])
 
 	if (isLoading) {
@@ -109,7 +84,6 @@ export default function PublicationList({
 					<NewPostButton
 						buttonMessage={buttonMessage}
 						publicationType={type}
-						adviserId={adviserId}
 					/>
 				)}
 			</div>
@@ -131,7 +105,6 @@ export default function PublicationList({
 					<NewPostButton
 						buttonMessage={buttonMessage}
 						publicationType={type}
-						adviserId={adviserId}
 					/>
 				)}
 			</Col>

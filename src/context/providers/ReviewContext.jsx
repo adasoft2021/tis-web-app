@@ -2,6 +2,7 @@ import { createContext, useContext, useReducer } from 'react'
 import * as reviewService from '../../services/reviewService'
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
+import { useUserCredentials } from './UserCredentialsContext'
 
 export const ReviewContext = createContext({
 	...reviewInitialState,
@@ -17,12 +18,16 @@ export const useReview = () => {
 }
 
 export const ReviewProvider = ({ children }) => {
+	const { token } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
 	const createReview = async (reviewDTO) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
-			const review = await reviewService.createReview(reviewDTO)
+			const review = await reviewService.createReview({
+				token,
+				reviewDTO,
+			})
 			dispatch({
 				type: REVIEW_ACTIONS.LOAD_CREATE_SUCCESS,
 				payload: review,
@@ -38,7 +43,7 @@ export const ReviewProvider = ({ children }) => {
 	const getReview = async (reviewId) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
-			const review = await reviewService.getReview(reviewId)
+			const review = await reviewService.getReview({ token, reviewId })
 			dispatch({ type: REVIEW_ACTIONS.LOAD_GET_SUCCESS, payload: review })
 		} catch ({ response: { data } }) {
 			dispatch({
@@ -52,6 +57,7 @@ export const ReviewProvider = ({ children }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.updateReview({
+				token,
 				reviewId,
 				reviewDTO,
 			})

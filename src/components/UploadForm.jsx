@@ -7,6 +7,8 @@ import { app } from '../fb'
 
 import { ImageConfig } from '../config/ImageConfig'
 import uploadImg from '../assets/cloud1.png'
+import { useSpaceAnswer } from '../context/providers/SpaceAnswerContext'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 
 const UploadForm = (props) => {
 	const wrapperRef = useRef(null)
@@ -34,7 +36,7 @@ const UploadForm = (props) => {
 		setFileList(updatedList)
 		props.onFileChange(updatedList)
 	}
-	const handleUpload = () => {
+	const handleUpload = async () => {
 		fileList.forEach(async (file) => {
 			const storageRef = app.storage().ref()
 			const filePath = storageRef.child(file.name)
@@ -48,6 +50,9 @@ const UploadForm = (props) => {
 			setFileList(updatedList)
 		})
 	}
+
+	const { spaceAnswer, createSpaceAnswer } = useSpaceAnswer()
+	const { id } = useUserCredentials()
 	return (
 		<>
 			<div
@@ -105,8 +110,20 @@ const UploadForm = (props) => {
 								showCancelButton: true,
 								confirmButtonText: 'Subir',
 							}).then((result) => {
-								if (result.isConfirmed) {
+								if (result.isConfirmed && spaceAnswer) {
 									handleUpload()
+									createSpaceAnswer({
+										spaceId: 1,
+										spaceAnswerDTO: {
+											spaceId: 1,
+											createdById: id,
+											files: fileList.map((file) => ({
+												name: file.name,
+												url: file.url || '',
+												deleted: false,
+											})),
+										},
+									})
 									Swal.fire('Subido!', '', 'success')
 								}
 							})

@@ -5,6 +5,9 @@ import Board from './board'
 import SpecificationSheet from './specificationSheet'
 import CompaniesList from './companies'
 import File from './file'
+import Register from './register/Register'
+import AdditionalGE from './additionalGE'
+import BoardFileUpload from './boardFileUpload'
 
 export {
 	Announcement,
@@ -14,4 +17,7 @@ export {
 	SpecificationSheet,
 	CompaniesList,
 	File,
+	Register,
+	AdditionalGE,
+	BoardFileUpload,
 }
