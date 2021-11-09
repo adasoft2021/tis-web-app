@@ -6,6 +6,8 @@ import Swal from 'sweetalert2'
 
 import { ImageConfig } from '../config/ImageConfig'
 import uploadImg from '../assets/cloud1.png'
+import { useSpaceAnswer } from '../context/providers/SpaceAnswerContext'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 
 const UploadForm = (props) => {
 	const wrapperRef = useRef(null)
@@ -33,6 +35,9 @@ const UploadForm = (props) => {
 		setFileList(updatedList)
 		props.onFileChange(updatedList)
 	}
+
+	const { spaceAnswer, createSpaceAnswer } = useSpaceAnswer()
+	const { id } = useUserCredentials()
 
 	return (
 		<>
@@ -91,7 +96,19 @@ const UploadForm = (props) => {
 								showCancelButton: true,
 								confirmButtonText: 'Subir',
 							}).then((result) => {
-								if (result.isConfirmed) {
+								createSpaceAnswer({
+									spaceId: 1,
+									spaceAnswerDTO: {
+										spaceId: 1,
+										createdById: id,
+										files: fileList.map((file) => ({
+											name: file.name,
+											url: file.url || '',
+											deleted: false,
+										})),
+									},
+								})
+								if (result.isConfirmed && spaceAnswer) {
 									Swal.fire('Subido!', '', 'success')
 								}
 							})

@@ -105,41 +105,45 @@ export default function Page({ children }) {
 								Lista de GE
 							</Nav.Link>
 						</Link>
+						{userType === userTypes.ADVISER && (
+							<div>
+								<Link to='/proposals-presentation/Parte A/1'>
+									<Nav.Link
+										eventKey='/proposals-presentation'
+										className='p-3 ps-4 border-bottom border-light text-light'
+									>
+										Presentación de propuestas
+									</Nav.Link>
+								</Link>
 
-						<Link to='/proposals-presentation/Parte A/1'>
-							<Nav.Link
-								eventKey='/proposals-presentation'
-								className='p-3 ps-4 border-bottom border-light text-light'
-							>
-								Presentación de propuestas
-							</Nav.Link>
-						</Link>
-
-						<Link to='/project-development/Entregable semana 1/2'>
-							<Nav.Link
-								eventKey='/project-development'
-								className='p-3 ps-4 border-bottom border-light text-light'
-							>
-								Desarrollo de proyecto
-							</Nav.Link>
-						</Link>
-						<Link to='/final-evaluation/espacio 1/3'>
-							<Nav.Link
-								eventKey='/final-evaluation'
-								className='p-3 ps-4 border-bottom border-light text-light'
-							>
-								Evaluación final
-							</Nav.Link>
-						</Link>
-
-						<Link to='/file'>
-							<Nav.Link
-								eventKey='/file'
-								className='p-3 ps-4 border-bottom border-light text-light'
-							>
-								Envio de Archivos
-							</Nav.Link>
-						</Link>
+								<Link to='/project-development/Entregable semana 1/2'>
+									<Nav.Link
+										eventKey='/project-development'
+										className='p-3 ps-4 border-bottom border-light text-light'
+									>
+										Desarrollo de proyecto
+									</Nav.Link>
+								</Link>
+								<Link to='/final-evaluation/espacio 1/3'>
+									<Nav.Link
+										eventKey='/final-evaluation'
+										className='p-3 ps-4 border-bottom border-light text-light'
+									>
+										Evaluación final
+									</Nav.Link>
+								</Link>
+							</div>
+						)}
+						{userType === userTypes.COMPANY && (
+							<Link to='/file'>
+								<Nav.Link
+									eventKey='/file'
+									className='p-3 ps-4 border-bottom border-light text-light'
+								>
+									Envio de Archivos
+								</Nav.Link>
+							</Link>
+						)}
 					</Nav>
 				</Col>
 				<Col sm={10} className={styles.content}>
