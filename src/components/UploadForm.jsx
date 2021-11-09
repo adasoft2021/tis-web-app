@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import './drop-file-input.scss'
 import Swal from 'sweetalert2'
 import { app } from '../fb'
-
+import { useToast } from '../context/providers/ToastContext'
 import { ImageConfig } from '../config/ImageConfig'
 import uploadImg from '../assets/cloud1.png'
 import { useSpaceAnswer } from '../context/providers/SpaceAnswerContext'
@@ -36,18 +36,29 @@ const UploadForm = (props) => {
 		setFileList(updatedList)
 		props.onFileChange(updatedList)
 	}
-	const handleUpload = async () => {
+
+	const [fileListURL, setFileListURL] = useState([])
+	const { showToast } = useToast()
+	const handleUpload = () => {
+		console.log(fileList)
+		const storageRef = app.storage().ref()
 		fileList.forEach(async (file) => {
-			const storageRef = app.storage().ref()
 			const filePath = storageRef.child(file.name)
-			await filePath.put(file)
-			const fileDownloadUrl = filePath.getDownloadURL()
-			fileRemove(file)
-			const updatedList = [
-				...fileList,
-				{ name: file.name, url: fileDownloadUrl },
-			]
-			setFileList(updatedList)
+			try {
+				await filePath.put(file)
+				const fileDownloadUrl = await filePath.getDownloadURL()
+				const updatedList = [
+					...fileListURL,
+					{ name: file.name, url: fileDownloadUrl, deleted: false },
+				]
+				setFileListURL(updatedList)
+				console.log(fileDownloadUrl)
+			} catch {
+				showToast({
+					color: 'danger',
+					message: 'No se pudo subir el archivo',
+				})
+			}
 		})
 	}
 
@@ -110,21 +121,19 @@ const UploadForm = (props) => {
 								showCancelButton: true,
 								confirmButtonText: 'Subir',
 							}).then((result) => {
-								if (result.isConfirmed && spaceAnswer) {
+								if (result.isConfirmed) {
 									handleUpload()
 									createSpaceAnswer({
 										spaceId: 1,
 										spaceAnswerDTO: {
 											spaceId: 1,
 											createdById: id,
-											files: fileList.map((file) => ({
-												name: file.name,
-												url: file.url || '',
-												deleted: false,
-											})),
+											files: fileListURL,
 										},
 									})
-									Swal.fire('Subido!', '', 'success')
+									if (spaceAnswer) {
+										Swal.fire('Subido!', '', 'success')
+									}
 								}
 							})
 						}
