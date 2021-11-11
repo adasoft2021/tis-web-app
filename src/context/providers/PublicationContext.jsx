@@ -8,6 +8,7 @@ import {
 import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
 import { useToast } from './ToastContext'
 import { useUserCredentials } from './UserCredentialsContext'
+import { userTypes } from '../reducers/userCredentialsReducer'
 
 const PublicationContext = createContext({
 	...publicationInitialState,
@@ -17,6 +18,7 @@ const PublicationContext = createContext({
 	resetPublicationDTO: () => {},
 	updatePublication: async ({ publicationId, publicationDTO }) => {},
 	createPublication: async ({ publicationDTO }) => {},
+	getPublishedPublications: async ({ publicationType }) => {},
 })
 
 export const usePublication = () => {
@@ -26,17 +28,31 @@ export const usePublication = () => {
 }
 
 export const useAllAdviserPublications = (publicationType) => {
-	const { getAllAdviserPublications, isLoading, publications } =
-		usePublication()
+	const {
+		getAllAdviserPublications,
+		getPublishedPublications,
+		isLoading,
+		publications,
+	} = usePublication()
+	const { userType } = useUserCredentials()
 
 	useEffect(() => {
-		getAllAdviserPublications({
-			publicationType: publicationType.substring(
-				0,
-				publicationType.length - 1
-			),
-		})
-	}, [])
+		if (userType === userTypes.ADVISER) {
+			getAllAdviserPublications({
+				publicationType: publicationType.substring(
+					0,
+					publicationType.length - 1
+				),
+			})
+		} else {
+			getPublishedPublications({
+				publicationType: publicationType.substring(
+					0,
+					publicationType.length - 1
+				),
+			})
+		}
+	}, [userType])
 
 	return { isLoading, publications }
 }
@@ -182,6 +198,34 @@ export const PublicationProvider = ({ children }) => {
 		}
 	}
 
+	const getPublishedPublications = async ({ publicationType }) => {
+		dispatch({ type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST })
+		try {
+			const publications =
+				await publicationService.getPublishedPublications({
+					publicationType,
+				})
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_SUCCESS,
+				payload: publications,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
+		}
+	}
+
 	return (
 		<PublicationContext.Provider
 			value={{
@@ -192,6 +236,7 @@ export const PublicationProvider = ({ children }) => {
 				resetPublicationDTO,
 				updatePublication,
 				createPublication,
+				getPublishedPublications,
 			}}
 		>
 			{children}

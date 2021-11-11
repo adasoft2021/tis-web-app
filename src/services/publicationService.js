@@ -47,3 +47,10 @@ export async function deletePublication({ token, publicationId }) {
 		headers: { 'X-Token': token },
 	})
 }
+
+export async function getPublishedPublications({ publicationType }) {
+	const response = await publicationService.get('/published', {
+		params: { adviserId: 1, type: publicationType, semester: '2-2021' },
+	})
+	return response.data
+}

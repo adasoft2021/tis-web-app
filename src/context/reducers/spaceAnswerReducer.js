@@ -1,6 +1,7 @@
 import { SPACE_ANSWER_ACTIONS } from '../actions/spaceAnswerActions'
 
 export const spaceAnswerInitialState = {
+	spaceAnswer: null,
 	spaceAnswers: [],
 	spaceAnswerDTO: null,
 	isLoading: false,
@@ -12,11 +13,13 @@ export const spaceAnswerReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				isLoading: true,
+				spaceAnswer: null,
 			}
 		case SPACE_ANSWER_ACTIONS.LOAD_CREATE_SPACE_ANSWER_SUCCESS:
 			return {
 				...state,
 				spaceAnswers: [...state.spaceAnswers, payload],
+				spaceAnswer: payload,
 			}
 		case SPACE_ANSWER_ACTIONS.LOAD_SPACE_ANSWERS_LIST:
 			return {
@@ -33,6 +36,7 @@ export const spaceAnswerReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				isLoading: false,
+				spaceAnswer: null,
 			}
 	}
 }
