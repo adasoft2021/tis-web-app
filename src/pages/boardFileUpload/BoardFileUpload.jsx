@@ -4,6 +4,7 @@ import ContextAwareToggle from '../../components/ContextAwareToggle'
 import { useSpaceAnswerList } from '../../context/providers/SpaceAnswerContext'
 import Page from '../Page'
 import ListCard from './ListCard'
+import CreateSpace from '../../components/createSpace/CreateSpace'
 
 function Header({ companyName }) {
 	return (
@@ -43,12 +44,17 @@ const BoardFileUpload = ({ spaceId, spaceTitle }) => {
 							/>
 						))
 					) : (
-						<h4>
-							Aún no hay respuesta de alguna GE a {spaceTitle}
-						</h4>
+						<>
+							<h4>
+								Aún no hay respuesta de alguna GE a {spaceTitle}
+							</h4>
+						</>
 					)}
 				</>
 			)}
+			<center className='p-4'>
+				<CreateSpace />
+			</center>
 		</Page>
 	)
 }
