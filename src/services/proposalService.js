@@ -14,3 +14,12 @@ export async function getAllAdviserProposals({ token, adviserId }) {
 
 	return response.data
 }
+
+export async function getProposal({ token, proposalId }) {
+	const response = await proposalService.get(`/${proposalId}`, {
+		headers: {
+			'X-Token': token,
+		},
+	})
+	return response.data
+}

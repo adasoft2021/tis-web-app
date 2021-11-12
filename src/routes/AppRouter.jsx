@@ -1,4 +1,7 @@
 import { Route, Switch } from 'wouter'
+import { ObservationProvider } from '../context/providers/ObservationContext'
+import { ProposalProvider } from '../context/providers/ProposalContext'
+import { ReviewProvider } from '../context/providers/ReviewContext'
 import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import {
@@ -12,6 +15,7 @@ import {
 	Register,
 	AdditionalGE,
 	BoardFileUpload,
+	Review,
 } from '../pages'
 
 export default function AppRouter() {
@@ -24,6 +28,18 @@ export default function AppRouter() {
 			<Route
 				path='/specification_sheets'
 				component={SpecificationSheet}
+			/>
+			<Route
+				path='/reviews'
+				component={(props) => (
+					<ProposalProvider>
+						<ObservationProvider>
+							<ReviewProvider>
+								<Review {...props} />
+							</ReviewProvider>
+						</ObservationProvider>
+					</ProposalProvider>
+				)}
 			/>
 			<Route
 				path='/companies'
