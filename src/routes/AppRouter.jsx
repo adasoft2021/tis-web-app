@@ -13,6 +13,7 @@ import {
 	AdditionalGE,
 	BoardFileUpload,
 } from '../pages'
+import ReviewList from '../pages/reviewList/ReviewList'
 
 export default function AppRouter() {
 	return (
@@ -25,6 +26,7 @@ export default function AppRouter() {
 				path='/specification_sheets'
 				component={SpecificationSheet}
 			/>
+			<Route path='/reviews' component={ReviewList} />
 			<Route
 				path='/companies'
 				component={(props) => (
@@ -37,6 +39,7 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
+
 			<SpaceAnswerProvider>
 				<Route
 					path='/proposals-presentation/:spaceTitle/:spaceId'
