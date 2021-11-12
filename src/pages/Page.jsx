@@ -132,6 +132,14 @@ export default function Page({ children }) {
 										Evaluación final
 									</Nav.Link>
 								</Link>
+								<Link to='/reviews-list'>
+									<Nav.Link
+										eventKey='/reviews-list'
+										className='p-3 ps-4 border-bottom border-light text-light'
+									>
+										Revisiones
+									</Nav.Link>
+								</Link>
 							</div>
 						)}
 						{userType === userTypes.COMPANY && (

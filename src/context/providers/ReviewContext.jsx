@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react'
+import { createContext, useContext, useEffect, useReducer } from 'react'
 import * as reviewService from '../../services/reviewService'
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
@@ -6,7 +6,7 @@ import { useUserCredentials } from './UserCredentialsContext'
 
 export const ReviewContext = createContext({
 	...reviewInitialState,
-	createReview: async (reviewDTO) => reviewDTO,
+	createReview: async ({ reviewDTO }) => reviewDTO,
 	getReview: async (reviewId) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 })
@@ -17,11 +17,21 @@ export const useReview = () => {
 	return context
 }
 
+export const useReviewById = (reviewId) => {
+	const { error, getReview } = useReview()
+
+	useEffect(() => {
+		getReview(reviewId)
+	}, [])
+
+	return { error }
+}
+
 export const ReviewProvider = ({ children }) => {
 	const { token } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
-	const createReview = async (reviewDTO) => {
+	const createReview = async ({ reviewDTO }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.createReview({

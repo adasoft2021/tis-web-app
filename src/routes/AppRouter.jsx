@@ -13,7 +13,8 @@ import {
 	AdditionalGE,
 	BoardFileUpload,
 } from '../pages'
-
+import { ReviewsList } from '../pages/reviews/ReviewsList'
+import { ReviewProvider } from '../context/providers/ReviewContext'
 export default function AppRouter() {
 	return (
 		<Switch>
@@ -37,35 +38,47 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
-			<SpaceAnswerProvider>
-				<Route
-					path='/proposals-presentation/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+			<Route
+				path='/proposals-presentation/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-				<Route
-					path='/project-development/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/project-development/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-				<Route
-					path='/final-evaluation/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/final-evaluation/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-			</SpaceAnswerProvider>
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/reviews-list'
+				component={(props) => (
+					<ReviewProvider>
+						<ReviewsList {...props} />
+					</ReviewProvider>
+				)}
+			/>
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
