@@ -1,10 +1,12 @@
-const { default: createInstance } = require('./http')
+import createInstance from './http'
 
 const proposalService = createInstance({ url: '/proposals' })
 
-export async function getAllAdviserProposals({ adviserId = 1 }) {
+export async function getAllAdviserProposals({ token, adviserId }) {
 	const response = await proposalService.get('', {
-		headers: {},
+		headers: {
+			'X-Token': token,
+		},
 		params: {
 			adviser: adviserId,
 		},
@@ -13,7 +15,11 @@ export async function getAllAdviserProposals({ adviserId = 1 }) {
 	return response.data
 }
 
-export async function getProposal({ proposalId }) {
-	const response = await proposalService.get(`/${proposalId}`)
+export async function getProposal({ token, proposalId }) {
+	const response = await proposalService.get(`/${proposalId}`, {
+		headers: {
+			'X-Token': token,
+		},
+	})
 	return response.data
 }

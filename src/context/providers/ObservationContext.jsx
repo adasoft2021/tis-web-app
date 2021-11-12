@@ -5,6 +5,7 @@ import {
 	observationInitialState,
 	observationReducer,
 } from '../reducers/observationReducer'
+import { useUserCredentials } from './UserCredentialsContext'
 
 export const ObservationContext = createContext({
 	...observationInitialState,
@@ -40,6 +41,7 @@ export const useObservationsList = (proposalId) => {
 }
 
 export const ObservationProvider = ({ children }) => {
+	const { token } = useUserCredentials()
 	const [state, dispatch] = useReducer(
 		observationReducer,
 		observationInitialState
@@ -49,6 +51,7 @@ export const ObservationProvider = ({ children }) => {
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_CREATE })
 		try {
 			const observation = await observationService.createObservation({
+				token,
 				proposalId,
 				observationDTO,
 			})
@@ -71,6 +74,7 @@ export const ObservationProvider = ({ children }) => {
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_DELETE })
 		try {
 			await observationService.deleteObservation({
+				token,
 				observationId,
 			})
 			dispatch({
@@ -93,6 +97,7 @@ export const ObservationProvider = ({ children }) => {
 		try {
 			const observations =
 				await observationService.getAllProposalObservations({
+					token,
 					proposalId,
 				})
 			dispatch({
@@ -114,6 +119,7 @@ export const ObservationProvider = ({ children }) => {
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_UPDATE })
 		try {
 			const observation = await observationService.updateObservation({
+				token,
 				observationId,
 				observationDTO,
 			})

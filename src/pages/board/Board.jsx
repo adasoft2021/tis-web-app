@@ -11,7 +11,6 @@ export default function Board() {
 	const openInNewTab = (url) => {
 		const newWindow = window.open(url)
 		if (newWindow) newWindow.opener = null
-		console.log(url)
 	}
 	const { getProposal } = useProposal()
 

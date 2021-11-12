@@ -5,13 +5,15 @@ import {
 	proposalInitialState,
 	proposalReducer,
 } from '../reducers/proposalReducer'
+import { useUserCredentials } from './UserCredentialsContext'
 
 export const ProposalContext = createContext({
 	...proposalInitialState,
+	getAllAdviserProposals: async () => {},
 	getProposal: async ({ proposalId }) => {},
 })
 
-export function useProposal() {
+export const useProposal = () => {
 	const context = useContext(ProposalContext)
 
 	return context
@@ -27,13 +29,47 @@ export function useProposalById(proposalId) {
 	return { error, isLoading, proposal }
 }
 
+export const useListProposals = () => {
+	const { error, getAllAdviserProposals, isLoading, proposals } =
+		useProposal()
+
+	useEffect(() => {
+		getAllAdviserProposals()
+	}, [])
+
+	return { error, isLoading, proposals }
+}
+
 export const ProposalProvider = ({ children }) => {
+	const { id, token } = useUserCredentials()
 	const [state, dispatch] = useReducer(proposalReducer, proposalInitialState)
+
+	const getAllAdviserProposals = async () => {
+		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
+		try {
+			const proposals = await proposalService.getAllAdviserProposals({
+				token,
+				adviserId: id,
+			})
+			dispatch({
+				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_SUCCESS,
+				payload: proposals,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_ERROR,
+				payload: data,
+			})
+		}
+	}
 
 	const getProposal = async ({ proposalId }) => {
 		dispatch({ type: PROPOSAL_ACTIONS.LOAD_GET_PROPOSAL })
 		try {
-			const proposal = await proposalService.getProposal({ proposalId })
+			const proposal = await proposalService.getProposal({
+				token,
+				proposalId,
+			})
 			dispatch({
 				type: PROPOSAL_ACTIONS.LOAD_GET_PROPOSAL_SUCCESS,
 				payload: proposal,
@@ -50,7 +86,9 @@ export const ProposalProvider = ({ children }) => {
 	}
 
 	return (
-		<ProposalContext.Provider value={{ ...state, getProposal }}>
+		<ProposalContext.Provider
+			value={{ ...state, getAllAdviserProposals, getProposal }}
+		>
 			{children}
 		</ProposalContext.Provider>
 	)
