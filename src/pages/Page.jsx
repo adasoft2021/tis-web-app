@@ -132,9 +132,9 @@ export default function Page({ children }) {
 										Evaluación final
 									</Nav.Link>
 								</Link>
-								<Link to='/reviews-list'>
+								<Link to='/reviews'>
 									<Nav.Link
-										eventKey='/reviews-list'
+										eventKey='/reviews'
 										className='p-3 ps-4 border-bottom border-light text-light'
 									>
 										Revisiones

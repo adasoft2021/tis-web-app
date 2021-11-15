@@ -1,6 +1,11 @@
 import { Route, Switch } from 'wouter'
+import { ObservationProvider } from '../context/providers/ObservationContext'
+import { ProposalProvider } from '../context/providers/ProposalContext'
+import { ReviewProvider } from '../context/providers/ReviewContext'
 import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
+import { ProyectProvider } from '../context/providers/ProyectContext'
+import { SpaceProvider } from '../context/providers/SpaceContext'
 import {
 	Board,
 	NotFoundPage,
@@ -12,9 +17,10 @@ import {
 	Register,
 	AdditionalGE,
 	BoardFileUpload,
+	Review,
 } from '../pages'
 import { ReviewsList } from '../pages/reviews/ReviewsList'
-import { ReviewProvider } from '../context/providers/ReviewContext'
+
 export default function AppRouter() {
 	return (
 		<Switch>
@@ -25,6 +31,18 @@ export default function AppRouter() {
 			<Route
 				path='/specification_sheets'
 				component={SpecificationSheet}
+			/>
+			<Route
+				path='/reviews/:reviewId'
+				component={({ params: { reviewId } }) => (
+					<ProposalProvider>
+						<ObservationProvider>
+							<ReviewProvider>
+								<Review reviewId={reviewId} />
+							</ReviewProvider>
+						</ObservationProvider>
+					</ProposalProvider>
+				)}
 			/>
 			<Route
 				path='/companies'
@@ -72,11 +90,17 @@ export default function AppRouter() {
 				)}
 			/>
 			<Route
-				path='/reviews-list'
+				path='/reviews'
 				component={(props) => (
-					<ReviewProvider>
-						<ReviewsList {...props} />
-					</ReviewProvider>
+					<ProyectProvider>
+						<CompanyProvider>
+							<SpaceProvider>
+								<ReviewProvider>
+									<ReviewsList {...props} />
+								</ReviewProvider>
+							</SpaceProvider>
+						</CompanyProvider>
+					</ProyectProvider>
 				)}
 			/>
 			<Route component={NotFoundPage} />
