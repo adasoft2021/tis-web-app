@@ -4,6 +4,7 @@ import { REVIEW_ACTIONS } from '../actions/reviewActions'
 
 export const reviewInitialState = {
 	review: null,
+	reviews: [],
 	error: null,
 	isLoading: true,
 	qualificationSchema: null,
@@ -105,6 +106,24 @@ export const reviewReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				error: payload,
+				isLoading: false,
+			}
+
+		case REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS:
+			return {
+				...state,
+				isLoading: true,
+			}
+
+		case REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS_SUCCESS:
+			return {
+				...state,
+				isLoading: false,
+				reviews: payload,
+			}
+		case REVIEW_ACTIONS.STOP_LOADING:
+			return {
+				...state,
 				isLoading: false,
 			}
 		default:
