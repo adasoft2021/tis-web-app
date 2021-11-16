@@ -8,6 +8,7 @@ import { useAllCompanies } from '../../context/providers/CompanyContext'
 import { useProyect } from '../../context/providers/ProyectContext'
 import { useSpace } from '../../context/providers/SpaceContext'
 import { useReview } from '../../context/providers/ReviewContext'
+import { useUserCredentials } from '../../context/providers/UserCredentialsContext'
 export default function ReviewForm({
 	show,
 	onHide,
@@ -19,6 +20,7 @@ export default function ReviewForm({
 	const { spaces, getProyectSpaces } = useSpace()
 	const [proyectSpaces, setProyectSpaces] = useState([spaces])
 	const { createReview } = useReview()
+	const { id } = useUserCredentials()
 	useEffect(() => {
 		getAdviserProyects()
 	}, [])
@@ -80,8 +82,8 @@ export default function ReviewForm({
 				createReview({
 					reviewDTO: {
 						title: values.title,
-						proyectId: values.proyect,
 						spaces: values.selectedSpaces.map((space) => space.id),
+						createdById: id,
 						companyId: values.company,
 					},
 				})
