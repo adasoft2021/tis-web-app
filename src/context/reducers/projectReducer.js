@@ -1,6 +1,7 @@
 import { PROJECT_ACTIONS } from '../actions/projectActions'
 
 export const projectInitialState = {
+	projectDTO: null,
 	projects: [],
 }
 

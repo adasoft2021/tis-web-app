@@ -16,6 +16,9 @@ const ProjectContext = createContext({
 	 *      specificationSheetId: number}} projectDTO proyecto a crear que
 	 * contiene el título del Proyecto, el ID de la Convocatoria y el ID del
 	 * Pliego de Especificaciones relacionados al Proyecto.
+	 *
+	 * @returns {Promise<boolean>} true si se creó el proyecto y false caso
+	 * contrario.
 	 */
 	createProject: async (projectDTO) => {},
 })
@@ -50,6 +53,7 @@ export function ProjectProvider({ children }) {
 				color: 'success',
 				message: `Se creó el Proyecto ${title}.`,
 			})
+			return true
 		} catch ({
 			response: {
 				data: { message },
@@ -63,6 +67,7 @@ export function ProjectProvider({ children }) {
 						? message
 						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
+			return false
 		}
 	}
 

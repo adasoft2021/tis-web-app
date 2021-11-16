@@ -18,6 +18,7 @@ import {
 	Review,
 	Project,
 } from '../pages'
+import { ProjectProvider } from '../context/providers/ProjectContext'
 
 export default function AppRouter() {
 	return (
@@ -54,7 +55,9 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
-			<Route path='/projects' component={Project} />
+			<ProjectProvider>
+				<Route path='/projects' component={Project} />
+			</ProjectProvider>
 			<SpaceAnswerProvider>
 				<Route
 					path='/proposals-presentation/:spaceTitle/:spaceId'
