@@ -17,7 +17,8 @@ import {
 	BoardFileUpload,
 	Review,
 } from '../pages'
-import Addendum from '../pages/addendum/Addendum'
+import ReviewList from '../pages/reviewList/ReviewList'
+
 export default function AppRouter() {
 	return (
 		<Switch>
@@ -31,7 +32,7 @@ export default function AppRouter() {
 			/>
 
 			<Route
-				path='/reviews'
+				path='/reviews/:review'
 				component={(props) => (
 					<ProposalProvider>
 						<ObservationProvider>
@@ -42,6 +43,7 @@ export default function AppRouter() {
 					</ProposalProvider>
 				)}
 			/>
+			<Route path='/reviews' component={ReviewList} />
 			<Route
 				path='/companies'
 				component={(props) => (
@@ -54,7 +56,6 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
-			<Route path='/demoPage' component={Addendum} />
 
 			<SpaceAnswerProvider>
 				<Route
