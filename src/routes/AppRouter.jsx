@@ -16,6 +16,7 @@ import {
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
+	Project,
 } from '../pages'
 
 export default function AppRouter() {
@@ -53,6 +54,7 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
+			<Route path='/projects' component={Project} />
 			<SpaceAnswerProvider>
 				<Route
 					path='/proposals-presentation/:spaceTitle/:spaceId'
