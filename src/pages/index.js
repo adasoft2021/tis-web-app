@@ -9,7 +9,7 @@ import File from './file'
 import Register from './register/Register'
 import AdditionalGE from './additionalGE'
 import BoardFileUpload from './boardFileUpload'
-
+import ReviewCompany from './reviewCompany'
 export {
 	Announcement,
 	HomePage,
@@ -22,4 +22,5 @@ export {
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
+	ReviewCompany,
 }

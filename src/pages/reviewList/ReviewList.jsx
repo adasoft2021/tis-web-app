@@ -1,25 +1,24 @@
+import { Spinner } from 'react-bootstrap'
 import DisplayLinkList from '../../components/DisplayLinkList'
+import { useCompanyReviews } from '../../context/providers/ReviewContext'
 import Page from '../Page'
 
-const reviews = [
-	{
-		id: 1,
-		title: 'Orden de Cambio',
-	},
-	{
-		id: 2,
-		title: 'Adenda',
-	},
-]
-
 const ReviewList = () => {
+	const { isLoading, reviews } = useCompanyReviews()
 	return (
 		<Page>
-			<DisplayLinkList
-				title='Revisiones'
-				description=''
-				linkList={reviews}
-			/>
+			{isLoading ? (
+				<div className='d-flex m-5 justify-content-center align-items-center'>
+					<Spinner animation='border' />
+				</div>
+			) : (
+				<DisplayLinkList
+					title='Revisiones'
+					description=''
+					linkList={reviews}
+					emptyMessage='Aún no hay revisiones'
+				/>
+			)}
 		</Page>
 	)
 }

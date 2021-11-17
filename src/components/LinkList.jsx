@@ -7,14 +7,7 @@ const LinkList = ({ list }) => {
 			{list.map((item) => (
 				<div className='d-flex' key={item.id}>
 					<img className='me-2' src='/image/clickMouse.png' />
-					<Link
-						to={{
-							pathname: `${location}/${item.title}`,
-							state: {
-								id: item.id,
-							},
-						}}
-					>
+					<Link to={`${location}/${item.id}`}>
 						<a>{item.title}</a>
 					</Link>
 				</div>
