@@ -22,3 +22,12 @@ export async function updateReview({ token, reviewId, reviewDTO }) {
 	})
 	return response.data
 }
+
+export async function publishReview({ reviewId, token }) {
+	const response = await reviewService.put(
+		`/${reviewId}/publish`,
+		undefined,
+		{ headers: { 'X-Token': token } }
+	)
+	return response.data
+}
