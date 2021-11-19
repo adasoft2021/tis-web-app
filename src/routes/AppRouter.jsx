@@ -6,6 +6,7 @@ import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
+import { ReviewsList } from '../pages/reviews/ReviewsList'
 import {
 	Board,
 	NotFoundPage,
@@ -19,7 +20,6 @@ import {
 	BoardFileUpload,
 	Review,
 } from '../pages'
-import { ReviewsList } from '../pages/reviews/ReviewsList'
 
 export default function AppRouter() {
 	return (
@@ -56,6 +56,7 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
+
 			<Route
 				path='/proposals-presentation/:spaceTitle/:spaceId'
 				component={({ params: { spaceId, spaceTitle } }) => (
