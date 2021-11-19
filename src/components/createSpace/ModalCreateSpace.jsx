@@ -6,7 +6,7 @@ import CloseButton from './CloseButton'
 import getToDay from './getToDay'
 import { useProject } from '../../context/providers/ProjectContext'
 
-const SignupForm = ({ show, onHide }) => {
+const ModalCreateSpace = ({ show, onHide }) => {
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -37,9 +37,7 @@ const SignupForm = ({ show, onHide }) => {
 	useEffect(() => {
 		getAdviserProjects()
 	}, [])
-	const listProyects = projects.map((name) => (
-		<option key={name.toString()}>{name}</option>
-	))
+
 	return (
 		<Modal
 			show={show}
@@ -86,7 +84,11 @@ const SignupForm = ({ show, onHide }) => {
 								}
 							>
 								<option></option>
-								{listProyects}
+								{projects.map((project) => (
+									<option key={project.id} value={project.id}>
+										{project.title}
+									</option>
+								))}
 							</Form.Select>
 
 							<Form.Control.Feedback type='invalid'>
@@ -140,4 +142,4 @@ const SignupForm = ({ show, onHide }) => {
 		</Modal>
 	)
 }
-export default SignupForm
+export default ModalCreateSpace

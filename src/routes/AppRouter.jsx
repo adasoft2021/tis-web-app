@@ -61,10 +61,14 @@ export default function AppRouter() {
 				path='/proposals-presentation/:spaceTitle/:spaceId'
 				component={({ params: { spaceId, spaceTitle } }) => (
 					<SpaceAnswerProvider>
-						<BoardFileUpload
-							spaceId={spaceId}
-							spaceTitle={decodeURI(spaceTitle)}
-						/>
+						<ProjectProvider>
+							<SpaceProvider>
+								<BoardFileUpload
+									spaceId={spaceId}
+									spaceTitle={decodeURI(spaceTitle)}
+								/>
+							</SpaceProvider>
+						</ProjectProvider>
 					</SpaceAnswerProvider>
 				)}
 			/>
@@ -72,10 +76,14 @@ export default function AppRouter() {
 				path='/project-development/:spaceTitle/:spaceId'
 				component={({ params: { spaceId, spaceTitle } }) => (
 					<SpaceAnswerProvider>
-						<BoardFileUpload
-							spaceId={spaceId}
-							spaceTitle={decodeURI(spaceTitle)}
-						/>
+						<ProjectProvider>
+							<SpaceProvider>
+								<BoardFileUpload
+									spaceId={spaceId}
+									spaceTitle={decodeURI(spaceTitle)}
+								/>{' '}
+							</SpaceProvider>
+						</ProjectProvider>
 					</SpaceAnswerProvider>
 				)}
 			/>
@@ -83,10 +91,14 @@ export default function AppRouter() {
 				path='/final-evaluation/:spaceTitle/:spaceId'
 				component={({ params: { spaceId, spaceTitle } }) => (
 					<SpaceAnswerProvider>
-						<BoardFileUpload
-							spaceId={spaceId}
-							spaceTitle={decodeURI(spaceTitle)}
-						/>
+						<ProjectProvider>
+							<SpaceProvider>
+								<BoardFileUpload
+									spaceId={spaceId}
+									spaceTitle={decodeURI(spaceTitle)}
+								/>
+							</SpaceProvider>
+						</ProjectProvider>
 					</SpaceAnswerProvider>
 				)}
 			/>
