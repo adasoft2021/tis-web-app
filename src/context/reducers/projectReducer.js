@@ -11,5 +11,9 @@ export const projectReducer = (state, { type, payload }) => {
 				...state,
 				projects: [...state.projects, payload],
 			}
+		case PROJECT_ACTIONS.LOAD_ADVISER_PROJECTS_SUCCESS:
+			return { ...state, projects: payload }
+		default:
+			return state
 	}
 }

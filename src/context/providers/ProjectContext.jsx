@@ -18,6 +18,8 @@ const ProjectContext = createContext({
 	 * Pliego de Especificaciones relacionados al Proyecto.
 	 */
 	createProject: async (projectDTO) => {},
+
+	getAdviserProjects: async () => {},
 })
 
 export function useProject() {
@@ -66,8 +68,20 @@ export function ProjectProvider({ children }) {
 		}
 	}
 
+	const getAdviserProjects = async () => {
+		dispatch({
+			type: PROJECT_ACTIONS.LOAD_ADVISER_PROJECTS_SUCCESS,
+			payload: [
+				{ id: 1, title: 'TIS Plataform' },
+				{ id: 2, title: 'MailList' },
+			],
+		})
+	}
+
 	return (
-		<ProjectContext.Provider value={{ ...state, createProject }}>
+		<ProjectContext.Provider
+			value={{ ...state, createProject, getAdviserProjects }}
+		>
 			{children}
 		</ProjectContext.Provider>
 	)

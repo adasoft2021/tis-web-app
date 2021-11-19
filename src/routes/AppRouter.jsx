@@ -4,6 +4,9 @@ import { ProposalProvider } from '../context/providers/ProposalContext'
 import { ReviewProvider } from '../context/providers/ReviewContext'
 import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
+import { ProjectProvider } from '../context/providers/ProjectContext'
+import { SpaceProvider } from '../context/providers/SpaceContext'
+import { ReviewsList } from '../pages/reviews/ReviewsList'
 import {
 	Board,
 	NotFoundPage,
@@ -30,12 +33,12 @@ export default function AppRouter() {
 				component={SpecificationSheet}
 			/>
 			<Route
-				path='/reviews'
-				component={(props) => (
+				path='/reviews/:reviewId'
+				component={({ params: { reviewId } }) => (
 					<ProposalProvider>
 						<ObservationProvider>
 							<ReviewProvider>
-								<Review {...props} />
+								<Review reviewId={reviewId} />
 							</ReviewProvider>
 						</ObservationProvider>
 					</ProposalProvider>
@@ -53,35 +56,54 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
-			<SpaceAnswerProvider>
-				<Route
-					path='/proposals-presentation/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+
+			<Route
+				path='/proposals-presentation/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-				<Route
-					path='/project-development/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/project-development/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-				<Route
-					path='/final-evaluation/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/final-evaluation/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-			</SpaceAnswerProvider>
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/reviews'
+				component={(props) => (
+					<ProjectProvider>
+						<CompanyProvider>
+							<SpaceProvider>
+								<ReviewProvider>
+									<ReviewsList {...props} />
+								</ReviewProvider>
+							</SpaceProvider>
+						</CompanyProvider>
+					</ProjectProvider>
+				)}
+			/>
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
