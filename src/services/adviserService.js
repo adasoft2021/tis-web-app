@@ -18,3 +18,15 @@ export async function getSpaceAnswers({ token, adviserId, spaceId }) {
 	)
 	return response.data
 }
+
+export async function createSpace({ token, spaceDTO, adviserId }) {
+	const response = await adviserService.post(
+		`/${adviserId}/spaces/`,
+		spaceDTO,
+		{
+			headers: { 'X-Token': token },
+		}
+	)
+
+	return response.data
+}
