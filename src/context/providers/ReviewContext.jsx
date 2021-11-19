@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from 'react'
 import * as reviewService from '../../services/reviewService'
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
+import { useToast } from './ToastContext'
 import { useUserCredentials } from './UserCredentialsContext'
 
 export const ReviewContext = createContext({
@@ -9,6 +10,7 @@ export const ReviewContext = createContext({
 	createReview: async (reviewDTO) => reviewDTO,
 	getReview: async (reviewId) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
+	publishReview: async ({ reviewId }) => false,
 })
 
 export const useReview = () => {
@@ -28,6 +30,7 @@ export const useReviewById = (reviewId) => {
 }
 
 export const ReviewProvider = ({ children }) => {
+	const { showToast } = useToast()
 	const { token } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
@@ -83,9 +86,40 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const publishReview = async ({ reviewId }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada.',
+		})
+		try {
+			await reviewService.publishReview({ reviewId, token })
+			return true
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			return false
+		}
+	}
+
 	return (
 		<ReviewContext.Provider
-			value={{ ...state, createReview, getReview, updateReview }}
+			value={{
+				...state,
+				createReview,
+				getReview,
+				updateReview,
+				publishReview,
+			}}
 		>
 			{children}
 		</ReviewContext.Provider>
