@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Button, Container, Nav, Navbar } from 'react-bootstrap'
 import { useProposalById } from '../../context/providers/ProposalContext'
-import { useReviewById } from '../../context/providers/ReviewContext'
+import { useReview } from '../../context/providers/ReviewContext'
 import Grid from './components/Grid'
 import Popup from './components/Popup'
 
-export default function Review() {
+export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
 	const { error } = useProposalById(1)
-	const { error: errorReview } = useReviewById(1)
+	const { error: errorReview, getReview } = useReview()
+
+	useEffect(() => {
+		getReview({ reviewId })
+	})
 
 	useEffect(() => {
 		if (error) {

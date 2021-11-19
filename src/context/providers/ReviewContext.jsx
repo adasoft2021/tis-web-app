@@ -3,10 +3,11 @@ import * as reviewService from '../../services/reviewService'
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
 import { useUserCredentials } from './UserCredentialsContext'
+import { useToast } from './ToastContext'
 
 export const ReviewContext = createContext({
 	...reviewInitialState,
-	createReview: async (reviewDTO) => reviewDTO,
+	createReview: async ({ reviewDTO }) => reviewDTO,
 	getReview: async (reviewId) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 })
@@ -28,10 +29,11 @@ export const useReviewById = (reviewId) => {
 }
 
 export const ReviewProvider = ({ children }) => {
+	const { showToast } = useToast()
 	const { token } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
-	const createReview = async (reviewDTO) => {
+	const createReview = async ({ reviewDTO }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.createReview({
@@ -42,10 +44,21 @@ export const ReviewProvider = ({ children }) => {
 				type: REVIEW_ACTIONS.LOAD_CREATE_SUCCESS,
 				payload: review,
 			})
+			showToast({
+				color: 'success',
+				message: 'Se creo la revision exitosamente',
+			})
 		} catch ({ response: { data } }) {
 			dispatch({
 				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
 				payload: data,
+			})
+			showToast({
+				color: 'danger',
+				message:
+					data.status < 500
+						? data.message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
 			})
 		}
 	}
