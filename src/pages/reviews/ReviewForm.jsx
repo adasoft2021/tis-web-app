@@ -5,7 +5,7 @@ import { FiTrash } from 'react-icons/fi'
 import swal from 'sweetalert'
 import * as Yup from 'yup'
 import { useAllCompanies } from '../../context/providers/CompanyContext'
-import { useProyect } from '../../context/providers/ProyectContext'
+import { useProject } from '../../context/providers/ProjectContext'
 import { useSpace } from '../../context/providers/SpaceContext'
 import { useReview } from '../../context/providers/ReviewContext'
 import { useUserCredentials } from '../../context/providers/UserCredentialsContext'
@@ -15,22 +15,22 @@ export default function ReviewForm({
 	titleForm = 'Crear Revisión',
 	buttonText = 'CREAR',
 }) {
-	const { proyects, getAdviserProyects } = useProyect()
+	const { projects, getAdviserProjects } = useProject()
 	const { companies } = useAllCompanies()
-	const { spaces, getProyectSpaces } = useSpace()
-	const [proyectSpaces, setProyectSpaces] = useState([spaces])
+	const { spaces, getProjectSpaces } = useSpace()
+	const [projectSpaces, setProjectSpaces] = useState([spaces])
 	const { createReview } = useReview()
 	const { id } = useUserCredentials()
 	useEffect(() => {
-		getAdviserProyects()
+		getAdviserProjects()
 	}, [])
 	useEffect(() => {
-		setProyectSpaces(spaces)
+		setProjectSpaces(spaces)
 		formik.setFieldValue('selectedSpaces', [])
 	}, [spaces])
 
-	function handleChangeProyect(e) {
-		getProyectSpaces({ proyectId: e.target.value })
+	function handleChangeProject(e) {
+		getProjectSpaces({ projectId: e.target.value })
 		formik.handleChange(e)
 	}
 	function handleChangeSpace(e) {
@@ -38,8 +38,8 @@ export default function ReviewForm({
 			...formik.values.selectedSpaces,
 			...spaces.filter((space) => space.id === e.target.value),
 		])
-		setProyectSpaces(
-			proyectSpaces.filter((space) => space.id !== e.target.value)
+		setProjectSpaces(
+			projectSpaces.filter((space) => space.id !== e.target.value)
 		)
 	}
 	function handleRemoveSpace(removed) {
@@ -47,15 +47,15 @@ export default function ReviewForm({
 			'selectedSpaces',
 			formik.values.selectedSpaces.filter((space) => space.id !== removed)
 		)
-		setProyectSpaces([
-			...proyectSpaces,
+		setProjectSpaces([
+			...projectSpaces,
 			...spaces.filter((space) => space.id === removed),
 		])
 	}
 	const formik = useFormik({
 		initialValues: {
 			title: '',
-			proyect: '',
+			project: '',
 			company: '',
 			selectedSpaces: [],
 		},
@@ -64,7 +64,7 @@ export default function ReviewForm({
 				.required('Campo obligatorio')
 				.min(5, 'Este campo debe contener mínimo 5 caracteres')
 				.max(40, 'Este campo debe contener máximo 40 caracteres'),
-			proyect: Yup.number()
+			project: Yup.number()
 				.required('Debe seleccionar un proyecto')
 				.positive('Debe seleccionar un proyecto'),
 			company: Yup.number()
@@ -130,30 +130,30 @@ export default function ReviewForm({
 								{formik.touched.title && formik.errors.title}
 							</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group controlId='proyect'>
-							<Form.Label className='fs-4'>Proyecto</Form.Label>
+						<Form.Group controlId='project'>
+							<Form.Label className='fs-4'>Projecto</Form.Label>
 							<Form.Select
 								className='mb-2'
-								onChange={handleChangeProyect}
+								onChange={handleChangeProject}
 								isInvalid={
-									formik.touched.proyect &&
-									formik.errors.proyect
+									formik.touched.project &&
+									formik.errors.project
 								}
 							>
 								<option>Seleccione un proyecto</option>
-								{proyects.map((proyect, index) => {
+								{projects.map((project, index) => {
 									return (
 										<option
-											key={proyect.id}
-											value={proyect.id}
+											key={project.id}
+											value={project.id}
 										>
-											{proyect.title}
+											{project.title}
 										</option>
 									)
 								})}
 							</Form.Select>
 							<Form.Control.Feedback type='invalid'>
-								{formik.errors.proyect}
+								{formik.errors.project}
 							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group controlId='company'>
@@ -193,7 +193,7 @@ export default function ReviewForm({
 								<option>
 									Seleccione los espacios en revisión
 								</option>
-								{proyectSpaces.map((space) => (
+								{projectSpaces.map((space) => (
 									<option key={space.id} value={space.id}>
 										{space.title}
 									</option>
@@ -208,7 +208,7 @@ export default function ReviewForm({
 								(space, index) => (
 									<Col
 										sm={4}
-										key={(formik.values.proyect, space.id)}
+										key={(formik.values.project, space.id)}
 									>
 										<Card className='shadow  bg-body rounded'>
 											<Card.Body>

@@ -1,13 +1,13 @@
-import { PROYECT_ACTIONS } from '../actions/proyectActions'
+import { PROJECT_ACTIONS } from '../actions/projectActions'
 
-export const proyectInitialState = {
-	proyects: [],
+export const projectInitialState = {
+	projects: [],
 }
 
-export const proyectReducer = (state, { type, payload }) => {
+export const projectReducer = (state, { type, payload }) => {
 	switch (type) {
-		case PROYECT_ACTIONS.LOAD_ADVISER_PROYECTS_SUCCESS:
-			return { ...state, proyects: payload }
+		case PROJECT_ACTIONS.LOAD_ADVISER_PROJECTS_SUCCESS:
+			return { ...state, projects: payload }
 		default:
 			return state
 	}

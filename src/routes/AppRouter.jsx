@@ -4,7 +4,7 @@ import { ProposalProvider } from '../context/providers/ProposalContext'
 import { ReviewProvider } from '../context/providers/ReviewContext'
 import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
-import { ProyectProvider } from '../context/providers/ProyectContext'
+import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
 import {
 	Board,
@@ -92,7 +92,7 @@ export default function AppRouter() {
 			<Route
 				path='/reviews'
 				component={(props) => (
-					<ProyectProvider>
+					<ProjectProvider>
 						<CompanyProvider>
 							<SpaceProvider>
 								<ReviewProvider>
@@ -100,7 +100,7 @@ export default function AppRouter() {
 								</ReviewProvider>
 							</SpaceProvider>
 						</CompanyProvider>
-					</ProyectProvider>
+					</ProjectProvider>
 				)}
 			/>
 			<Route component={NotFoundPage} />

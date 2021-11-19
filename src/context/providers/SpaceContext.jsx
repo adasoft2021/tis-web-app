@@ -4,7 +4,7 @@ import { spaceInitialState, spaceReducer } from '../reducers/spaceReducer'
 
 const SpaceContext = createContext({
 	...spaceInitialState,
-	getProyectSpaces: ({ proyectId }) => {},
+	getProjectSpaces: ({ projectId }) => {},
 })
 
 export const useSpace = () => {
@@ -14,10 +14,10 @@ export const useSpace = () => {
 
 export const SpaceProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(spaceReducer, spaceInitialState)
-	const getProyectSpaces = async ({ proyectId }) => {
-		if (proyectId) {
+	const getProjectSpaces = async ({ projectId }) => {
+		if (projectId) {
 			dispatch({
-				type: SPACE_ACTIONS.LOAD_PROYECT_SPACES_SUCCESS,
+				type: SPACE_ACTIONS.LOAD_PROJECT_SPACES_SUCCESS,
 				payload: [
 					{ id: '1', title: 'Parte A' },
 					{ id: '2', title: 'Parte B' },
@@ -29,7 +29,7 @@ export const SpaceProvider = ({ children }) => {
 		}
 	}
 	return (
-		<SpaceContext.Provider value={{ ...state, getProyectSpaces }}>
+		<SpaceContext.Provider value={{ ...state, getProjectSpaces }}>
 			{children}
 		</SpaceContext.Provider>
 	)

@@ -7,7 +7,7 @@ export const spaceInitialState = {
 
 export const spaceReducer = (state, { type, payload }) => {
 	switch (type) {
-		case SPACE_ACTIONS.LOAD_PROYECT_SPACES_SUCCESS:
+		case SPACE_ACTIONS.LOAD_PROJECT_SPACES_SUCCESS:
 			return { ...state, spaces: payload }
 		case SPACE_ACTIONS.STOP_LOADING:
 			return { ...state, spaces: [] }

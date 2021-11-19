@@ -1,20 +1,20 @@
 import { createContext, useContext, useReducer } from 'react'
-import { PROYECT_ACTIONS } from '../actions/proyectActions'
-import { proyectInitialState, proyectReducer } from '../reducers/proyectReducer'
-const ProyectContext = createContext({
-	...proyectInitialState,
-	getAdviserProyects: () => {},
+import { PROJECT_ACTIONS } from '../actions/projectActions'
+import { projectInitialState, projectReducer } from '../reducers/projectReducer'
+const ProjectContext = createContext({
+	...projectInitialState,
+	getAdviserProjects: () => {},
 })
 
-export const useProyect = () => {
-	const context = useContext(ProyectContext)
+export const useProject = () => {
+	const context = useContext(ProjectContext)
 	return context
 }
-export const ProyectProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(proyectReducer, proyectInitialState)
-	const getAdviserProyects = async () => {
+export const ProjectProvider = ({ children }) => {
+	const [state, dispatch] = useReducer(projectReducer, projectInitialState)
+	const getAdviserProjects = async () => {
 		dispatch({
-			type: PROYECT_ACTIONS.LOAD_ADVISER_PROYECTS_SUCCESS,
+			type: PROJECT_ACTIONS.LOAD_ADVISER_PROJECTS_SUCCESS,
 			payload: [
 				{ id: 1, title: 'TIS Plataform' },
 				{ id: 2, title: 'MailList' },
@@ -22,8 +22,8 @@ export const ProyectProvider = ({ children }) => {
 		})
 	}
 	return (
-		<ProyectContext.Provider value={{ ...state, getAdviserProyects }}>
+		<ProjectContext.Provider value={{ ...state, getAdviserProjects }}>
 			{children}
-		</ProyectContext.Provider>
+		</ProjectContext.Provider>
 	)
 }
