@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { Modal, Form, Row, InputGroup, Button } from 'react-bootstrap'
 import CloseButton from './CloseButton'
 import getToDay from './getToDay'
+import { useProject } from '../../context/providers/ProjectContext'
 
 const SignupForm = ({ show, onHide }) => {
 	const formik = useFormik({
@@ -32,14 +33,11 @@ const SignupForm = ({ show, onHide }) => {
 			alert(JSON.stringify(values, null, 2))
 		},
 	})
-	const proyects = [
-		'Proyecto 1',
-		'Proyecto 2',
-		'Proyecto 3',
-		'Proyecto 4',
-		'Proyecto 5',
-	]
-	const listProyects = proyects.map((name) => (
+	const { projects, getAdviserProjects } = useProject()
+	useEffect(() => {
+		getAdviserProjects()
+	}, [])
+	const listProyects = projects.map((name) => (
 		<option key={name.toString()}>{name}</option>
 	))
 	return (

@@ -27,6 +27,17 @@ export async function createSpace({ token, spaceDTO, adviserId }) {
 			headers: { 'X-Token': token },
 		}
 	)
-
+	return response.data
+}
+export async function createProject({ token, adviserId, projectDTO }) {
+	const response = await adviserService.post(
+		`/${adviserId}/projects`,
+		projectDTO,
+		{
+			headers: {
+				'X-Token': token,
+			},
+		}
+	)
 	return response.data
 }

@@ -1,4 +1,6 @@
 import Page from '../Page'
+import useEffect from 'react'
+import { useProposal } from '../../context/providers/ProposalContext'
 
 export default function Board() {
 	const offer = {
@@ -10,6 +12,11 @@ export default function Board() {
 		const newWindow = window.open(url)
 		if (newWindow) newWindow.opener = null
 	}
+	const { getProposal } = useProposal()
+
+	useEffect(() => {
+		getProposal(1)
+	}, [])
 
 	return (
 		<Page>

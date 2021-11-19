@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react'
+import { createContext, useContext, useEffect, useReducer } from 'react'
 import * as reviewService from '../../services/reviewService'
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
@@ -15,6 +15,16 @@ export const useReview = () => {
 	const context = useContext(ReviewContext)
 
 	return context
+}
+
+export const useReviewById = (reviewId) => {
+	const { error, getReview } = useReview()
+
+	useEffect(() => {
+		getReview(reviewId)
+	}, [])
+
+	return { error }
 }
 
 export const ReviewProvider = ({ children }) => {

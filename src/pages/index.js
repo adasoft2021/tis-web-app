@@ -1,3 +1,4 @@
+import Review from './review'
 import Announcement from './announcement'
 import HomePage from './home'
 import NotFoundPage from './NotFoundPage'
@@ -20,4 +21,5 @@ export {
 	Register,
 	AdditionalGE,
 	BoardFileUpload,
+	Review,
 }
