@@ -4,9 +4,10 @@ import { REVIEW_ACTIONS } from '../actions/reviewActions'
 
 export const reviewInitialState = {
 	review: null,
+	reviews: [],
 	error: null,
 	isLoading: true,
-	qualificationSchema: null,
+	qualificationSchema: yup.object({}),
 }
 
 const getReview = ({ qualifications, ...rest }) => {
@@ -20,7 +21,7 @@ const getReview = ({ qualifications, ...rest }) => {
 	}
 }
 
-const createQualificationSchema = (qualifications) => {
+export const createQualificationSchema = (qualifications) => {
 	return yup.object({
 		one: yup
 			.number('El valor tiene que ser numerico')
@@ -93,9 +94,6 @@ export const reviewReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				review: getReview(payload),
-				qualificationSchema: createQualificationSchema(
-					payload.qualifications
-				),
 				error: null,
 				isLoading: false,
 			}
@@ -105,6 +103,24 @@ export const reviewReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				error: payload,
+				isLoading: false,
+			}
+
+		case REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS:
+			return {
+				...state,
+				isLoading: true,
+			}
+
+		case REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS_SUCCESS:
+			return {
+				...state,
+				isLoading: false,
+				reviews: payload,
+			}
+		case REVIEW_ACTIONS.STOP_LOADING:
+			return {
+				...state,
 				isLoading: false,
 			}
 		default:

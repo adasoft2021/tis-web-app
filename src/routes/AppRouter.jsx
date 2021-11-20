@@ -18,9 +18,14 @@ import {
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
+	ReviewCompany,
 	SpaceAnswer,
 } from '../pages'
+import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import ReviewList from '../pages/reviewList/ReviewList'
+
 export default function AppRouter() {
+	const { userType } = useUserCredentials()
 	return (
 		<Switch>
 			<Route path='/' component={HomePage} />
@@ -32,18 +37,30 @@ export default function AppRouter() {
 				path='/specification_sheets'
 				component={SpecificationSheet}
 			/>
+
 			<Route
 				path='/reviews/:reviewId'
-				component={({ params: { reviewId } }) => (
-					<ProposalProvider>
+				component={({ params }) => {
+					return userType === 'ADVISER' ? (
+						<ProposalProvider>
+							<ObservationProvider>
+								<ReviewProvider>
+									<Review {...params} />
+								</ReviewProvider>
+							</ObservationProvider>
+						</ProposalProvider>
+					) : (
 						<ObservationProvider>
 							<ReviewProvider>
-								<Review reviewId={reviewId} />
+								<ReviewCompany {...params} />
 							</ReviewProvider>
 						</ObservationProvider>
-					</ProposalProvider>
-				)}
+					)
+				}}
 			/>
+			<ReviewProvider>
+				<Route path='/reviews' component={ReviewList} />
+			</ReviewProvider>
 			<Route
 				path='/companies'
 				component={(props) => (

@@ -21,7 +21,9 @@ export default function Popup(props) {
 	if ((isLoading && !review) || !review) {
 		return null
 	}
-
+	if (review.qualifications.length === 0) {
+		return null
+	}
 	return (
 		<Modal
 			{...props}
