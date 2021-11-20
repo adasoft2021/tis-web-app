@@ -5,10 +5,10 @@ import { useReviewById } from '../../context/providers/ReviewContext'
 import Grid from './components/Grid'
 import Popup from './components/Popup'
 
-export default function Review() {
+export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
 	const { error } = useProposalById(1)
-	const { error: errorReview } = useReviewById(1)
+	const { error: errorReview } = useReviewById(reviewId)
 
 	useEffect(() => {
 		if (error) {
