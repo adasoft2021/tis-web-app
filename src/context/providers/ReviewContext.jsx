@@ -37,6 +37,14 @@ export const useCompanyReviews = () => {
 	return { isLoading, reviews }
 }
 
+export const useCompanyReviewById = ({ reviewId }) => {
+	const { getReview, isLoading, review } = useReview()
+	useEffect(() => {
+		getReview(reviewId)
+	}, [])
+
+	return { isLoading, review }
+}
 export const ReviewProvider = ({ children }) => {
 	const { showToast } = useToast()
 	const { token, id } = useUserCredentials()

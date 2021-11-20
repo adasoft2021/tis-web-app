@@ -7,7 +7,7 @@ export const reviewInitialState = {
 	reviews: [],
 	error: null,
 	isLoading: true,
-	qualificationSchema: null,
+	qualificationSchema: yup.object({}),
 }
 
 const getReview = ({ qualifications, ...rest }) => {
@@ -21,7 +21,7 @@ const getReview = ({ qualifications, ...rest }) => {
 	}
 }
 
-const createQualificationSchema = (qualifications) => {
+export const createQualificationSchema = (qualifications) => {
 	return yup.object({
 		one: yup
 			.number('El valor tiene que ser numerico')
@@ -94,9 +94,6 @@ export const reviewReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				review: getReview(payload),
-				qualificationSchema: createQualificationSchema(
-					payload.qualifications
-				),
 				error: null,
 				isLoading: false,
 			}

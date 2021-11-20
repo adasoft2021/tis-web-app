@@ -4,6 +4,9 @@ import { ProposalProvider } from '../context/providers/ProposalContext'
 import { ReviewProvider } from '../context/providers/ReviewContext'
 import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
+import { ProjectProvider } from '../context/providers/ProjectContext'
+import { SpaceProvider } from '../context/providers/SpaceContext'
+import { ReviewsList } from '../pages/reviews/ReviewsList'
 import {
 	Board,
 	NotFoundPage,
@@ -11,12 +14,12 @@ import {
 	SpecificationSheet,
 	CompaniesList,
 	HomePage,
-	File,
 	Register,
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
 	ReviewCompany,
+	SpaceAnswer,
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import ReviewList from '../pages/reviewList/ReviewList'
@@ -29,6 +32,7 @@ export default function AppRouter() {
 			<Route path='/announcements' component={Announcement} />
 			<Route path='/tablero' component={Board} />
 			<Route path='/404' component={NotFoundPage} />
+
 			<Route
 				path='/specification_sheets'
 				component={SpecificationSheet}
@@ -36,19 +40,19 @@ export default function AppRouter() {
 
 			<Route
 				path='/reviews/:reviewId'
-				component={(props) => {
+				component={({ params }) => {
 					return userType === 'ADVISER' ? (
 						<ProposalProvider>
 							<ObservationProvider>
 								<ReviewProvider>
-									<Review {...props} />
+									<Review {...params} />
 								</ReviewProvider>
 							</ObservationProvider>
 						</ProposalProvider>
 					) : (
 						<ObservationProvider>
 							<ReviewProvider>
-								<ReviewCompany {...props} />
+								<ReviewCompany {...params} />
 							</ReviewProvider>
 						</ObservationProvider>
 					)
@@ -65,40 +69,67 @@ export default function AppRouter() {
 					</CompanyProvider>
 				)}
 			/>
-			<Route path='/file' component={File} />
+
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
+			<Route
+				path='/proposals-presentation/:spaceId'
+				component={SpaceAnswer}
+			/>
+			<Route
+				path='/project-development/:spaceId'
+				component={SpaceAnswer}
+			/>
+			<Route path='/final-evaluation/:spaceId' component={SpaceAnswer} />
 
-			<SpaceAnswerProvider>
-				<Route
-					path='/proposals-presentation/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+			<Route
+				path='/proposals-presentation/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-				<Route
-					path='/project-development/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/project-development/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-				<Route
-					path='/final-evaluation/:spaceTitle/:spaceId'
-					component={({ params: { spaceId, spaceTitle } }) => (
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/final-evaluation/:spaceTitle/:spaceId'
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
 						<BoardFileUpload
 							spaceId={spaceId}
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
-					)}
-				/>
-			</SpaceAnswerProvider>
+					</SpaceAnswerProvider>
+				)}
+			/>
+			<Route
+				path='/reviews'
+				component={(props) => (
+					<ProjectProvider>
+						<CompanyProvider>
+							<SpaceProvider>
+								<ReviewProvider>
+									<ReviewsList {...props} />
+								</ReviewProvider>
+							</SpaceProvider>
+						</CompanyProvider>
+					</ProjectProvider>
+				)}
+			/>
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
