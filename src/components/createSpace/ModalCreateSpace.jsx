@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { Modal, Form, Row, InputGroup, Button } from 'react-bootstrap'
+import { Modal, Form, Row, InputGroup } from 'react-bootstrap'
 import CloseButton from './CloseButton'
+import CreateButton from './CreateButton'
 import getToDay from './getToDay'
 import { useProject } from '../../context/providers/ProjectContext'
 
@@ -133,9 +134,10 @@ const ModalCreateSpace = ({ show, onHide }) => {
 					</Form.Group>
 
 					<center>
-						<Button className='m-3' type='submit' variant='success'>
-							CREAR
-						</Button>
+						<CreateButton
+							onHide={onHide}
+							formik={formik}
+						></CreateButton>
 					</center>
 				</Row>
 			</Form>
