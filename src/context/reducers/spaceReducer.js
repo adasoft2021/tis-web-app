@@ -2,6 +2,7 @@ import { SPACE_ACTIONS } from '../actions/spaceActions'
 
 export const spaceInitialState = {
 	spaceDTO: null,
+	spaces: [],
 	isLoading: false,
 }
 
@@ -22,7 +23,11 @@ export const spaceReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				isLoading: false,
+				spaces: [],
 			}
+		case SPACE_ACTIONS.LOAD_PROJECT_SPACES_SUCCESS:
+			return { ...state, spaces: payload }
+
 		default:
 			return state
 	}

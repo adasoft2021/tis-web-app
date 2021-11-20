@@ -7,7 +7,9 @@ import { useToast } from './ToastContext'
 const SpaceContext = createContext({
 	...spaceInitialState,
 	getSpaceById: async ({ spaceId }) => {},
+	getProjectSpaces: ({ projectId }) => {},
 })
+
 export const useSpace = () => {
 	const context = useContext(SpaceContext)
 	return context
@@ -45,8 +47,25 @@ export const SpaceProvider = ({ children }) => {
 			dispatch({ type: SPACE_ACTIONS.STOP_LOADING })
 		}
 	}
+
+	const getProjectSpaces = async ({ projectId }) => {
+		if (projectId) {
+			dispatch({
+				type: SPACE_ACTIONS.LOAD_PROJECT_SPACES_SUCCESS,
+				payload: [
+					{ id: '1', title: 'Parte A' },
+					{ id: '2', title: 'Parte B' },
+					{ id: '3', title: 'Orden de cambio' },
+				],
+			})
+		} else {
+			dispatch({ type: SPACE_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
-		<SpaceContext.Provider value={{ ...state, getSpaceById }}>
+		<SpaceContext.Provider
+			value={{ ...state, getSpaceById, getProjectSpaces }}
+		>
 			{children}
 		</SpaceContext.Provider>
 	)
