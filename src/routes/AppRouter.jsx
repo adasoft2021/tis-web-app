@@ -11,13 +11,12 @@ import {
 	SpecificationSheet,
 	CompaniesList,
 	HomePage,
-	File,
 	Register,
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
+	SpaceAnswer,
 } from '../pages'
-
 export default function AppRouter() {
 	return (
 		<Switch>
@@ -25,6 +24,7 @@ export default function AppRouter() {
 			<Route path='/announcements' component={Announcement} />
 			<Route path='/tablero' component={Board} />
 			<Route path='/404' component={NotFoundPage} />
+
 			<Route
 				path='/specification_sheets'
 				component={SpecificationSheet}
@@ -49,10 +49,19 @@ export default function AppRouter() {
 					</CompanyProvider>
 				)}
 			/>
-			<Route path='/file' component={File} />
+
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
+			<Route
+				path='/proposals-presentation/:spaceId'
+				component={SpaceAnswer}
+			/>
+			<Route
+				path='/project-development/:spaceId'
+				component={SpaceAnswer}
+			/>
+			<Route path='/final-evaluation/:spaceId' component={SpaceAnswer} />
 			<SpaceAnswerProvider>
 				<Route
 					path='/proposals-presentation/:spaceTitle/:spaceId'
