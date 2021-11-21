@@ -114,7 +114,7 @@ export const reviewReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				review: null,
-				reviews: null,
+				reviews: [],
 				error: payload,
 				isLoading: false,
 			}
