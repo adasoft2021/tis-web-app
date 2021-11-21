@@ -9,6 +9,7 @@ export const ReviewContext = createContext({
 	createReview: async (reviewDTO) => reviewDTO,
 	getReview: async (reviewId) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
+	getAdviserReviews: async () => {},
 })
 
 export const useReview = () => {
@@ -83,9 +84,31 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const getAdviserReviews = async () => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const reviews = await reviewService.getAdviserReviews({ token })
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_REVIEWS_SUCCESS,
+				payload: reviews,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_REVIEWS_ERROR,
+				payload: data,
+			})
+		}
+	}
+
 	return (
 		<ReviewContext.Provider
-			value={{ ...state, createReview, getReview, updateReview }}
+			value={{
+				...state,
+				createReview,
+				getReview,
+				updateReview,
+				getAdviserReviews,
+			}}
 		>
 			{children}
 		</ReviewContext.Provider>

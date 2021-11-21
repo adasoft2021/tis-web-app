@@ -3,6 +3,7 @@ import * as yup from 'yup'
 import { REVIEW_ACTIONS } from '../actions/reviewActions'
 
 export const reviewInitialState = {
+	reviews: [],
 	review: null,
 	error: null,
 	isLoading: true,
@@ -99,11 +100,21 @@ export const reviewReducer = (state, { type, payload }) => {
 				error: null,
 				isLoading: false,
 			}
+		case REVIEW_ACTIONS.LOAD_REVIEWS_SUCCESS:
+			return {
+				...state,
+				reviews: payload,
+				error: null,
+				isLoading: false,
+			}
 		case REVIEW_ACTIONS.LOAD_CREATE_ERROR:
 		case REVIEW_ACTIONS.LOAD_GET_ERROR:
 		case REVIEW_ACTIONS.LOAD_UPDATE_ERROR:
+		case REVIEW_ACTIONS.LOAD_REVIEWS_ERROR:
 			return {
 				...state,
+				review: null,
+				reviews: null,
 				error: payload,
 				isLoading: false,
 			}
