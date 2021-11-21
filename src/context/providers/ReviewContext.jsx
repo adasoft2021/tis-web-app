@@ -6,8 +6,8 @@ import { useUserCredentials } from './UserCredentialsContext'
 
 export const ReviewContext = createContext({
 	...reviewInitialState,
-	createReview: async (reviewDTO) => reviewDTO,
-	getReview: async (reviewId) => reviewId,
+	createReview: async ({ reviewDTO }) => reviewDTO,
+	getReview: async ({ reviewId }) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 	getAdviserReviews: async () => {},
 })
@@ -22,7 +22,7 @@ export const useReviewById = (reviewId) => {
 	const { error, getReview } = useReview()
 
 	useEffect(() => {
-		getReview(reviewId)
+		getReview({ reviewId })
 	}, [])
 
 	return { error }
@@ -32,7 +32,7 @@ export const ReviewProvider = ({ children }) => {
 	const { token } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
-	const createReview = async (reviewDTO) => {
+	const createReview = async ({ reviewDTO }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.createReview({
@@ -51,14 +51,14 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
-	const getReview = async (reviewId) => {
+	const getReview = async ({ reviewId }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.getReview({ token, reviewId })
 			dispatch({ type: REVIEW_ACTIONS.LOAD_GET_SUCCESS, payload: review })
 		} catch ({ response: { data } }) {
 			dispatch({
-				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
+				type: REVIEW_ACTIONS.LOAD_GET_ERROR,
 				payload: data,
 			})
 		}

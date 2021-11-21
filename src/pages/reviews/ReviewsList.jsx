@@ -8,15 +8,14 @@ import ReviewForm from './ReviewForm'
 
 export const ReviewsList = () => {
 	const [show, setShow] = useState(false)
-	const { isLoading, reviews, getAdviserReviews } = useReview()
-	const [isLoadingReviews, setIsLoadingReviews] = useState(false)
+	const { review, reviews, getAdviserReviews } = useReview()
+
 	useEffect(() => {
-		if (isLoading && !isLoadingReviews) {
-			setIsLoadingReviews(true)
-			getAdviserReviews()
-			setIsLoadingReviews(false)
-		}
-	}, [isLoading])
+		getAdviserReviews()
+	}, [review])
+	useEffect(() => {
+		getAdviserReviews()
+	}, [])
 	return (
 		<Page>
 			<h2>Revisiones</h2>
