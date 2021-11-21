@@ -245,12 +245,12 @@ const CGregistrationForm = ({ company }) => {
 		}
 	}
 	useEffect(() => {
-		if (classCode) {
-			setActiveInputs(classCode.code.length === 11)
+		if (formik.values.codRegister.length === 11) {
+			setActiveInputs(classCode)
 		} else {
 			setActiveInputs(false)
 		}
-	}, [classCode])
+	}, [formik.values.codRegister, classCode])
 
 	const uploadFile = async (e) => {
 		const file = e.target.files[0]
