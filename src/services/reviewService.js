@@ -1,4 +1,5 @@
 import createInstance from './http'
+import { getCompanyReviews } from './companyService'
 
 const reviewService = createInstance({ url: '/reviews' })
 
@@ -29,3 +30,4 @@ export async function getAdviserReviews({ token }) {
 	})
 	return response.data
 }
+export { getCompanyReviews }
