@@ -11,6 +11,7 @@ export const ReviewContext = createContext({
 	getReview: async (reviewId) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 	publishReview: async ({ reviewId }) => false,
+	getCompanyReviews: async () => {},
 })
 
 export const useReview = () => {
@@ -29,9 +30,25 @@ export const useReviewById = (reviewId) => {
 	return { error }
 }
 
+export const useCompanyReviews = () => {
+	const { getCompanyReviews, isLoading, reviews } = useReview()
+	useEffect(() => {
+		getCompanyReviews()
+	}, [])
+	return { isLoading, reviews }
+}
+
+export const useCompanyReviewById = ({ reviewId }) => {
+	const { getReview, isLoading, review } = useReview()
+	useEffect(() => {
+		getReview(reviewId)
+	}, [])
+
+	return { isLoading, review }
+}
 export const ReviewProvider = ({ children }) => {
 	const { showToast } = useToast()
-	const { token } = useUserCredentials()
+	const { token, id } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
 	const createReview = async (reviewDTO) => {
@@ -85,7 +102,6 @@ export const ReviewProvider = ({ children }) => {
 			})
 		}
 	}
-
 	const publishReview = async ({ reviewId }) => {
 		showToast({
 			color: 'info',
@@ -111,6 +127,34 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const getCompanyReviews = async () => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS })
+		try {
+			const reviews = await reviewService.getCompanyReviews({
+				token,
+				companyId: id,
+			})
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS_SUCCESS,
+				payload: reviews,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: REVIEW_ACTIONS.STOP_LOADING })
+		}
+	}
+
 	return (
 		<ReviewContext.Provider
 			value={{
@@ -119,6 +163,7 @@ export const ReviewProvider = ({ children }) => {
 				getReview,
 				updateReview,
 				publishReview,
+				getCompanyReviews,
 			}}
 		>
 			{children}

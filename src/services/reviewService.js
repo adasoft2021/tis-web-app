@@ -1,4 +1,5 @@
 import createInstance from './http'
+import { getCompanyReviews } from './companyService'
 
 const reviewService = createInstance({ url: '/reviews' })
 
@@ -31,3 +32,5 @@ export async function publishReview({ reviewId, token }) {
 	)
 	return response.data
 }
+
+export { getCompanyReviews }
