@@ -134,22 +134,23 @@ export default function Page({ children }) {
 								</Link>
 							</div>
 						)}
-						<Link to='/reviews'>
-							<Nav.Link
-								eventKey='/reviews'
-								className='p-3 ps-4 border-bottom border-light text-light'
-							>
-								Revisiones
-							</Nav.Link>
-						</Link>
-
 						{userType === userTypes.COMPANY && (
-							<Link to='/file'>
+							<Link to='/proposals-presentation/1'>
 								<Nav.Link
-									eventKey='/file'
+									eventKey='/proposals-presentation'
 									className='p-3 ps-4 border-bottom border-light text-light'
 								>
-									Envio de Archivos
+									Presentación de propuestas
+								</Nav.Link>
+							</Link>
+						)}
+						{userType && (
+							<Link to='/reviews'>
+								<Nav.Link
+									eventKey='/reviews'
+									className='p-3 ps-4 border-bottom border-light text-light'
+								>
+									Revisiones
 								</Nav.Link>
 							</Link>
 						)}

@@ -3,7 +3,7 @@ import { FiEdit } from 'react-icons/fi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { BsCheckCircle } from 'react-icons/bs'
 import { useObservation } from '../../../context/providers/ObservationContext'
-
+import { useReview } from '../../../context/providers/ReviewContext'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useEffect } from 'react'
@@ -47,6 +47,7 @@ export default function Observation({
 			alert(errorDelete)
 		}
 	}, [errorDelete])
+	const { review } = useReview()
 
 	const formik = useFormik({
 		initialValues: {
@@ -63,7 +64,7 @@ export default function Observation({
 				return
 			}
 			await createObservation({
-				proposalId: 1,
+				reviewId: review.id,
 				observationDTO: { description, title },
 			})
 

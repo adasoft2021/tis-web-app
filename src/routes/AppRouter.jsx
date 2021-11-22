@@ -6,7 +6,7 @@ import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
-import { ReviewsList } from '../pages/reviews/ReviewsList'
+import { ReviewsList as AdviserReviewsList } from '../pages/reviews/ReviewsList'
 import {
 	Board,
 	NotFoundPage,
@@ -23,6 +23,7 @@ import {
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import ReviewList from '../pages/reviewList/ReviewList'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -40,27 +41,46 @@ export default function AppRouter() {
 
 			<Route
 				path='/reviews/:reviewId'
-				component={({ params }) => {
+				component={({ params: { reviewId } }) => {
 					return userType === 'ADVISER' ? (
 						<ProposalProvider>
 							<ObservationProvider>
 								<ReviewProvider>
-									<Review {...params} />
+									<Review reviewId={reviewId} />
 								</ReviewProvider>
 							</ObservationProvider>
 						</ProposalProvider>
 					) : (
 						<ObservationProvider>
 							<ReviewProvider>
-								<ReviewCompany {...params} />
+								<ReviewCompany reviewId={reviewId} />
 							</ReviewProvider>
 						</ObservationProvider>
 					)
 				}}
 			/>
-			<ReviewProvider>
-				<Route path='/reviews' component={ReviewList} />
-			</ReviewProvider>
+
+			<Route
+				path='/reviews'
+				component={(props) => {
+					return userType === userTypes.ADVISER ? (
+						<ProjectProvider>
+							<CompanyProvider>
+								<SpaceProvider>
+									<ReviewProvider>
+										<AdviserReviewsList {...props} />
+									</ReviewProvider>
+								</SpaceProvider>
+							</CompanyProvider>
+						</ProjectProvider>
+					) : (
+						<ReviewProvider>
+							<ReviewList />
+						</ReviewProvider>
+					)
+				}}
+			/>
+
 			<Route
 				path='/companies'
 				component={(props) => (
@@ -114,20 +134,6 @@ export default function AppRouter() {
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
 					</SpaceAnswerProvider>
-				)}
-			/>
-			<Route
-				path='/reviews'
-				component={(props) => (
-					<ProjectProvider>
-						<CompanyProvider>
-							<SpaceProvider>
-								<ReviewProvider>
-									<ReviewsList {...props} />
-								</ReviewProvider>
-							</SpaceProvider>
-						</CompanyProvider>
-					</ProjectProvider>
 				)}
 			/>
 			<Route component={NotFoundPage} />
