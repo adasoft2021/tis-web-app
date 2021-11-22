@@ -1,6 +1,5 @@
 import styles from './Grid.module.scss'
 import ObservationsList from './ObservationsList'
-
 import Split from 'react-split-grid'
 import PdfFrame from './PdfFrame'
 

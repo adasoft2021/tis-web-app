@@ -41,19 +41,19 @@ export default function AppRouter() {
 
 			<Route
 				path='/reviews/:reviewId'
-				component={({ params }) => {
+				component={({ params: { reviewId } }) => {
 					return userType === 'ADVISER' ? (
 						<ProposalProvider>
 							<ObservationProvider>
 								<ReviewProvider>
-									<Review {...params} />
+									<Review reviewId={reviewId} />
 								</ReviewProvider>
 							</ObservationProvider>
 						</ProposalProvider>
 					) : (
 						<ObservationProvider>
 							<ReviewProvider>
-								<ReviewCompany {...params} />
+								<ReviewCompany reviewId={reviewId} />
 							</ReviewProvider>
 						</ObservationProvider>
 					)

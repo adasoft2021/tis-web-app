@@ -9,9 +9,9 @@ import { useUserCredentials } from './UserCredentialsContext'
 
 export const ObservationContext = createContext({
 	...observationInitialState,
-	createObservation: async ({ proposalId, observationDTO }) => {},
+	createObservation: async ({ reviewId, observationDTO }) => {},
 	deleteObservation: async ({ observationId }) => {},
-	getAllProposalObservations: async ({ proposalId }) => {},
+	getAllReviewObservations: async ({ reviewId }) => {},
 	updateObservation: async ({ observationId, observationDTO }) => {},
 })
 
@@ -21,16 +21,16 @@ export const useObservation = () => {
 	return context
 }
 
-export const useObservationsList = (proposalId) => {
+export const useObservationsList = (reviewId) => {
 	const {
 		errorObservationList,
-		getAllProposalObservations,
+		getAllReviewObservations,
 		isLoadingObservationsList,
 		observations,
 	} = useObservation()
 
 	useEffect(() => {
-		getAllProposalObservations({ proposalId })
+		getAllReviewObservations({ reviewId })
 	}, [])
 
 	return {
@@ -47,12 +47,12 @@ export const ObservationProvider = ({ children }) => {
 		observationInitialState
 	)
 
-	const createObservation = async ({ proposalId, observationDTO }) => {
+	const createObservation = async ({ reviewId, observationDTO }) => {
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_CREATE })
 		try {
 			const observation = await observationService.createObservation({
 				token,
-				proposalId,
+				reviewId,
 				observationDTO,
 			})
 			dispatch({
@@ -92,13 +92,13 @@ export const ObservationProvider = ({ children }) => {
 		}
 	}
 
-	const getAllProposalObservations = async ({ proposalId }) => {
+	const getAllReviewObservations = async ({ reviewId }) => {
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_OBSERVATIONS_LIST })
 		try {
 			const observations =
-				await observationService.getAllProposalObservations({
+				await observationService.getAllReviewObservations({
 					token,
-					proposalId,
+					reviewId,
 				})
 			dispatch({
 				type: OBSERVATION_ACTIONS.LOAD_OBSERVATIONS_LIST_SUCCESS,
@@ -144,7 +144,7 @@ export const ObservationProvider = ({ children }) => {
 				...state,
 				createObservation,
 				deleteObservation,
-				getAllProposalObservations,
+				getAllReviewObservations,
 				updateObservation,
 			}}
 		>
