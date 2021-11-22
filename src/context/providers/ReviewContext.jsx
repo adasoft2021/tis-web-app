@@ -21,13 +21,13 @@ export const useReview = () => {
 }
 
 export const useReviewById = (reviewId) => {
-	const { error, getReview } = useReview()
+	const { error, review, getReview } = useReview()
 
 	useEffect(() => {
 		getReview({ reviewId })
 	}, [])
 
-	return { error }
+	return { error, review }
 }
 
 export const useCompanyReviews = () => {
