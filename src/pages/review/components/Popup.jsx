@@ -3,10 +3,13 @@ import { Formik } from 'formik'
 import Qualification from './Qualification'
 import { useReview } from '../../../context/providers/ReviewContext'
 
-const fields = ['one', 'two', 'three', 'four', 'five', 'six', 'seven']
-
 export default function Popup(props) {
-	const { review, isLoading, updateReview, qualificationSchema } = useReview()
+	const {
+		review,
+		isLoading,
+		updateReview,
+		qualifications: { qualificationIntialState, qualificationSchema },
+	} = useReview()
 
 	const getTotalScore = (scores) => {
 		let totalScore = 0
@@ -32,49 +35,14 @@ export default function Popup(props) {
 			centered
 		>
 			<Formik
-				initialValues={{
-					one: review.qualifications[0].score || '',
-					two: review.qualifications[1].score || '',
-					three: review.qualifications[2].score || '',
-					four: review.qualifications[3].score || '',
-					five: review.qualifications[4].score || '',
-					six: review.qualifications[5].score || '',
-					seven: review.qualifications[6].score || '',
-					comentario: review.comment || '',
-				}}
+				initialValues={qualificationIntialState}
 				onSubmit={async ({ comentario, ...rest }) => {
 					const reviewDTO = {
 						comment: comentario || null,
-						qualifications: [
-							{
-								score: rest.one === '' ? null : rest.one,
-								qualificationId: review.qualifications[0].id,
-							},
-							{
-								score: rest.two === '' ? null : rest.two,
-								qualificationId: review.qualifications[1].id,
-							},
-							{
-								score: rest.three === '' ? null : rest.three,
-								qualificationId: review.qualifications[2].id,
-							},
-							{
-								score: rest.four === '' ? null : rest.four,
-								qualificationId: review.qualifications[3].id,
-							},
-							{
-								score: rest.five === '' ? null : rest.five,
-								qualificationId: review.qualifications[4].id,
-							},
-							{
-								score: rest.six === '' ? null : rest.six,
-								qualificationId: review.qualifications[5].id,
-							},
-							{
-								score: rest.seven === '' ? null : rest.seven,
-								qualificationId: review.qualifications[6].id,
-							},
-						],
+						qualifications: Object.keys(rest).map((field) => ({
+							score: rest[field] || null,
+							qualificationId: field.split('-')[1],
+						})),
 					}
 					await updateReview({ reviewId: 1, reviewDTO })
 				}}
@@ -116,12 +84,12 @@ export default function Popup(props) {
 								</div>
 								<hr />
 								{review.qualifications.map(
-									({ id, description, maxScore }, index) => (
+									({ id, description, maxScore }) => (
 										<Qualification
 											key={id}
 											label={description}
 											points={maxScore}
-											name={fields[index]}
+											name={`field-${id}`}
 											disabled={review.totalScore}
 										/>
 									)

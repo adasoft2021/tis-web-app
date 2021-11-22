@@ -5,12 +5,22 @@ import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
 import { useToast } from './ToastContext'
 import { useUserCredentials } from './UserCredentialsContext'
 
+import * as yup from 'yup'
+
 export const ReviewContext = createContext({
 	...reviewInitialState,
 	createReview: async (reviewDTO) => reviewDTO,
 	getReview: async (reviewId) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 	getCompanyReviews: async () => {},
+	/**
+	 * Función para cambiar el esquema de calificaciones de yup para su
+	 * validación de las mismas y los valores que tienen cada uno.
+	 * @param {{qualificationSchema, qualificationIntialState}} qualifications
+	 * objeto que contendrá el esquema para validar en el formulario y los
+	 * valores iniciales de calificaciones.
+	 */
+	setQualifications: (qualifications) => {},
 })
 
 export const useReview = () => {
@@ -21,12 +31,40 @@ export const useReview = () => {
 
 export const useReviewById = (reviewId) => {
 	const { error, getReview } = useReview()
+	useReviewQualifications()
 
 	useEffect(() => {
 		getReview(reviewId)
 	}, [])
 
 	return { error }
+}
+
+const useReviewQualifications = () => {
+	const { review, setQualifications } = useReview()
+
+	useEffect(() => {
+		if (review) {
+			const schema = {}
+			const initialValues = {}
+			review.qualifications.forEach(({ id, maxScore, score }) => {
+				schema[`field-${id}`] = yup
+					.number('El valor tiene que ser numérico')
+					.min(0, 'Este campo no pude ser menor a 0')
+					.max(
+						maxScore,
+						`Este campo no puede ser mayor a ${maxScore}`
+					)
+				initialValues[`field-${id}`] = score || ''
+			})
+			if (Object.values(schema).length) {
+				setQualifications({
+					qualificationIntialState: initialValues,
+					qualificationSchema: yup.object({ ...schema }),
+				})
+			}
+		}
+	}, [review])
 }
 
 export const useCompanyReviews = () => {
@@ -130,6 +168,13 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const setQualifications = (qualifications) => {
+		dispatch({
+			type: REVIEW_ACTIONS.SET_QUALIFICATIONS,
+			payload: qualifications,
+		})
+	}
+
 	return (
 		<ReviewContext.Provider
 			value={{
@@ -138,6 +183,7 @@ export const ReviewProvider = ({ children }) => {
 				getReview,
 				updateReview,
 				getCompanyReviews,
+				setQualifications,
 			}}
 		>
 			{children}
