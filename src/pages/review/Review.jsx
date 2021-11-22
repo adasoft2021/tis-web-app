@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Container, Nav, Navbar } from 'react-bootstrap'
+import { Button, Container, Nav, Navbar, Spinner } from 'react-bootstrap'
 import { useProposalById } from '../../context/providers/ProposalContext'
 import { useReviewById } from '../../context/providers/ReviewContext'
 import Grid from './components/Grid'
@@ -8,7 +8,7 @@ import Popup from './components/Popup'
 export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
 	const { error } = useProposalById(1)
-	const { error: errorReview } = useReviewById(reviewId)
+	const { error: errorReview, isLoading, review } = useReviewById(reviewId)
 
 	useEffect(() => {
 		if (error) {
@@ -21,6 +21,18 @@ export default function Review({ reviewId }) {
 			alert(errorReview)
 		}
 	}, [errorReview])
+
+	if (isLoading) {
+		return (
+			<div className='d-flex m-5 justify-content-center align-items-center'>
+				<Spinner animation='border' />
+			</div>
+		)
+	}
+
+	if (!review) {
+		return null
+	}
 
 	return (
 		<>
@@ -37,7 +49,7 @@ export default function Review({ reviewId }) {
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
 					<Navbar.Collapse id='basic-navbar-nav'>
-						{!errorReview && (
+						{!errorReview && review.qualifications.length && (
 							<Nav className='ms-auto'>
 								<Button
 									className='fw-bold rounded-pill'
