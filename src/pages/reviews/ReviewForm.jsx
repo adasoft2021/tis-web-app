@@ -79,14 +79,18 @@ export default function ReviewForm({
 				text: ' ¿Seguro de lo que va a enviar?',
 				buttons: ['Seguir editando', 'Sí'],
 			}).then((answer) => {
-				createReview({
-					reviewDTO: {
-						title: values.title,
-						spaces: values.selectedSpaces.map((space) => space.id),
-						createdById: id,
-						companyId: values.company,
-					},
-				})
+				if (answer) {
+					createReview({
+						reviewDTO: {
+							title: values.title,
+							spaces: values.selectedSpaces.map(
+								(space) => space.id
+							),
+							createdById: id,
+							companyId: values.company,
+						},
+					})
+				}
 			})
 		},
 	})

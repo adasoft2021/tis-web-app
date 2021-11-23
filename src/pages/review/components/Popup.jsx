@@ -36,7 +36,7 @@ export default function Popup(props) {
 		>
 			<Formik
 				initialValues={qualificationIntialState}
-				onSubmit={async ({ comentario, ...rest }) => {
+				onSubmit={async ({ comentario, ...rest }, { resetForm }) => {
 					const reviewDTO = {
 						comment: comentario || null,
 						qualifications: Object.keys(rest).map((field) => ({
@@ -45,6 +45,7 @@ export default function Popup(props) {
 						})),
 					}
 					await updateReview({ reviewId: review.id, reviewDTO })
+					props.onHide()
 				}}
 				validationSchema={qualificationSchema}
 			>
@@ -59,7 +60,7 @@ export default function Popup(props) {
 				}) => (
 					<Form onSubmit={handleSubmit} className='bg-dark'>
 						<div
-							className='bg-'
+							className='bg-dark'
 							style={{ margin: 50, background: 'black' }}
 						>
 							<Modal.Header closeButton className='bg-dark'>
@@ -83,7 +84,8 @@ export default function Popup(props) {
 											label={description}
 											points={maxScore}
 											name={`field-${id}`}
-											disabled={review.totalScore}
+											onChange={handleChange}
+											disabled={review.published}
 										/>
 									)
 								)}
@@ -123,7 +125,7 @@ export default function Popup(props) {
 									name='comentario'
 									value={comentario}
 									onChange={handleChange}
-									disabled={review.totalScore}
+									disabled={review.published}
 								></textarea>
 								{touched.comentario && errors.comentario && (
 									<div className='error text-danger'>
@@ -131,7 +133,7 @@ export default function Popup(props) {
 									</div>
 								)}
 								<div className='Container'></div>
-								{!review.totalScore && (
+								{!review.published && (
 									<center>
 										<Button
 											type='submit'
