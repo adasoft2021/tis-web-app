@@ -1,20 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Button, Container, Nav, Navbar, Spinner } from 'react-bootstrap'
-import { useProposalById } from '../../context/providers/ProposalContext'
 import { useReviewById } from '../../context/providers/ReviewContext'
 import Grid from './components/Grid'
 import Popup from './components/Popup'
 
 export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
-	const { error } = useProposalById(1)
-	const { error: errorReview, isLoading, review } = useReviewById(reviewId)
 
-	useEffect(() => {
-		if (error) {
-			alert(error)
-		}
-	}, [error])
+	const { error: errorReview, isLoading, review } = useReviewById(reviewId)
 
 	useEffect(() => {
 		if (errorReview) {
@@ -48,19 +41,40 @@ export default function Review({ reviewId }) {
 						TIS
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
-					<Navbar.Collapse id='basic-navbar-nav'>
-						{!errorReview && review.qualifications.length && (
+
+					{!errorReview && (
+						<Navbar.Collapse id='basic-navbar-nav'>
 							<Nav className='ms-auto'>
-								<Button
-									className='fw-bold rounded-pill'
-									variant='info'
-									onClick={() => setShowPopup(true)}
-								>
-									CALIFICAR
-								</Button>
+								<p>
+									{review && review.published
+										? 'EMITIDA'
+										: 'SIN EMITIR'}
+								</p>
 							</Nav>
-						)}
-					</Navbar.Collapse>
+							{review.qualifications.length && (
+								<Nav className='ms-auto'>
+									<Button
+										className='fw-bold rounded-pill'
+										variant='info'
+										onClick={() => setShowPopup(true)}
+									>
+										CALIFICAR
+									</Button>
+								</Nav>
+							)}
+							{review && !review.published && (
+								<Nav className='ms-auto'>
+									<Button
+										className='fw-bold rounded-pill'
+										variant='success'
+										disabled={review.published}
+									>
+										EMITIR
+									</Button>
+								</Nav>
+							)}
+						</Navbar.Collapse>
+					)}
 				</Container>
 			</Navbar>
 			<Popup show={showPopup} onHide={() => setShowPopup(false)} />

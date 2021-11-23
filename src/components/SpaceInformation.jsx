@@ -24,7 +24,7 @@ const SpaceInformation = ({ spaceId }) => {
 			<h2> {spaceDTO.title} </h2>
 			<p>
 				<b> Fecha limite: </b>
-				<i className={styles.endDate}> {showDate(spaceDTO.endDate)} </i>
+				<i className={styles.endDate}>{showDate(spaceDTO.limitDate)}</i>
 			</p>
 			<p> {spaceDTO.description}</p>
 		</>

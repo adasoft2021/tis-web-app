@@ -1,12 +1,12 @@
-import { Container, Spinner } from 'react-bootstrap'
-import { useProposal } from '../../../context/providers/ProposalContext'
+import { Accordion, Container, Spinner } from 'react-bootstrap'
+import { useReview } from '../../../context/providers/ReviewContext'
 
 import styles from './PdfFrame.module.scss'
 
 export default function PdfFrame() {
-	const { error, isLoading, proposal } = useProposal()
+	const { error, isLoading, review } = useReview()
 
-	if (isLoading || !proposal) {
+	if (isLoading || !review) {
 		return (
 			<Container
 				className={`${styles.pdf} d-flex justify-content-center align-items-center`}
@@ -22,5 +22,45 @@ export default function PdfFrame() {
 		)
 	}
 
-	return <iframe className={styles.pdf} src={proposal.fileUrl} />
+	function getSpaceTitle(spaceId) {
+		const space = review.spaces.filter((space) => space.id === spaceId)
+		return space[0].title
+	}
+
+	return (
+		<div>
+			<Accordion defaultActiveKey='0' flush>
+				{review.spaceAnswers.map((spaceAnswer, index) => (
+					<Accordion.Item key={spaceAnswer.id} eventKey={index}>
+						<Accordion.Header>
+							<p>
+								{'Respuesta al espacio: ' +
+									getSpaceTitle(spaceAnswer.spaceId)}
+							</p>
+						</Accordion.Header>
+						<Accordion.Body>
+							<Accordion defaultActiveKey='0'>
+								{spaceAnswer.files.map((file, findex) => (
+									<Accordion.Item
+										key={file.id}
+										eventKey={findex}
+									>
+										<Accordion.Header>
+											<p>{file.name}</p>
+										</Accordion.Header>
+										<Accordion.Body>
+											<iframe
+												className={styles.pdf}
+												src={file.url}
+											/>
+										</Accordion.Body>
+									</Accordion.Item>
+								))}
+							</Accordion>
+						</Accordion.Body>
+					</Accordion.Item>
+				))}
+			</Accordion>
+		</div>
+	)
 }
