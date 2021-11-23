@@ -5,12 +5,24 @@ import { reviewInitialState, reviewReducer } from '../reducers/reviewReducer'
 import { useToast } from './ToastContext'
 import { useUserCredentials } from './UserCredentialsContext'
 
+import * as yup from 'yup'
+
 export const ReviewContext = createContext({
 	...reviewInitialState,
-	createReview: async (reviewDTO) => reviewDTO,
-	getReview: async (reviewId) => reviewId,
+	createReview: async ({ reviewDTO }) => reviewDTO,
+	getReview: async ({ reviewId }) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
+	publishReview: async ({ reviewId }) => false,
+	getAdviserReviews: async () => {},
 	getCompanyReviews: async () => {},
+	/**
+	 * Función para cambiar el esquema de calificaciones de yup para su
+	 * validación de las mismas y los valores que tienen cada uno.
+	 * @param {{qualificationSchema, qualificationIntialState}} qualifications
+	 * objeto que contendrá el esquema para validar en el formulario y los
+	 * valores iniciales de calificaciones.
+	 */
+	setQualifications: (qualifications) => {},
 })
 
 export const useReview = () => {
@@ -20,13 +32,41 @@ export const useReview = () => {
 }
 
 export const useReviewById = (reviewId) => {
-	const { error, getReview } = useReview()
+	const { error, getReview, isLoading, review } = useReview()
+	useReviewQualifications()
 
 	useEffect(() => {
-		getReview(reviewId)
+		getReview({ reviewId })
 	}, [])
 
-	return { error }
+	return { error, isLoading, review }
+}
+
+const useReviewQualifications = () => {
+	const { review, setQualifications } = useReview()
+
+	useEffect(() => {
+		if (review) {
+			const schema = {}
+			const initialValues = {}
+			review.qualifications.forEach(({ id, maxScore, score }) => {
+				schema[`field-${id}`] = yup
+					.number('El valor tiene que ser numérico')
+					.min(0, 'Este campo no pude ser menor a 0')
+					.max(
+						maxScore,
+						`Este campo no puede ser mayor a ${maxScore}`
+					)
+				initialValues[`field-${id}`] = score || ''
+			})
+			if (Object.values(schema).length) {
+				setQualifications({
+					qualificationIntialState: initialValues,
+					qualificationSchema: yup.object({ ...schema }),
+				})
+			}
+		}
+	}, [review])
 }
 
 export const useCompanyReviews = () => {
@@ -40,7 +80,7 @@ export const useCompanyReviews = () => {
 export const useCompanyReviewById = ({ reviewId }) => {
 	const { getReview, isLoading, review } = useReview()
 	useEffect(() => {
-		getReview(reviewId)
+		getReview({ reviewId })
 	}, [])
 
 	return { isLoading, review }
@@ -50,7 +90,7 @@ export const ReviewProvider = ({ children }) => {
 	const { token, id } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
-	const createReview = async (reviewDTO) => {
+	const createReview = async ({ reviewDTO }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.createReview({
@@ -69,14 +109,14 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
-	const getReview = async (reviewId) => {
+	const getReview = async ({ reviewId }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.getReview({ token, reviewId })
 			dispatch({ type: REVIEW_ACTIONS.LOAD_GET_SUCCESS, payload: review })
 		} catch ({ response: { data } }) {
 			dispatch({
-				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
+				type: REVIEW_ACTIONS.LOAD_GET_ERROR,
 				payload: data,
 			})
 		}
@@ -101,7 +141,46 @@ export const ReviewProvider = ({ children }) => {
 			})
 		}
 	}
+	const publishReview = async ({ reviewId }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada.',
+		})
+		try {
+			await reviewService.publishReview({ reviewId, token })
+			return true
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			return false
+		}
+	}
 
+	const getAdviserReviews = async () => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const reviews = await reviewService.getAdviserReviews({ token })
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_ADVISER_REVIEWS_SUCCESS,
+				payload: reviews,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_ADVISER_REVIEWS_ERROR,
+				payload: data,
+			})
+		}
+	}
 	const getCompanyReviews = async () => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS })
 		try {
@@ -130,6 +209,13 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const setQualifications = (qualifications) => {
+		dispatch({
+			type: REVIEW_ACTIONS.SET_QUALIFICATIONS,
+			payload: qualifications,
+		})
+	}
+
 	return (
 		<ReviewContext.Provider
 			value={{
@@ -137,7 +223,10 @@ export const ReviewProvider = ({ children }) => {
 				createReview,
 				getReview,
 				updateReview,
+				publishReview,
+				getAdviserReviews,
 				getCompanyReviews,
+				setQualifications,
 			}}
 		>
 			{children}

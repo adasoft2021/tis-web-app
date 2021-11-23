@@ -6,7 +6,7 @@ import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
-import { ReviewsList } from '../pages/reviews/ReviewsList'
+import { ReviewsList as AdviserReviewsList } from '../pages/reviews/ReviewsList'
 import {
 	Board,
 	NotFoundPage,
@@ -18,12 +18,14 @@ import {
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
+	Project,
 	ReviewCompany,
 	SpaceAnswer,
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import ReviewList from '../pages/reviewList/ReviewList'
 import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
+import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -41,30 +43,55 @@ export default function AppRouter() {
 
 			<Route
 				path='/reviews/:reviewId'
-				component={({ params }) => {
+				component={({ params: { reviewId } }) => {
 					return userType === 'ADVISER' ? (
 						<ProposalProvider>
 							<ObservationProvider>
 								<ReviewProvider>
-									<Review {...params} />
+									<Review reviewId={reviewId} />
 								</ReviewProvider>
 							</ObservationProvider>
 						</ProposalProvider>
 					) : (
 						<ObservationProvider>
 							<ReviewProvider>
-								<ReviewCompany {...params} />
+								<ReviewCompany reviewId={reviewId} />
 							</ReviewProvider>
 						</ObservationProvider>
 					)
 				}}
 			/>
-			<ReviewProvider>
-				<Route path='/reviews' component={ReviewList} />
-			</ReviewProvider>
-			<SpaceProvider>
-				<Route path='/spaces' component={SpacesSubmitLinkList} />
-			</SpaceProvider>
+
+			<Route
+				path='/spaces'
+				component={() => (
+					<SpaceProvider>
+						<SpacesSubmitLinkList />
+					</SpaceProvider>
+				)}
+			/>
+
+			<Route
+				path='/reviews'
+				component={(props) => {
+					return userType === userTypes.ADVISER ? (
+						<ProjectProvider>
+							<CompanyProvider>
+								<SpaceProvider>
+									<ReviewProvider>
+										<AdviserReviewsList {...props} />
+									</ReviewProvider>
+								</SpaceProvider>
+							</CompanyProvider>
+						</ProjectProvider>
+					) : (
+						<ReviewProvider>
+							<ReviewList />
+						</ReviewProvider>
+					)
+				}}
+			/>
+
 			<Route
 				path='/companies'
 				component={(props) => (
@@ -77,6 +104,16 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
+			<Route
+				path='/projects'
+				component={() => (
+					<ProjectProvider>
+						{' '}
+						<Project />{' '}
+					</ProjectProvider>
+				)}
+			/>
+
 			<Route
 				path='/proposals-presentation/:spaceId'
 				component={SpaceAnswer}
@@ -118,20 +155,6 @@ export default function AppRouter() {
 							spaceTitle={decodeURI(spaceTitle)}
 						/>
 					</SpaceAnswerProvider>
-				)}
-			/>
-			<Route
-				path='/reviews'
-				component={(props) => (
-					<ProjectProvider>
-						<CompanyProvider>
-							<SpaceProvider>
-								<ReviewProvider>
-									<ReviewsList {...props} />
-								</ReviewProvider>
-							</SpaceProvider>
-						</CompanyProvider>
-					</ProjectProvider>
 				)}
 			/>
 			<Route component={NotFoundPage} />
