@@ -17,7 +17,7 @@ export default function Review({ reviewId }) {
 
 	useEffect(() => {
 		if (errorReview) {
-			alert(errorReview)
+			alert(JSON.stringify(errorReview))
 		}
 	}, [errorReview])
 

@@ -33,13 +33,13 @@ const BoardFileUpload = ({ spaceId, spaceTitle }) => {
 			) : (
 				<>
 					{spaceAnswers.length !== 0 ? (
-						spaceAnswers.map((company) => (
+						spaceAnswers.map((answer) => (
 							<AccordionItem
 								header={
-									<Header companyName={company.companyName} />
+									<Header companyName={answer.companyName} />
 								}
-								key={company.companyName}
-								body={<ListCard files={company.files} />}
+								key={answer.id}
+								body={<ListCard files={answer.files} />}
 							/>
 						))
 					) : (
