@@ -6,6 +6,7 @@ import CloseButton from './CloseButton'
 import CreateButton from './CreateButton'
 import getToDay from './getToDay'
 import { useProject } from '../../context/providers/ProjectContext'
+import Swal from 'sweetalert2'
 
 const ModalCreateSpace = ({ show, onHide }) => {
 	const formik = useFormik({
@@ -31,9 +32,20 @@ const ModalCreateSpace = ({ show, onHide }) => {
 		}),
 
 		onSubmit: (values) => {
-			alert(JSON.stringify(values, null, 2))
+			Swal({
+				text: 'Seguro de lo que va a enviar.',
+				icon: 'warning',
+				buttons: ['Seguir editando', 'Si'],
+			}).then((answer) => {
+				if (answer) {
+					alert(JSON.stringify(values, null, 2))
+
+					formik.handleReset()
+				}
+			})
 		},
 	})
+
 	const { projects, getAdviserProjects } = useProject()
 	useEffect(() => {
 		getAdviserProjects()
@@ -80,8 +92,9 @@ const ModalCreateSpace = ({ show, onHide }) => {
 								onChange={formik.handleChange}
 								value={formik.values.proyectTis}
 								isInvalid={
-									formik.touched.proyectTis &&
-									formik.errors.proyectTis
+									(formik.touched.proyectTis &&
+										formik.errors.proyectTis) ||
+									projects.length === 0
 								}
 							>
 								<option></option>
@@ -93,7 +106,9 @@ const ModalCreateSpace = ({ show, onHide }) => {
 							</Form.Select>
 
 							<Form.Control.Feedback type='invalid'>
-								{formik.errors.proyectTis}
+								{formik.errors.proyectTis ||
+									(projects.length === 0 &&
+										'No existen proyectos, debe crear un proyecto')}
 							</Form.Control.Feedback>
 						</InputGroup>
 					</Form.Group>
