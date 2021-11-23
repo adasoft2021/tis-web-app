@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Container, Nav, Navbar } from 'react-bootstrap'
+import { Button, Container, Nav, Navbar, Spinner } from 'react-bootstrap'
 import { useReviewById } from '../../context/providers/ReviewContext'
 import Grid from './components/Grid'
 import Popup from './components/Popup'
@@ -7,13 +7,25 @@ import Popup from './components/Popup'
 export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
 
-	const { error: errorReview, review } = useReviewById(reviewId)
+	const { error: errorReview, isLoading, review } = useReviewById(reviewId)
 
 	useEffect(() => {
 		if (errorReview) {
 			alert(errorReview)
 		}
 	}, [errorReview])
+
+	if (isLoading) {
+		return (
+			<div className='d-flex m-5 justify-content-center align-items-center'>
+				<Spinner animation='border' />
+			</div>
+		)
+	}
+
+	if (!review) {
+		return null
+	}
 
 	return (
 		<>
@@ -39,15 +51,17 @@ export default function Review({ reviewId }) {
 										: 'SIN EMITIR'}
 								</p>
 							</Nav>
-							<Nav className='ms-auto'>
-								<Button
-									className='fw-bold rounded-pill'
-									variant='info'
-									onClick={() => setShowPopup(true)}
-								>
-									CALIFICAR
-								</Button>
-							</Nav>
+							{review.qualifications.length && (
+								<Nav className='ms-auto'>
+									<Button
+										className='fw-bold rounded-pill'
+										variant='info'
+										onClick={() => setShowPopup(true)}
+									>
+										CALIFICAR
+									</Button>
+								</Nav>
+							)}
 							{review && !review.published && (
 								<Nav className='ms-auto'>
 									<Button
