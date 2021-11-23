@@ -27,3 +27,10 @@ export async function updateCompany({ token, companyDTO, companyId }) {
 	})
 	return response.data
 }
+
+export async function getCompanyReviews({ companyId, token }) {
+	const response = await companyService.get(`/${companyId}/reviews`, {
+		headers: { 'X-Token': token },
+	})
+	return response.data
+}
