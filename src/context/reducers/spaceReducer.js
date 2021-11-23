@@ -27,7 +27,17 @@ export const spaceReducer = (state, { type, payload }) => {
 			}
 		case SPACE_ACTIONS.LOAD_PROJECT_SPACES_SUCCESS:
 			return { ...state, spaces: payload }
-
+		case SPACE_ACTIONS.LOAD_COMPANY_SPACES:
+			return {
+				...state,
+				isLoading: true,
+			}
+		case SPACE_ACTIONS.LOAD_COMPANY_SPACES_SUCCESS:
+			return {
+				...state,
+				spaces: payload,
+				isLoading: false,
+			}
 		default:
 			return state
 	}

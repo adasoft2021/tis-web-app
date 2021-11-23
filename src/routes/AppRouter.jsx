@@ -23,6 +23,7 @@ import {
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import ReviewList from '../pages/reviewList/ReviewList'
+import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -61,6 +62,9 @@ export default function AppRouter() {
 			<ReviewProvider>
 				<Route path='/reviews' component={ReviewList} />
 			</ReviewProvider>
+			<SpaceProvider>
+				<Route path='/spaces' component={SpacesSubmitLinkList} />
+			</SpaceProvider>
 			<Route
 				path='/companies'
 				component={(props) => (

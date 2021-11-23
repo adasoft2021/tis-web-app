@@ -142,6 +142,14 @@ export default function Page({ children }) {
 								Revisiones
 							</Nav.Link>
 						</Link>
+						<Link to='/spaces'>
+							<Nav.Link
+								eventKey='/spaces'
+								className='p-3 ps-4 border-bottom border-light text-light'
+							>
+								Espacio de envio de archivos
+							</Nav.Link>
+						</Link>
 
 						{userType === userTypes.COMPANY && (
 							<Link to='/file'>

@@ -8,6 +8,7 @@ const SpaceContext = createContext({
 	...spaceInitialState,
 	getSpaceById: async ({ spaceId }) => {},
 	getProjectSpaces: ({ projectId }) => {},
+	getCompanySpaces: async () => {},
 })
 
 export const useSpace = () => {
@@ -21,9 +22,18 @@ export const useSpaceInformation = ({ spaceId }) => {
 	}, [])
 	return { isLoading, spaceDTO }
 }
+
+export const useCompanySpaces = () => {
+	const { getCompanySpaces, isLoading, spaces } = useSpace()
+	useEffect(() => {
+		getCompanySpaces()
+	}, [])
+	return { isLoading, spaces }
+}
+
 export const SpaceProvider = ({ children }) => {
 	const { showToast } = useToast()
-	const { token } = useUserCredentials()
+	const { token, id } = useUserCredentials()
 	const [state, dispatch] = useReducer(spaceReducer, spaceInitialState)
 
 	const getSpaceById = async ({ spaceId }) => {
@@ -62,9 +72,43 @@ export const SpaceProvider = ({ children }) => {
 			dispatch({ type: SPACE_ACTIONS.STOP_LOADING })
 		}
 	}
+
+	const getCompanySpaces = async () => {
+		dispatch({ type: SPACE_ACTIONS.LOAD_COMPANY_SPACES })
+		try {
+			const spaces = await spaceService.getCompanySpaces({
+				token,
+				companyId: id,
+			})
+			dispatch({
+				type: SPACE_ACTIONS.LOAD_COMPANY_SPACES_SUCCESS,
+				payload: spaces,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: SPACE_ACTIONS.STOP_LOADING })
+		}
+	}
+
 	return (
 		<SpaceContext.Provider
-			value={{ ...state, getSpaceById, getProjectSpaces }}
+			value={{
+				...state,
+				getSpaceById,
+				getProjectSpaces,
+				getCompanySpaces,
+			}}
 		>
 			{children}
 		</SpaceContext.Provider>

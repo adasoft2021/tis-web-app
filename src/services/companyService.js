@@ -34,3 +34,10 @@ export async function getCompanyReviews({ companyId, token }) {
 	})
 	return response.data
 }
+
+export async function getCompanySpaces({ companyId, token }) {
+	const response = await companyService.get(`/${companyId}/spaces`, {
+		headers: { 'X-Token': token },
+	})
+	return response.data
+}
