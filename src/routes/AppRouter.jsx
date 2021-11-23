@@ -24,6 +24,7 @@ import {
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 import ReviewList from '../pages/reviewList/ReviewList'
+import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
 import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function AppRouter() {
@@ -62,6 +63,15 @@ export default function AppRouter() {
 			/>
 
 			<Route
+				path='/spaces'
+				component={() => (
+					<SpaceProvider>
+						<SpacesSubmitLinkList />
+					</SpaceProvider>
+				)}
+			/>
+
+			<Route
 				path='/reviews'
 				component={(props) => {
 					return userType === userTypes.ADVISER ? (
@@ -94,9 +104,16 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
-			<ProjectProvider>
-				<Route path='/projects' component={Project} />
-			</ProjectProvider>
+			<Route
+				path='/projects'
+				component={() => (
+					<ProjectProvider>
+						{' '}
+						<Project />{' '}
+					</ProjectProvider>
+				)}
+			/>
+
 			<Route
 				path='/proposals-presentation/:spaceId'
 				component={SpaceAnswer}

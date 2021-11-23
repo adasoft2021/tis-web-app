@@ -1,5 +1,5 @@
 import createInstance from './http'
-
+import { getCompanySpaces } from './companyService'
 const spaceService = createInstance({ url: '/spaces' })
 
 export async function getSpaceById({ spaceId, token }) {
@@ -8,3 +8,5 @@ export async function getSpaceById({ spaceId, token }) {
 	})
 	return response.data
 }
+
+export { getCompanySpaces }
