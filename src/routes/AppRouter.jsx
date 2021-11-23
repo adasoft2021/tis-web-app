@@ -18,6 +18,7 @@ import {
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
+	Project,
 	ReviewCompany,
 	SpaceAnswer,
 } from '../pages'
@@ -41,19 +42,19 @@ export default function AppRouter() {
 
 			<Route
 				path='/reviews/:reviewId'
-				component={({ params }) => {
+				component={({ params: { reviewId } }) => {
 					return userType === 'ADVISER' ? (
 						<ProposalProvider>
 							<ObservationProvider>
 								<ReviewProvider>
-									<Review {...params} />
+									<Review reviewId={reviewId} />
 								</ReviewProvider>
 							</ObservationProvider>
 						</ProposalProvider>
 					) : (
 						<ObservationProvider>
 							<ReviewProvider>
-								<ReviewCompany {...params} />
+								<ReviewCompany reviewId={reviewId} />
 							</ReviewProvider>
 						</ObservationProvider>
 					)
@@ -93,6 +94,9 @@ export default function AppRouter() {
 			<Route path='/register' component={Register} />
 			<Route path='/additional-info' component={AdditionalGE} />
 			<Route path='/boardFile' component={BoardFileUpload} />
+			<ProjectProvider>
+				<Route path='/projects' component={Project} />
+			</ProjectProvider>
 			<Route
 				path='/proposals-presentation/:spaceId'
 				component={SpaceAnswer}

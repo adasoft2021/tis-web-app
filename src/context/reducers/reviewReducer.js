@@ -97,11 +97,21 @@ export const reviewReducer = (state, { type, payload }) => {
 				error: null,
 				isLoading: false,
 			}
+		case REVIEW_ACTIONS.LOAD_ADVISER_REVIEWS_SUCCESS:
+			return {
+				...state,
+				reviews: payload,
+				error: null,
+				isLoading: false,
+			}
 		case REVIEW_ACTIONS.LOAD_CREATE_ERROR:
 		case REVIEW_ACTIONS.LOAD_GET_ERROR:
 		case REVIEW_ACTIONS.LOAD_UPDATE_ERROR:
+		case REVIEW_ACTIONS.LOAD_ADVISER_REVIEWS_ERROR:
 			return {
 				...state,
+				review: null,
+				reviews: [],
 				error: payload,
 				isLoading: false,
 			}

@@ -8,6 +8,7 @@ import CompaniesList from './companies'
 import Register from './register/Register'
 import AdditionalGE from './additionalGE'
 import BoardFileUpload from './boardFileUpload'
+import Project from './project'
 import ReviewCompany from './reviewCompany'
 import SpaceAnswer from './spaceAnswer'
 
@@ -22,6 +23,7 @@ export {
 	AdditionalGE,
 	BoardFileUpload,
 	Review,
+	Project,
 	ReviewCompany,
 	SpaceAnswer,
 }

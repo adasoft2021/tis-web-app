@@ -7,10 +7,11 @@ import { useUserCredentials } from './UserCredentialsContext'
 
 export const ReviewContext = createContext({
 	...reviewInitialState,
-	createReview: async (reviewDTO) => reviewDTO,
-	getReview: async (reviewId) => reviewId,
+	createReview: async ({ reviewDTO }) => reviewDTO,
+	getReview: async ({ reviewId }) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
 	publishReview: async ({ reviewId }) => false,
+	getAdviserReviews: async () => {},
 	getCompanyReviews: async () => {},
 })
 
@@ -21,13 +22,13 @@ export const useReview = () => {
 }
 
 export const useReviewById = (reviewId) => {
-	const { error, getReview } = useReview()
+	const { error, review, getReview } = useReview()
 
 	useEffect(() => {
-		getReview(reviewId)
+		getReview({ reviewId })
 	}, [])
 
-	return { error }
+	return { error, review }
 }
 
 export const useCompanyReviews = () => {
@@ -41,7 +42,7 @@ export const useCompanyReviews = () => {
 export const useCompanyReviewById = ({ reviewId }) => {
 	const { getReview, isLoading, review } = useReview()
 	useEffect(() => {
-		getReview(reviewId)
+		getReview({ reviewId })
 	}, [])
 
 	return { isLoading, review }
@@ -51,7 +52,7 @@ export const ReviewProvider = ({ children }) => {
 	const { token, id } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
-	const createReview = async (reviewDTO) => {
+	const createReview = async ({ reviewDTO }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.createReview({
@@ -70,14 +71,14 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
-	const getReview = async (reviewId) => {
+	const getReview = async ({ reviewId }) => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
 		try {
 			const review = await reviewService.getReview({ token, reviewId })
 			dispatch({ type: REVIEW_ACTIONS.LOAD_GET_SUCCESS, payload: review })
 		} catch ({ response: { data } }) {
 			dispatch({
-				type: REVIEW_ACTIONS.LOAD_CREATE_ERROR,
+				type: REVIEW_ACTIONS.LOAD_GET_ERROR,
 				payload: data,
 			})
 		}
@@ -127,6 +128,21 @@ export const ReviewProvider = ({ children }) => {
 		}
 	}
 
+	const getAdviserReviews = async () => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const reviews = await reviewService.getAdviserReviews({ token })
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_ADVISER_REVIEWS_SUCCESS,
+				payload: reviews,
+			})
+		} catch ({ response: { data } }) {
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_ADVISER_REVIEWS_ERROR,
+				payload: data,
+			})
+		}
+	}
 	const getCompanyReviews = async () => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_GET_COMPANY_REVIEWS })
 		try {
@@ -163,6 +179,7 @@ export const ReviewProvider = ({ children }) => {
 				getReview,
 				updateReview,
 				publishReview,
+				getAdviserReviews,
 				getCompanyReviews,
 			}}
 		>

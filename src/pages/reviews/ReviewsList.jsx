@@ -1,14 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
+import DisplayLinkList from '../../components/DisplayLinkList'
+import { useReview } from '../../context/providers/ReviewContext'
 import Page from '../Page'
 import ReviewForm from './ReviewForm'
 
 export const ReviewsList = () => {
 	const [show, setShow] = useState(false)
+	const { review, reviews, getAdviserReviews } = useReview()
+
+	useEffect(() => {
+		getAdviserReviews()
+	}, [review])
+	useEffect(() => {
+		getAdviserReviews()
+	}, [])
 	return (
 		<Page>
-			<h2>Revisiones</h2>
+			<DisplayLinkList
+				title='Revisiones'
+				description=''
+				linkList={reviews}
+				emptyMessage='Aún no hay revisiones'
+			/>
 			<center>
 				<Button
 					variant='info'
