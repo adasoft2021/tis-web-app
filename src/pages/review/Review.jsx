@@ -6,12 +6,11 @@ import Popup from './components/Popup'
 
 export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
-
 	const { error: errorReview, isLoading, review } = useReviewById(reviewId)
 
 	useEffect(() => {
 		if (errorReview) {
-			alert(errorReview)
+			alert(JSON.stringify(errorReview))
 		}
 	}, [errorReview])
 

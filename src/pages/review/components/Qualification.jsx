@@ -1,7 +1,7 @@
 import { useField } from 'formik'
 import { Col, Form, Row } from 'react-bootstrap'
 
-export default function Qualification({ label, points, ...props }) {
+export default function Qualification({ label, points, value, ...props }) {
 	const [field, meta] = useField(props)
 
 	return (
