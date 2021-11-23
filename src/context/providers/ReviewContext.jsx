@@ -32,14 +32,14 @@ export const useReview = () => {
 }
 
 export const useReviewById = (reviewId) => {
-	const { error, getReview, isLoading, review } = useReview()
+	const { error, getReview, isLoading, publishReview, review } = useReview()
 	useReviewQualifications()
 
 	useEffect(() => {
 		getReview({ reviewId })
 	}, [])
 
-	return { error, isLoading, review }
+	return { error, isLoading, publishReview, review }
 }
 
 const useReviewQualifications = () => {

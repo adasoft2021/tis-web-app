@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Button, Container, Nav, Navbar, Spinner } from 'react-bootstrap'
 import { useReviewById } from '../../context/providers/ReviewContext'
+import swal from 'sweetalert'
 import Grid from './components/Grid'
 import Popup from './components/Popup'
 
 export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
 
-	const { error: errorReview, isLoading, review } = useReviewById(reviewId)
+	const {
+		error: errorReview,
+		isLoading,
+		publishReview,
+		review,
+	} = useReviewById(reviewId)
 
 	useEffect(() => {
 		if (errorReview) {
@@ -25,6 +31,23 @@ export default function Review({ reviewId }) {
 
 	if (!review) {
 		return null
+	}
+
+	const validateQualifications = () => {
+		const valid = !review.qualifications.filter(
+			({ score }) => score === null
+		).length
+
+		if (valid) {
+			swal({
+				text: '¿Está seguro de emitir la revisión? Una vez emitida no se podrán realizar cambios.',
+				buttons: ['No', 'Sí'],
+			}).then((answer) => {
+				if (answer) {
+					publishReview({ reviewId: review.id })
+				}
+			})
+		}
 	}
 
 	return (
@@ -51,23 +74,25 @@ export default function Review({ reviewId }) {
 										: 'SIN EMITIR'}
 								</p>
 							</Nav>
-							{review.qualifications.length && (
-								<Nav className='ms-auto'>
-									<Button
-										className='fw-bold rounded-pill'
-										variant='info'
-										onClick={() => setShowPopup(true)}
-									>
-										CALIFICAR
-									</Button>
-								</Nav>
-							)}
+							{review.qualifications.length !== 0 &&
+								!review.published && (
+									<Nav className='ms-auto'>
+										<Button
+											className='fw-bold rounded-pill'
+											variant='info'
+											onClick={() => setShowPopup(true)}
+										>
+											CALIFICAR
+										</Button>
+									</Nav>
+								)}
 							{review && !review.published && (
 								<Nav className='ms-auto'>
 									<Button
 										className='fw-bold rounded-pill'
 										variant='success'
 										disabled={review.published}
+										onClick={validateQualifications}
 									>
 										EMITIR
 									</Button>
