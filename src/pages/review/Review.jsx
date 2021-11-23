@@ -50,15 +50,17 @@ export default function Review({ reviewId }) {
 										: 'SIN EMITIR'}
 								</p>
 							</Nav>
-							<Nav className='ms-auto'>
-								<Button
-									className='fw-bold rounded-pill'
-									variant='info'
-									onClick={() => setShowPopup(true)}
-								>
-									CALIFICAR
-								</Button>
-							</Nav>
+							{review.qualifications.length && (
+								<Nav className='ms-auto'>
+									<Button
+										className='fw-bold rounded-pill'
+										variant='info'
+										onClick={() => setShowPopup(true)}
+									>
+										CALIFICAR
+									</Button>
+								</Nav>
+							)}
 							{review && !review.published && (
 								<Nav className='ms-auto'>
 									<Button

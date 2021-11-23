@@ -12,6 +12,7 @@ export const ReviewContext = createContext({
 	createReview: async ({ reviewDTO }) => reviewDTO,
 	getReview: async ({ reviewId }) => reviewId,
 	updateReview: async ({ reviewId, reviewDTO }) => reviewDTO,
+	publishReview: async ({ reviewId }) => false,
 	getAdviserReviews: async () => {},
 	getCompanyReviews: async () => {},
 	/**
@@ -140,6 +141,30 @@ export const ReviewProvider = ({ children }) => {
 			})
 		}
 	}
+	const publishReview = async ({ reviewId }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada.',
+		})
+		try {
+			await reviewService.publishReview({ reviewId, token })
+			return true
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			return false
+		}
+	}
 
 	const getAdviserReviews = async () => {
 		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
@@ -198,6 +223,7 @@ export const ReviewProvider = ({ children }) => {
 				createReview,
 				getReview,
 				updateReview,
+				publishReview,
 				getAdviserReviews,
 				getCompanyReviews,
 				setQualifications,
