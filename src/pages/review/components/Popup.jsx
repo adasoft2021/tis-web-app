@@ -44,25 +44,18 @@ export default function Popup(props) {
 							qualificationId: field.split('-')[1],
 						})),
 					}
-					await updateReview({ reviewId: 1, reviewDTO })
+					await updateReview({ reviewId: review.id, reviewDTO })
 				}}
 				validationSchema={qualificationSchema}
 			>
 				{({
-					values: {
-						comentario,
-						one,
-						two,
-						three,
-						four,
-						five,
-						six,
-						seven,
-					},
+					values: { comentario, ...rest },
 					handleChange,
 					touched,
 					errors,
 					handleSubmit,
+					isValid,
+					dirty,
 				}) => (
 					<Form onSubmit={handleSubmit} className='bg-dark'>
 						<div
@@ -104,19 +97,22 @@ export default function Popup(props) {
 									</Form.Label>
 									<Col sm='2' className='text-light'>
 										<p className='bg-light text-dark p-1 rounded text-center h5'>
-											{getTotalScore([
-												one,
-												two,
-												three,
-												four,
-												five,
-												six,
-												seven,
-											])}
+											{getTotalScore(Object.values(rest))}
 										</p>
 									</Col>
 									<Col sm='2'>
-										<p className='text-light'>/100</p>
+										<p className='text-light'>
+											{'/'}
+											{getTotalScore(
+												review.qualifications.map(
+													({
+														id,
+														description,
+														maxScore,
+													}) => maxScore
+												)
+											)}
+										</p>
 									</Col>
 								</Form.Group>
 								<h4 className='text-light'>Comentario</h4>
@@ -141,6 +137,7 @@ export default function Popup(props) {
 											type='submit'
 											variant='success'
 											style={{ margin: 10 }}
+											disabled={!(isValid && dirty)}
 										>
 											GUARDAR
 										</Button>
