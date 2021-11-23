@@ -84,10 +84,12 @@ export default function AppRouter() {
 								</SpaceProvider>
 							</CompanyProvider>
 						</ProjectProvider>
-					) : (
+					) : userType === userTypes.COMPANY ? (
 						<ReviewProvider>
 							<ReviewList />
 						</ReviewProvider>
+					) : (
+						<NotFoundPage />
 					)
 				}}
 			/>

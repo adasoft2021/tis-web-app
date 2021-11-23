@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Button, Container, Nav, Navbar, Spinner } from 'react-bootstrap'
-import { useReviewById } from '../../context/providers/ReviewContext'
+import { useReviewById, useReview } from '../../context/providers/ReviewContext'
 import Grid from './components/Grid'
 import Popup from './components/Popup'
 
 export default function Review({ reviewId }) {
 	const [showPopup, setShowPopup] = useState(false)
 	const { error: errorReview, isLoading, review } = useReviewById(reviewId)
-
+	const { publishReview } = useReview()
 	useEffect(() => {
 		if (errorReview) {
 			alert(JSON.stringify(errorReview))
@@ -50,7 +50,7 @@ export default function Review({ reviewId }) {
 										: 'SIN EMITIR'}
 								</p>
 							</Nav>
-							{review.qualifications.length && (
+							{review.qualifications.length ? (
 								<Nav className='ms-auto'>
 									<Button
 										className='fw-bold rounded-pill'
@@ -60,18 +60,23 @@ export default function Review({ reviewId }) {
 										CALIFICAR
 									</Button>
 								</Nav>
-							)}
-							{review && !review.published && (
+							) : null}
+							{review && !review.published ? (
 								<Nav className='ms-auto'>
 									<Button
 										className='fw-bold rounded-pill'
 										variant='success'
 										disabled={review.published}
+										onClick={() => {
+											publishReview({
+												reviewId: review.id,
+											})
+										}}
 									>
 										EMITIR
 									</Button>
 								</Nav>
-							)}
+							) : null}
 						</Navbar.Collapse>
 					)}
 				</Container>
