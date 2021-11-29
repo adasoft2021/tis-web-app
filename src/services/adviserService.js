@@ -31,3 +31,16 @@ export async function createProject({ token, adviserId, projectDTO }) {
 	)
 	return response.data
 }
+
+export async function getPublicationHistory({ adviserId, token, type }) {
+	const response = await adviserService.get(
+		`/${adviserId}/publications/hystory`,
+		{
+			headers: { 'X-Token': token },
+			params: {
+				type,
+			},
+		}
+	)
+	return response.data
+}

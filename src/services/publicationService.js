@@ -1,5 +1,5 @@
 import createInstance from './http'
-
+import { getPublicationHistory } from './adviserService'
 const publicationService = createInstance({ url: '/publications' })
 
 export async function createPublication({ token, publicationDTO }) {
@@ -54,3 +54,5 @@ export async function getPublishedPublications({ publicationType }) {
 	})
 	return response.data
 }
+
+export { getPublicationHistory }
