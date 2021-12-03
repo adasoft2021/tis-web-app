@@ -1,5 +1,4 @@
 import createInstance from './http'
-
 const companyService = createInstance({ url: '/companies' })
 
 export async function getAllCompanies() {

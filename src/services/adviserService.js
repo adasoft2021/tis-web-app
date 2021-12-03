@@ -31,3 +31,19 @@ export async function createProject({ token, adviserId, projectDTO }) {
 	)
 	return response.data
 }
+
+export async function getAnswerSpacesByProject({
+	token,
+	adviserId,
+	projectId,
+}) {
+	const response = await adviserService.get(`/${adviserId}/companies`, {
+		headers: {
+			'X-Token': token,
+		},
+		params: {
+			projectId,
+		},
+	})
+	return response.data
+}

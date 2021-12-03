@@ -5,12 +5,14 @@ import {
 	proposalInitialState,
 	proposalReducer,
 } from '../reducers/proposalReducer'
+import { useToast } from './ToastContext'
 import { useUserCredentials } from './UserCredentialsContext'
 
 export const ProposalContext = createContext({
 	...proposalInitialState,
 	getAllAdviserProposals: async () => {},
 	getProposal: async ({ proposalId }) => {},
+	getAnswerSpacesByProject: async ({ projectId }) => {},
 })
 
 export const useProposal = () => {
@@ -40,7 +42,16 @@ export const useListProposals = () => {
 	return { error, isLoading, proposals }
 }
 
+export const useAnswerSpacesByProject = ({ projectId }) => {
+	const { getAnswerSpacesByProject, isLoading, proposals } = useProposal()
+
+	useEffect(() => {
+		getAnswerSpacesByProject({ projectId })
+	}, [])
+	return { isLoading, proposals }
+}
 export const ProposalProvider = ({ children }) => {
+	const { showToast } = useToast()
 	const { id, token } = useUserCredentials()
 	const [state, dispatch] = useReducer(proposalReducer, proposalInitialState)
 
@@ -85,9 +96,42 @@ export const ProposalProvider = ({ children }) => {
 		}
 	}
 
+	const getAnswerSpacesByProject = async ({ projectId }) => {
+		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
+		try {
+			const proposals = await proposalService.getAnswerSpacesByProject({
+				token,
+				adviserId: id,
+				projectId,
+			})
+			dispatch({
+				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_SUCCESS,
+				payload: proposals,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'El servicio no está disponible en estos momentos',
+			})
+			dispatch({ type: PROPOSAL_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<ProposalContext.Provider
-			value={{ ...state, getAllAdviserProposals, getProposal }}
+			value={{
+				...state,
+				getAllAdviserProposals,
+				getProposal,
+				getAnswerSpacesByProject,
+			}}
 		>
 			{children}
 		</ProposalContext.Provider>

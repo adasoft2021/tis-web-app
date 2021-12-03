@@ -152,6 +152,7 @@ export const CompanyProvider = ({ children }) => {
 			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
 		}
 	}
+
 	return (
 		<CompanyContext.Provider
 			value={{
