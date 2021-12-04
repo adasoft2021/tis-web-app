@@ -32,6 +32,15 @@ export async function createProject({ token, adviserId, projectDTO }) {
 	return response.data
 }
 
+export async function getProposalsHistory({ adviserId, token }) {
+	const response = await adviserService.get(
+		`/${adviserId}/proposals/history`,
+		{
+			headers: { 'X-Token': token },
+		}
+	)
+	return response.data
+}
 export async function getAnswerSpacesByProject({
 	token,
 	adviserId,

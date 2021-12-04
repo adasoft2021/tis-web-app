@@ -1,5 +1,5 @@
 import createInstance from './http'
-import { getAnswerSpacesByProject } from './adviserService'
+import { getProposalsHistory, getAnswerSpacesByProject } from './adviserService'
 
 const proposalService = createInstance({ url: '/proposals' })
 
@@ -25,4 +25,5 @@ export async function getProposal({ token, proposalId }) {
 	return response.data
 }
 
+export { getProposalsHistory }
 export { getAnswerSpacesByProject }

@@ -12,6 +12,7 @@ export const ProposalContext = createContext({
 	...proposalInitialState,
 	getAllAdviserProposals: async () => {},
 	getProposal: async ({ proposalId }) => {},
+	getProposalsHistory: async () => {},
 	getAnswerSpacesByProject: async ({ projectId }) => {},
 })
 
@@ -42,6 +43,13 @@ export const useListProposals = () => {
 	return { error, isLoading, proposals }
 }
 
+export const useProposalsHistory = () => {
+	const { getProposalsHistory, isLoading, proposals } = useProposal()
+	useEffect(() => {
+		getProposalsHistory()
+	}, [])
+	return { isLoading, proposals }
+}
 export const useAnswerSpacesByProject = ({ projectId }) => {
 	const { getAnswerSpacesByProject, isLoading, proposals } = useProposal()
 
@@ -96,6 +104,34 @@ export const ProposalProvider = ({ children }) => {
 		}
 	}
 
+	const getProposalsHistory = async () => {
+		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
+		try {
+			const proposals = await proposalService.getProposalsHistory({
+				adviserId: id,
+				token,
+			})
+			dispatch({
+				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_SUCCESS,
+				payload: proposals,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'El servicio no está disponible en estos momentos',
+			})
+			dispatch({ type: PROPOSAL_ACTIONS.STOP_LOADING })
+		}
+	}
+
 	const getAnswerSpacesByProject = async ({ projectId }) => {
 		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
 		try {
@@ -130,6 +166,7 @@ export const ProposalProvider = ({ children }) => {
 				...state,
 				getAllAdviserProposals,
 				getProposal,
+				getProposalsHistory,
 				getAnswerSpacesByProject,
 			}}
 		>
