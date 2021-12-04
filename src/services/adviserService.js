@@ -34,7 +34,7 @@ export async function createProject({ token, adviserId, projectDTO }) {
 
 export async function getPublicationHistory({ adviserId, token, type }) {
 	const response = await adviserService.get(
-		`/${adviserId}/publications/hystory`,
+		`/${adviserId}/publications/history`,
 		{
 			headers: { 'X-Token': token },
 			params: {
@@ -42,5 +42,11 @@ export async function getPublicationHistory({ adviserId, token, type }) {
 			},
 		}
 	)
+	return response.data
+}
+export async function getActualCompanies({ token, adviserId }) {
+	const response = await adviserService.get(`/${adviserId}/companies`, {
+		headers: { 'X-Token': token },
+	})
 	return response.data
 }
