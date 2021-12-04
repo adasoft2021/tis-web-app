@@ -19,6 +19,7 @@ const PublicationContext = createContext({
 	updatePublication: async ({ publicationId, publicationDTO }) => {},
 	createPublication: async ({ publicationDTO }) => {},
 	getPublishedPublications: async ({ publicationType }) => {},
+	getPublicationHistory: async ({ publicationType }) => {},
 })
 
 export const usePublication = () => {
@@ -57,6 +58,13 @@ export const useAllAdviserPublications = (publicationType) => {
 	return { isLoading, publications }
 }
 
+export const usePublicationHistory = (publicationType) => {
+	const { getPublicationHistory, publications, isLoading } = usePublication()
+	useEffect(() => {
+		getPublicationHistory({ publicationType })
+	}, [])
+	return { isLoading, publications }
+}
 export const PublicationProvider = ({ children }) => {
 	const { showToast } = useToast()
 	const { id, token } = useUserCredentials()
@@ -225,6 +233,36 @@ export const PublicationProvider = ({ children }) => {
 			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
 		}
 	}
+	const getPublicationHistory = async ({ publicationType }) => {
+		dispatch({ type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST })
+		try {
+			const publications = await publicationService.getPublicationHistory(
+				{
+					adviserId: id,
+					token,
+					publicationType,
+				}
+			)
+			dispatch({
+				type: PUBLICATION_ACTIONS.LOAD_PUBLICATIONS_LIST_SUCCESS,
+				payload: publications,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: PUBLICATION_ACTIONS.STOP_LOADING })
+		}
+	}
 
 	return (
 		<PublicationContext.Provider
@@ -237,6 +275,7 @@ export const PublicationProvider = ({ children }) => {
 				updatePublication,
 				createPublication,
 				getPublishedPublications,
+				getPublicationHistory,
 			}}
 		>
 			{children}

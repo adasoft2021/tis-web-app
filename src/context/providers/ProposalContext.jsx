@@ -5,14 +5,15 @@ import {
 	proposalInitialState,
 	proposalReducer,
 } from '../reducers/proposalReducer'
-import { useUserCredentials } from './UserCredentialsContext'
 import { useToast } from './ToastContext'
+import { useUserCredentials } from './UserCredentialsContext'
 
 export const ProposalContext = createContext({
 	...proposalInitialState,
 	getAllAdviserProposals: async () => {},
 	getProposal: async ({ proposalId }) => {},
 	getProposalsHistory: async () => {},
+	getAnswerSpacesByProject: async ({ projectId }) => {},
 })
 
 export const useProposal = () => {
@@ -47,7 +48,14 @@ export const useProposalsHistory = () => {
 	useEffect(() => {
 		getProposalsHistory()
 	}, [])
+	return { isLoading, proposals }
+}
+export const useAnswerSpacesByProject = ({ projectId }) => {
+	const { getAnswerSpacesByProject, isLoading, proposals } = useProposal()
 
+	useEffect(() => {
+		getAnswerSpacesByProject({ projectId })
+	}, [])
 	return { isLoading, proposals }
 }
 export const ProposalProvider = ({ children }) => {
@@ -123,6 +131,35 @@ export const ProposalProvider = ({ children }) => {
 			dispatch({ type: PROPOSAL_ACTIONS.STOP_LOADING })
 		}
 	}
+
+	const getAnswerSpacesByProject = async ({ projectId }) => {
+		dispatch({ type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS })
+		try {
+			const proposals = await proposalService.getAnswerSpacesByProject({
+				token,
+				adviserId: id,
+				projectId,
+			})
+			dispatch({
+				type: PROPOSAL_ACTIONS.LOAD_LIST_PROPOSALS_SUCCESS,
+				payload: proposals,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'El servicio no está disponible en estos momentos',
+			})
+			dispatch({ type: PROPOSAL_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<ProposalContext.Provider
 			value={{
@@ -130,6 +167,7 @@ export const ProposalProvider = ({ children }) => {
 				getAllAdviserProposals,
 				getProposal,
 				getProposalsHistory,
+				getAnswerSpacesByProject,
 			}}
 		>
 			{children}
