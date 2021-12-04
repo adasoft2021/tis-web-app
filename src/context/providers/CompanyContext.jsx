@@ -12,6 +12,7 @@ const CompanyContext = createContext({
 	getCompany: async () => {},
 	registerCompany: async ({ registrationCode, companyDTO }) => {},
 	updateCompany: async ({ companyDTO, companyId }) => {},
+	getActualCompanies: async () => {},
 })
 
 export const useCompany = () => {
@@ -38,7 +39,14 @@ export const useGetCompany = () => {
 
 	return { isLoading, company }
 }
+export const useActualCompanies = () => {
+	const { getActualCompanies, isLoading, companies } = useCompany()
+	useEffect(() => {
+		getActualCompanies()
+	}, [])
 
+	return { isLoading, companies }
+}
 export const CompanyProvider = ({ children }) => {
 	const { showToast } = useToast()
 	const { setUserCredentials, token, id } = useUserCredentials()
@@ -153,6 +161,33 @@ export const CompanyProvider = ({ children }) => {
 		}
 	}
 
+	const getActualCompanies = async () => {
+		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANIES_LIST })
+		try {
+			const companies = await companyService.getActualCompanies({
+				token,
+				adviserId: id,
+			})
+			dispatch({
+				type: COMPANY_ACTIONS.LOAD_COMPANIES_LIST_SUCCESS,
+				payload: companies,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<CompanyContext.Provider
 			value={{
@@ -161,6 +196,7 @@ export const CompanyProvider = ({ children }) => {
 				getCompany,
 				registerCompany,
 				updateCompany,
+				getActualCompanies,
 			}}
 		>
 			{children}

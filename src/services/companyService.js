@@ -1,4 +1,5 @@
 import createInstance from './http'
+import { getActualCompanies } from './adviserService'
 const companyService = createInstance({ url: '/companies' })
 
 export async function getAllCompanies() {
@@ -40,3 +41,5 @@ export async function getCompanySpaces({ companyId, token }) {
 	})
 	return response.data
 }
+
+export { getActualCompanies }
