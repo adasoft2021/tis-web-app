@@ -44,6 +44,11 @@ export const proposalReducer = (state, { type, payload }) => {
 				error: payload,
 				isLoading: false,
 			}
+		case PROPOSAL_ACTIONS.STOP_LOADING:
+			return {
+				...state,
+				isLoading: false,
+			}
 		default:
 			return state
 	}
