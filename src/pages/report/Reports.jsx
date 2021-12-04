@@ -11,7 +11,9 @@ export default function Reports() {
 				<Nav.Link href='/'>
 					Grupo Empresas Inscritas en la Gestion Actual
 				</Nav.Link>
-				<Nav.Link href='/'>Informacion de las Grupo Empresas</Nav.Link>
+				<Nav.Link href='/groupInformationReport'>
+					Informacion de las Grupo Empresas
+				</Nav.Link>
 				<Nav.Link href='/'>Respuestas de las Grupo Empresas</Nav.Link>
 				<Nav.Link href='/'>Revisiones</Nav.Link>
 				<Nav.Link href='/'>Historial de Propuestas Creadas</Nav.Link>

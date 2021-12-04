@@ -7,6 +7,7 @@ import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
 import Reports from '../pages/report/Reports'
+import GroupInformationReport from '../pages/report/GroupInformationReport'
 
 import {
 	Board,
@@ -26,6 +27,7 @@ import {
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 // import ReviewList from '../pages/reviewList/ReviewList'
 import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
+
 // import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function AppRouter() {
@@ -86,6 +88,10 @@ export default function AppRouter() {
 			<Route
 				path='/reports'
 				component={({ params: { spaceId, spaceTitle } }) => <Reports />}
+			/>
+			<Route
+				path='/groupInformationReport'
+				component={GroupInformationReport}
 			/>
 
 			<Route
