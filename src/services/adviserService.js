@@ -31,3 +31,10 @@ export async function createProject({ token, adviserId, projectDTO }) {
 	)
 	return response.data
 }
+
+export async function getActualCompanies({ token, adviserId }) {
+	const response = await adviserService.get(`/${adviserId}/companies`, {
+		headers: { 'X-Token': token },
+	})
+	return response.data
+}
