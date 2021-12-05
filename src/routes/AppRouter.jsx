@@ -7,7 +7,6 @@ import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
 import Reports from '../pages/report/Reports'
-import GroupInformationReport from '../pages/report/GroupInformationReport'
 
 import {
 	Board,
@@ -27,6 +26,12 @@ import {
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 // import ReviewList from '../pages/reviewList/ReviewList'
 import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
+import GroupInformationReport from '../pages/report/GroupInformationReport'
+import CompanyGroupResponses from '../pages/report/CompanyGroupResponses'
+import TableProposalTimes from '../components/tables/TableProposalTimes'
+import TableSignedCompanyGroup from '../components/tables/TableSignedCompanyGroup'
+import TableChangeOrders from '../components/tables/TableChangeOrders'
+import TableGEwithSlopes from '../components/tables/TableGEwithSlopes'
 
 // import { userTypes } from '../context/reducers/userCredentialsReducer'
 
@@ -93,6 +98,17 @@ export default function AppRouter() {
 				path='/groupInformationReport'
 				component={GroupInformationReport}
 			/>
+			<Route
+				path='/companyGroupResponses'
+				component={CompanyGroupResponses}
+			/>
+			<Route path='/tableProposalTimes' component={TableProposalTimes} />
+			<Route
+				path='/tableSignedCompanyGroup'
+				component={TableSignedCompanyGroup}
+			/>
+			<Route path='/tableChangeOrders' component={TableChangeOrders} />
+			<Route path='/tableGEwithSlopes' component={TableGEwithSlopes} />
 
 			<Route
 				path='/companies'

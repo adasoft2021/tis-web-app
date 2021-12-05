@@ -14,7 +14,9 @@ export default function Reports() {
 				<Nav.Link href='/groupInformationReport'>
 					Informacion de las Grupo Empresas
 				</Nav.Link>
-				<Nav.Link href='/'>Respuestas de las Grupo Empresas</Nav.Link>
+				<Nav.Link href='/companyGroupResponses'>
+					Respuestas de las Grupo Empresas
+				</Nav.Link>
 				<Nav.Link href='/'>Revisiones</Nav.Link>
 				<Nav.Link href='/'>Historial de Propuestas Creadas</Nav.Link>
 			</Nav>
