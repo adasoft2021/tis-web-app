@@ -23,6 +23,7 @@ export const ReviewContext = createContext({
 	 * valores iniciales de calificaciones.
 	 */
 	setQualifications: (qualifications) => {},
+	getInformationStatusReview: async () => {},
 })
 
 export const useReview = () => {
@@ -84,6 +85,15 @@ export const useCompanyReviewById = ({ reviewId }) => {
 	}, [])
 
 	return { isLoading, review }
+}
+
+export const useInformationStatusReview = () => {
+	const { getInformationStatusReview, isLoading, reviews } = useReview()
+	useEffect(() => {
+		getInformationStatusReview()
+	}, [])
+
+	return { isLoading, reviews }
 }
 export const ReviewProvider = ({ children }) => {
 	const { showToast } = useToast()
@@ -216,6 +226,33 @@ export const ReviewProvider = ({ children }) => {
 		})
 	}
 
+	const getInformationStatusReview = async () => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const reviews = await reviewService.getInformationStatusReview({
+				adviserId: id,
+				token,
+			})
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_ADVISER_REVIEWS_SUCCESS,
+				payload: reviews,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: REVIEW_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<ReviewContext.Provider
 			value={{
@@ -227,6 +264,7 @@ export const ReviewProvider = ({ children }) => {
 				getAdviserReviews,
 				getCompanyReviews,
 				setQualifications,
+				getInformationStatusReview,
 			}}
 		>
 			{children}
