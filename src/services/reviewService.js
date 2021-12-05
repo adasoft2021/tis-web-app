@@ -39,4 +39,17 @@ export async function getAdviserReviews({ token }) {
 	})
 	return response.data
 }
+
+export async function updateReviewStatus({ reviewId, token, newStatus }) {
+	const response = await reviewService.put(`/${reviewId}`, undefined, {
+		headers: {
+			'X-Token': token,
+		},
+		params: {
+			newStatus,
+		},
+	})
+	return response.data
+}
+
 export { getCompanyReviews }

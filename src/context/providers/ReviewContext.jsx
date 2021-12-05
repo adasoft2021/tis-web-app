@@ -15,6 +15,7 @@ export const ReviewContext = createContext({
 	publishReview: async ({ reviewId }) => false,
 	getAdviserReviews: async () => {},
 	getCompanyReviews: async () => {},
+	updateReviewStatus: async ({ reviewId, newStatus }) => {},
 	/**
 	 * Función para cambiar el esquema de calificaciones de yup para su
 	 * validación de las mismas y los valores que tienen cada uno.
@@ -216,6 +217,34 @@ export const ReviewProvider = ({ children }) => {
 		})
 	}
 
+	const updateReviewStatus = async ({ reviewId, newStatus }) => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const review = await reviewService.updateReviewStatus({
+				reviewId,
+				token,
+				newStatus,
+			})
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_UPDATE_SUCCESS,
+				payload: review,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: REVIEW_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<ReviewContext.Provider
 			value={{
@@ -227,6 +256,7 @@ export const ReviewProvider = ({ children }) => {
 				getAdviserReviews,
 				getCompanyReviews,
 				setQualifications,
+				updateReviewStatus,
 			}}
 		>
 			{children}
