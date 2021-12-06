@@ -42,4 +42,14 @@ export async function getCompanySpaces({ companyId, token }) {
 	return response.data
 }
 
+export async function getCompanyExtendedVersion({ companyId, token }) {
+	const response = await companyService.get(`${companyId}/extended-reviews`, {
+		headers: {
+			'X-Token': token,
+		},
+	})
+
+	return response.data
+}
+
 export { getActualCompanies }
