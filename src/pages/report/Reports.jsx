@@ -4,11 +4,12 @@ import { Nav } from 'react-bootstrap'
 export default function Reports() {
 	return (
 		<Page>
-			<Nav>
+			<h2 style={{ fontWeight: '700' }}>Reportes</h2>
+			<Nav defaultActiveKey='/' className='flex-column'>
 				<Nav.Link href='/historyCreatedSheets'>
 					Historial de Pliegos Creados
 				</Nav.Link>
-				<Nav.Link href='/'>
+				<Nav.Link href='/groupRegisteredCompanies'>
 					Grupo Empresas Inscritas en la Gestion Actual
 				</Nav.Link>
 				<Nav.Link href='/groupInformationReport'>

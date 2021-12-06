@@ -8,7 +8,8 @@ import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
 import Reports from '../pages/report/Reports'
 import GroupInformationReport from '../pages/report/GroupInformationReport'
-
+import HistoryCreatedSheets from '../pages/report/HistoryCreatedSheets'
+import GroupRegisteredCompanies from '../pages/report/GroupRegisteredCompanies'
 import {
 	Board,
 	NotFoundPage,
@@ -27,8 +28,6 @@ import {
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 // import ReviewList from '../pages/reviewList/ReviewList'
 import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
-
-// import { userTypes } from '../context/reducers/userCredentialsReducer'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -92,6 +91,14 @@ export default function AppRouter() {
 			<Route
 				path='/groupInformationReport'
 				component={GroupInformationReport}
+			/>
+			<Route
+				path='/historyCreatedSheets'
+				component={HistoryCreatedSheets}
+			/>
+			<Route
+				path='/groupRegisteredCompanies'
+				component={GroupRegisteredCompanies}
 			/>
 
 			<Route
