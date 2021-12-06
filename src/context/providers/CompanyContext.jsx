@@ -13,6 +13,7 @@ const CompanyContext = createContext({
 	registerCompany: async ({ registrationCode, companyDTO }) => {},
 	updateCompany: async ({ companyDTO, companyId }) => {},
 	getActualCompanies: async () => {},
+	getCompanyExtendedVersion: async () => {},
 })
 
 export const useCompany = () => {
@@ -47,6 +48,17 @@ export const useActualCompanies = () => {
 
 	return { isLoading, companies }
 }
+
+export const useGetCompanyExtendedVersion = () => {
+	const { getCompanyExtendedVersion, isLoading, company } = useCompany()
+
+	useEffect(() => {
+		getCompanyExtendedVersion()
+	}, [])
+
+	return { isLoading, company }
+}
+
 export const CompanyProvider = ({ children }) => {
 	const { showToast } = useToast()
 	const { setUserCredentials, token, id } = useUserCredentials()
@@ -188,6 +200,34 @@ export const CompanyProvider = ({ children }) => {
 			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
 		}
 	}
+
+	const getCompanyExtendedVersion = async () => {
+		dispatch({ type: COMPANY_ACTIONS.LOAD_COMPANY })
+		try {
+			const company = await companyService.getCompanyExtendedVersion({
+				companyId: id,
+				token,
+			})
+			dispatch({
+				type: COMPANY_ACTIONS.LOAD_COMPANY_SUCCESS,
+				payload: company,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: COMPANY_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<CompanyContext.Provider
 			value={{
@@ -197,6 +237,7 @@ export const CompanyProvider = ({ children }) => {
 				registerCompany,
 				updateCompany,
 				getActualCompanies,
+				getCompanyExtendedVersion,
 			}}
 		>
 			{children}
