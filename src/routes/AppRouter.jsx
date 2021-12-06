@@ -10,6 +10,7 @@ import Reports from '../pages/report/Reports'
 import GroupInformationReport from '../pages/report/GroupInformationReport'
 import HistoryCreatedSheets from '../pages/report/HistoryCreatedSheets'
 import GroupRegisteredCompanies from '../pages/report/GroupRegisteredCompanies'
+
 import {
 	Board,
 	NotFoundPage,
@@ -28,6 +29,11 @@ import {
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 // import ReviewList from '../pages/reviewList/ReviewList'
 import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
+import CompanyGroupResponses from '../pages/report/CompanyGroupResponses'
+import TableProposalTimes from '../components/tables/TableProposalTimes'
+import TableSignedCompanyGroup from '../components/tables/TableSignedCompanyGroup'
+import TableChangeOrders from '../components/tables/TableChangeOrders'
+import TableGEwithSlopes from '../components/tables/TableGEwithSlopes'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -100,6 +106,17 @@ export default function AppRouter() {
 				path='/groupRegisteredCompanies'
 				component={GroupRegisteredCompanies}
 			/>
+			<Route
+				path='/companyGroupResponses'
+				component={CompanyGroupResponses}
+			/>
+			<Route path='/tableProposalTimes' component={TableProposalTimes} />
+			<Route
+				path='/tableSignedCompanyGroup'
+				component={TableSignedCompanyGroup}
+			/>
+			<Route path='/tableChangeOrders' component={TableChangeOrders} />
+			<Route path='/tableGEwithSlopes' component={TableGEwithSlopes} />
 
 			<Route
 				path='/companies'

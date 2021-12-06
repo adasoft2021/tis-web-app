@@ -7,7 +7,10 @@ import Page from '../Page'
 export default function GroupInformationReport() {
 	return (
 		<Page>
-			<h3 style={{ fontWeight: '700' }}>
+			<a title='Los Tejos' href='/reports'>
+				<img src='/flechaAtras.png' width='26' />
+			</a>
+			<h3 className='p-3' style={{ fontWeight: '700' }}>
 				Reportes de Información de las GE del semestre actual
 			</h3>
 			<TableOne></TableOne>
