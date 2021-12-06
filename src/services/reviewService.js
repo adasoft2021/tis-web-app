@@ -39,5 +39,4 @@ export async function getAdviserReviews({ token }) {
 	})
 	return response.data
 }
-export { getCompanyReviews }
-export { getInformationStatusReview }
+export { getCompanyReviews, getInformationStatusReview }
