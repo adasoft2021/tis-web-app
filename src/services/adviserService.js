@@ -31,3 +31,48 @@ export async function createProject({ token, adviserId, projectDTO }) {
 	)
 	return response.data
 }
+
+export async function getProposalsHistory({ adviserId, token }) {
+	const response = await adviserService.get(
+		`/${adviserId}/proposals/history`,
+		{
+			headers: { 'X-Token': token },
+		}
+	)
+	return response.data
+}
+export async function getAnswerSpacesByProject({
+	token,
+	adviserId,
+	projectId,
+}) {
+	const response = await adviserService.get(`/${adviserId}/proposals`, {
+		headers: {
+			'X-Token': token,
+		},
+		params: {
+			projectId,
+		},
+	})
+	return response.data
+}
+
+export async function getPublicationHistory({ adviserId, token, type }) {
+	const response = await adviserService.get(
+		`/${adviserId}/publications/history`,
+		{
+			headers: { 'X-Token': token },
+			params: {
+				type,
+			},
+		}
+	)
+	return response.data
+}
+
+export async function getActualCompanies({ token, adviserId }) {
+	const response = await adviserService.get(`/${adviserId}/companies`, {
+		headers: { 'X-Token': token },
+	})
+	return response.data
+}
