@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Data } from './Data'
 import styled from 'styled-components'
 import { IconContext } from 'react-icons'
 import { FiPlus, FiMinus } from 'react-icons/fi'
+import { usePublicationHistory } from '../context/providers/PublicationContext'
 
 const AccordionSection = styled.div`
 	display: flex;
@@ -57,11 +57,12 @@ const Dropdown = styled.div`
 const Accordion = () => {
 	const [clicked, setClicked] = useState(false)
 
+	const { publications } = usePublicationHistory('SPECIFICATION_SHEET')
+
 	const toggle = (index) => {
 		if (clicked === index) {
 			return setClicked(null)
 		}
-
 		setClicked(index)
 	}
 
@@ -69,25 +70,26 @@ const Accordion = () => {
 		<IconContext.Provider value={{ color: '#00FFB9', size: '25px' }}>
 			<AccordionSection>
 				<Container>
-					{Data.map((item, index) => {
+					{publications.map((item) => {
 						return (
-							<>
-								<Wrap onClick={() => toggle(index)} key={index}>
+							<div key={item.id}>
+								<Wrap onClick={() => toggle(item.id)}>
 									<h1>{item.title}</h1>
+
 									<span>
-										{clicked === index ? (
+										{clicked === item.id ? (
 											<FiMinus />
 										) : (
 											<FiPlus />
 										)}
 									</span>
 								</Wrap>
-								{clicked === index ? (
+								{clicked === item.id ? (
 									<Dropdown>
-										<p>{item.content}</p>
+										<p>{item.fileUrl}</p>
 									</Dropdown>
 								) : null}
-							</>
+							</div>
 						)
 					})}
 				</Container>
