@@ -25,5 +25,4 @@ export async function getProposal({ token, proposalId }) {
 	return response.data
 }
 
-export { getProposalsHistory }
-export { getAnswerSpacesByProject }
+export { getProposalsHistory, getAnswerSpacesByProject }
