@@ -83,3 +83,18 @@ export async function getInformationStatusReview({ adviserId, token }) {
 	})
 	return response.data
 }
+
+export async function getReportsReviews({ adviserId, token, projectId }) {
+	const response = await adviserService.get(
+		`/${adviserId}/reviews/published`,
+		{
+			headers: {
+				'X-Token': token,
+			},
+			params: {
+				projectId,
+			},
+		}
+	)
+	return response.data
+}
