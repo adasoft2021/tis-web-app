@@ -76,3 +76,10 @@ export async function getActualCompanies({ token, adviserId }) {
 	})
 	return response.data
 }
+
+export async function getInformationStatusReview({ adviserId, token }) {
+	const response = await adviserService.get(`/${adviserId}/reviews`, {
+		headers: { 'X-Token': token },
+	})
+	return response.data
+}
