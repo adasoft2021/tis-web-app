@@ -13,7 +13,11 @@ const SpaceAnswer = ({ params: { spaceId } }) => {
 			<SpaceAnswerProvider>
 				<div className='box'>
 					<h2 className='header'>Formulario Subir Archivos</h2>
-					<UploadForm onFileChange={(files) => console.log(files)} />
+					<UploadForm
+						onFileChange={(files) => {
+							/* console.log(files) */
+						}}
+					/>
 				</div>
 			</SpaceAnswerProvider>
 		</Page>

@@ -240,7 +240,7 @@ export const PublicationProvider = ({ children }) => {
 				{
 					adviserId: id,
 					token,
-					publicationType,
+					type: publicationType,
 				}
 			)
 			dispatch({

@@ -1,7 +1,7 @@
 import React from 'react'
 import Page from '../Page'
-import { SpaceAnswerProvider } from '../../context/providers/SpaceAnswerContext'
 import ComponentsGroup from './components/ComponentsGroup'
+import { CompanyProvider } from '../../context/providers/CompanyContext'
 
 export default function GroupInformationReport() {
 	return (
@@ -12,9 +12,9 @@ export default function GroupInformationReport() {
 			<h3 className='p-3' style={{ fontWeight: '700' }}>
 				Reportes de Información de las GE del semestre actual
 			</h3>
-			<SpaceAnswerProvider>
+			<CompanyProvider>
 				<ComponentsGroup />
-			</SpaceAnswerProvider>
+			</CompanyProvider>
 		</Page>
 	)
 }

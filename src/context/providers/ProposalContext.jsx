@@ -51,7 +51,6 @@ export const useProposalsHistory = () => {
 	return { isLoading, proposals }
 }
 export const useAnswerSpacesByProject = ({ projectId }) => {
-	console.log('hola')
 	const { getAnswerSpacesByProject, isLoading, proposals } = useProposal()
 
 	useEffect(() => {

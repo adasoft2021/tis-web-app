@@ -22,7 +22,6 @@ const AddInformationForm = () => {
 		},
 		onSubmit: (values) => {
 			alert(JSON.stringify(values, null, 2))
-			console.log(formik)
 		},
 	})
 	const { showToast } = useToast()

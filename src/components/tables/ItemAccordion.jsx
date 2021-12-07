@@ -8,9 +8,12 @@ export default function ItemAccordion({ name, eventKey, partners }) {
 			<Accordion.Body>
 				{partners.map((S) => (
 					<div key={S.id}>
-						<Row className='d-inline-flex'>
-							<Col>{S.name}:</Col>
+						<Row>
+							<Col sm={4} lg={3} xl={2}>
+								{S.name}:
+							</Col>
 							<Col
+								sm={6}
 								style={{
 									color: '#07BCFF',
 									textDecoration: 'underline',

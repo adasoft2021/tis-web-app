@@ -104,7 +104,11 @@ export default function AppRouter() {
 			/>
 			<Route
 				path='/groupRegisteredCompanies'
-				component={GroupRegisteredCompanies}
+				component={() => (
+					<CompanyProvider>
+						<GroupRegisteredCompanies />
+					</CompanyProvider>
+				)}
 			/>
 			<Route
 				path='/companyGroupResponses'

@@ -17,6 +17,9 @@ const validateDate = (datePublication) => {
 }
 
 const validateSemester = (semesterPublication, currentSemester) => {
+	if (!semesterPublication) {
+		return false
+	}
 	semesterPublication = semesterPublication.split('-')
 	currentSemester = currentSemester.split('-')
 

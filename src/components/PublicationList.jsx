@@ -1,7 +1,7 @@
 import { Button, Col, Row, Spinner } from 'react-bootstrap'
 import { IoIosAdd } from 'react-icons/io'
 import { useLocation } from 'wouter'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
 	useAllAdviserPublications,
 	usePublication,
@@ -51,8 +51,6 @@ const NewPostButton = ({ buttonMessage, publicationType }) => {
 	)
 }
 export default function PublicationList({ buttonMessage, message }) {
-	const [filteredPublications, setFilteredPublications] = useState([])
-
 	const [location] = useLocation()
 	const { userType } = useUserCredentials()
 	const publicationType =
@@ -64,10 +62,6 @@ export default function PublicationList({ buttonMessage, message }) {
 	const { isLoading, publications } =
 		useAllAdviserPublications(publicationType)
 
-	useEffect(() => {
-		setFilteredPublications(publications)
-	}, [publications, userType])
-
 	if (isLoading) {
 		return (
 			<div className='d-flex m-5 justify-content-center align-items-center'>
@@ -76,7 +70,7 @@ export default function PublicationList({ buttonMessage, message }) {
 		)
 	}
 
-	if (!filteredPublications.length) {
+	if (!publications.length) {
 		return (
 			<div className='d-flex flex-column align-items-center m-5 gap-3'>
 				<p className='text-muted display-6'>{message}</p>
@@ -92,7 +86,7 @@ export default function PublicationList({ buttonMessage, message }) {
 
 	return (
 		<Row className='gy-4'>
-			{filteredPublications.map(({ id, ...rest }) => (
+			{publications.map(({ id, ...rest }) => (
 				<PublicationCard
 					key={id}
 					buttonMessage={buttonMessage}
