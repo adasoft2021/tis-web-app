@@ -5,6 +5,10 @@ import { PublicationProvider } from '../../context/providers/PublicationContext'
 function HistoryCreatedSheets() {
 	return (
 		<Page>
+			<a title='Los Tejos' href='/reports'>
+				<img src='/flechaAtras.png' width='30' />
+			</a>
+
 			<h3 style={{ fontWeight: '700' }}>
 				Reportes de Historial de Plieglos Creados
 			</h3>
