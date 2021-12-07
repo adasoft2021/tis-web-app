@@ -1,7 +1,23 @@
 import { PUBLICATION_ACTIONS } from '../actions/publicationActions'
 
 export const publicationInitialState = {
-	publications: [],
+	publications: [
+		{
+			id: 1,
+			title: 'Nombre de PE',
+			fileUrl: 'Archivo PDF',
+		},
+		{
+			id: 2,
+			title: 'Nombre de PE',
+			fileUrl: 'Archivo PDF',
+		},
+		{
+			id: 3,
+			title: 'Nombre de PE',
+			fileUrl: 'Archivo PDF',
+		},
+	],
 	publicationDTO: null,
 	isLoading: false,
 }

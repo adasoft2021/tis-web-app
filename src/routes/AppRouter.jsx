@@ -6,7 +6,11 @@ import { CompanyProvider } from '../context/providers/CompanyContext'
 import { SpaceAnswerProvider } from '../context/providers/SpaceAnswerContext'
 import { ProjectProvider } from '../context/providers/ProjectContext'
 import { SpaceProvider } from '../context/providers/SpaceContext'
-import { ReviewsList as AdviserReviewsList } from '../pages/reviews/ReviewsList'
+import Reports from '../pages/report/Reports'
+import GroupInformationReport from '../pages/report/GroupInformationReport'
+import HistoryCreatedSheets from '../pages/report/HistoryCreatedSheets'
+import GroupRegisteredCompanies from '../pages/report/GroupRegisteredCompanies'
+
 import {
 	Board,
 	NotFoundPage,
@@ -23,9 +27,13 @@ import {
 	SpaceAnswer,
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
-import ReviewList from '../pages/reviewList/ReviewList'
+// import ReviewList from '../pages/reviewList/ReviewList'
 import SpacesSubmitLinkList from '../pages/spacesLinkList/SpacesSubmitLinkList'
-import { userTypes } from '../context/reducers/userCredentialsReducer'
+import CompanyGroupResponses from '../pages/report/CompanyGroupResponses'
+import TableProposalTimes from '../components/tables/TableProposalTimes'
+import TableSignedCompanyGroup from '../components/tables/TableSignedCompanyGroup'
+import TableChangeOrders from '../components/tables/TableChangeOrders'
+import TableGEwithSlopes from '../components/tables/TableGEwithSlopes'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -73,26 +81,42 @@ export default function AppRouter() {
 
 			<Route
 				path='/reviews'
-				component={(props) => {
-					return userType === userTypes.ADVISER ? (
-						<ProjectProvider>
-							<CompanyProvider>
-								<SpaceProvider>
-									<ReviewProvider>
-										<AdviserReviewsList {...props} />
-									</ReviewProvider>
-								</SpaceProvider>
-							</CompanyProvider>
-						</ProjectProvider>
-					) : userType === userTypes.COMPANY ? (
-						<ReviewProvider>
-							<ReviewList />
-						</ReviewProvider>
-					) : (
-						<NotFoundPage />
-					)
-				}}
+				component={({ params: { spaceId, spaceTitle } }) => (
+					<SpaceAnswerProvider>
+						<BoardFileUpload
+							spaceId={spaceId}
+							spaceTitle={decodeURI(spaceTitle)}
+						/>
+					</SpaceAnswerProvider>
+				)}
 			/>
+			<Route
+				path='/reports'
+				component={({ params: { spaceId, spaceTitle } }) => <Reports />}
+			/>
+			<Route
+				path='/groupInformationReport'
+				component={GroupInformationReport}
+			/>
+			<Route
+				path='/historyCreatedSheets'
+				component={HistoryCreatedSheets}
+			/>
+			<Route
+				path='/groupRegisteredCompanies'
+				component={GroupRegisteredCompanies}
+			/>
+			<Route
+				path='/companyGroupResponses'
+				component={CompanyGroupResponses}
+			/>
+			<Route path='/tableProposalTimes' component={TableProposalTimes} />
+			<Route
+				path='/tableSignedCompanyGroup'
+				component={TableSignedCompanyGroup}
+			/>
+			<Route path='/tableChangeOrders' component={TableChangeOrders} />
+			<Route path='/tableGEwithSlopes' component={TableGEwithSlopes} />
 
 			<Route
 				path='/companies'

@@ -164,6 +164,16 @@ export default function Page({ children }) {
 								</Nav.Link>
 							</Link>
 						)}
+						{userType && (
+							<Link to='/reports'>
+								<Nav.Link
+									eventKey='/reports'
+									className='p-3 ps-4 border-bottom border-light text-light'
+								>
+									Reportes
+								</Nav.Link>
+							</Link>
+						)}
 					</Nav>
 				</Col>
 				<Col sm={10} className={styles.content}>
