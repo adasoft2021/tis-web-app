@@ -2,52 +2,27 @@ import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 import Page from '../../pages/Page'
+import { useListProposals } from '../../context/providers/ProposalContext'
 
-const table1 = [
-	{
-		id: 1,
-		name: 'Ada Soft',
-		spaceTitle: 'Titulo1',
-		deliveryDate: '4/12/2021',
-		seadline: '6/12/2021',
-		delay: 2,
-	},
-	{
-		id: 2,
-		name: 'Add Soft',
-		spaceTitle: 'Titulo2',
-		deliveryDate: '4/12/2021',
-		seadline: '6/12/2021',
-		delay: 5,
-	},
-	{
-		id: 3,
-		name: 'Jadesoft',
-		spaceTitle: 'Titulo3',
-		deliveryDate: '4/12/2021',
-		seadline: '6/12/2021',
-		delay: 4,
-	},
-]
 const columnas = [
 	{
 		name: 'GE',
-		selector: 'name',
+		selector: 'companyName',
 		sortable: true,
 	},
 	{
 		name: 'Titulo del Espacio',
-		selector: 'spaceTitle',
+		selector: 'title',
 		sortable: true,
 	},
 	{
 		name: 'Fecha de entrega',
-		selector: 'deliveryDate',
+		selector: 'createAt',
 		sortable: true,
 	},
 	{
 		name: 'Fecha de limite',
-		selector: 'seadline',
+		selector: 'limitDate',
 		sortable: true,
 	},
 	{
@@ -79,9 +54,10 @@ const customStyles = {
 	},
 }
 export default function TableProposalTimes() {
+	const { proposals } = useListProposals()
 	return (
 		<Page>
-			<a title='Los Tejos' href='/companyGroupResponses'>
+			<a href='/companyGroupResponses'>
 				<img src='/flechaAtras.png' width='26' />
 			</a>
 
@@ -95,7 +71,7 @@ export default function TableProposalTimes() {
 				<Col>
 					<DataTable
 						columns={columnas}
-						data={table1}
+						data={proposals}
 						customStyles={customStyles}
 						pointerOnHover
 						highlightOnHover
