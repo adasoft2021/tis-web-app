@@ -2,20 +2,15 @@ import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 
-const table1 = [
-	{ id: 1, nombre: 'Ada Soft', correo: 'adasoftsrl.@gmail.com' },
-	{ id: 2, nombre: 'Add Soft', correo: 'add.soft@gmail.com' },
-	{ id: 3, nombre: 'Jadesoft', correo: 'jadesoft@gmail.com' },
-]
 const columnas = [
 	{
 		name: 'Nombre',
-		selector: 'nombre',
+		selector: 'name',
 		sortable: true,
 	},
 	{
 		name: 'Correo eléctronico',
-		selector: 'correo',
+		selector: 'email',
 		sortable: true,
 		style: { color: '#07BCFF', textDecoration: 'underline' },
 	},
@@ -42,7 +37,7 @@ const customStyles = {
 		},
 	},
 }
-export default function tableTwo() {
+export default function tableTwo({ companies }) {
 	return (
 		<Row>
 			<h4 style={{ color: '#07BCFF', fontWeight: '700' }}>
@@ -51,7 +46,7 @@ export default function tableTwo() {
 			<Col>
 				<DataTable
 					columns={columnas}
-					data={table1}
+					data={companies}
 					customStyles={customStyles}
 					pointerOnHover
 					highlightOnHover

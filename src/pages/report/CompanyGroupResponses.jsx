@@ -16,12 +16,7 @@ export default function CompanyGroupResponses() {
 			<Nav className='flex-column'>
 				<Nav.Link href='/tableProposalTimes' className='d-inline-flex'>
 					<img src='/flecha.png' width='26' />
-					<div
-						style={{
-							color: 'blue',
-							textDecoration: 'underline',
-						}}
-					>
+					<div className={`${Styles.Link} d-inline-flex`}>
 						Tiempos de presentación de propuestas
 					</div>
 				</Nav.Link>

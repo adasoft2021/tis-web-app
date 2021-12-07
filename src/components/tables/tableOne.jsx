@@ -2,19 +2,15 @@ import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 
-const table1 = [
-	{ id: 1, nombre: 'Ada Soft', cantidadS: 5 },
-	{ id: 2, nombre: 'Jadesoft', cantidadS: 4 },
-]
 const columnas = [
 	{
 		name: 'Nombre',
-		selector: 'nombre',
+		selector: 'name',
 		sortable: true,
 	},
 	{
 		name: 'N° Socios',
-		selector: 'cantidadS',
+		selector: 'partnersCount',
 		sortable: true,
 	},
 ]
@@ -40,7 +36,7 @@ const customStyles = {
 		},
 	},
 }
-export default function tableOne() {
+export default function tableOne({ companies }) {
 	return (
 		<Row>
 			<h4 style={{ color: '#07BCFF', fontWeight: '700' }}>
@@ -49,7 +45,11 @@ export default function tableOne() {
 			<Col>
 				<DataTable
 					columns={columnas}
-					data={table1}
+					data={companies.map(({ id, name, partners }) => ({
+						id,
+						name,
+						partnersCount: partners.length,
+					}))}
 					customStyles={customStyles}
 					pointerOnHover
 					highlightOnHover
