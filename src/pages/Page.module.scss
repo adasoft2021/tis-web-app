@@ -2,14 +2,17 @@ html,
 body {
 	width: 100vw;
 	height: 100vh;
+	margin: 0;
+	padding: 0;
 }
 
 .page {
-	width: 100%;
-	height: calc(100vh - 58px);
+	margin: 0 !important;
+	height: calc(100vh - 70px);
 }
 
 .content {
-	height: 100%;
+	max-height: 100%;
+	padding: 0 !important;
 	overflow-y: auto;
 }
