@@ -1,5 +1,7 @@
 import { React } from 'react'
 import { Image, NavLink } from 'react-bootstrap'
+import { BsCircleFill } from 'react-icons/bs'
+
 import styles from './Discussion.module.scss'
 
 export default function CompanyGroup({ company }) {
@@ -15,12 +17,9 @@ export default function CompanyGroup({ company }) {
 			<span className={styles.name}>{company.name}</span>
 
 			{company.messangerState ? (
-				<Image
-					src='/greenPoint.png'
-					roundedCircle
-					width={20}
-					className={styles.icon}
-				/>
+				<div className={styles.icon}>
+					<BsCircleFill size={13} />
+				</div>
 			) : null}
 		</NavLink>
 	)

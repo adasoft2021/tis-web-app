@@ -13,7 +13,7 @@ import styles from './Page2.module.scss'
 export default function Page({ children }) {
 	const [location, setLocation] = useLocation()
 	const { id, userType, userName } = useUserCredentials()
-	const [clicState] = useState(true)
+	const [clicState] = useState(false)
 	const ShowUser = () => {
 		if (id)
 			switch (userType) {
