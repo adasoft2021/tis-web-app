@@ -25,6 +25,7 @@ import {
 	Project,
 	ReviewCompany,
 	SpaceAnswer,
+	Discussion,
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
 // import ReviewList from '../pages/reviewList/ReviewList'
@@ -187,6 +188,7 @@ export default function AppRouter() {
 					</SpaceAnswerProvider>
 				)}
 			/>
+			<Route path='/discussions' component={Discussion} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)

@@ -1,4 +1,12 @@
-import { Col, Container, Image, Nav, Navbar, Row } from 'react-bootstrap'
+import {
+	Button,
+	Col,
+	Container,
+	Image,
+	Nav,
+	Navbar,
+	Row,
+} from 'react-bootstrap'
 import { Link, useLocation } from 'wouter'
 import RegisterButton from '../components/RegisterButton'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
@@ -56,6 +64,13 @@ export default function Page({ children }) {
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
 					<Navbar.Collapse id='basic-navbar-nav'>
 						<Nav className='ms-auto'>
+							<Link to='/discussions'>
+								<Nav.Link>
+									<Button variant='warning'>
+										Espacio de Discusión
+									</Button>
+								</Nav.Link>
+							</Link>
 							<RegisterButton />
 						</Nav>
 					</Navbar.Collapse>
