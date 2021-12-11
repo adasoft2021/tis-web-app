@@ -4,8 +4,8 @@ import { Link } from 'wouter'
 
 export default function DiscussionButton() {
 	return (
-		<Link to='/discussionPAge'>
-			<Nav.Link eventKey='/discussionPage'>
+		<Link to='/discussions'>
+			<Nav.Link eventKey='/discussions'>
 				<Button className='btn-warning' style={{ color: 'white' }}>
 					Espacio de discusión
 				</Button>

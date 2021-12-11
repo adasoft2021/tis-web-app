@@ -1,6 +1,6 @@
 import { Col, Container, Image, Nav, Navbar, Row } from 'react-bootstrap'
 import { Link, useLocation } from 'wouter'
-import DiscussionButton from '../components/discussionsComponents/DiscussionButton'
+import DiscussionButton from './discussions/components/DiscussionButton'
 
 import RegisterButton from '../components/RegisterButton'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
