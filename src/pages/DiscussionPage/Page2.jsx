@@ -1,16 +1,19 @@
+import { useState } from 'react'
 import { Col, Container, Image, Nav, Navbar, Row } from 'react-bootstrap'
 import { Link, useLocation } from 'wouter'
-import DiscussionButton from '../components/discussionsComponents/DiscussionButton'
+import DiscussionButton from '../../components/discussionsComponents/DiscussionButton'
+import Message from '../../components/discussionsComponents/message'
 
-import RegisterButton from '../components/RegisterButton'
-import { useUserCredentials } from '../context/providers/UserCredentialsContext'
-import { userTypes } from '../context/reducers/userCredentialsReducer'
-
-import styles from './Page.module.scss'
+import RightList from '../../components/discussionsComponents/RightList'
+import RegisterButton from '../../components/RegisterButton'
+import { useUserCredentials } from '../../context/providers/UserCredentialsContext'
+import { userTypes } from '../../context/reducers/userCredentialsReducer'
+import styles from './Page2.module.scss'
 
 export default function Page({ children }) {
 	const [location, setLocation] = useLocation()
 	const { id, userType, userName } = useUserCredentials()
+	const [clicState] = useState(true)
 	const ShowUser = () => {
 		if (id)
 			switch (userType) {
@@ -179,8 +182,15 @@ export default function Page({ children }) {
 						)}
 					</Nav>
 				</Col>
-				<Col sm={10} className={styles.content}>
-					{children}
+				<Col sm={8} className={styles.content}>
+					{clicState ? (
+						<Message />
+					) : (
+						console.log('Componenete Discusión')
+					)}
+				</Col>
+				<Col sm={2} className={styles.content}>
+					<RightList></RightList>
 				</Col>
 			</Row>
 		</>

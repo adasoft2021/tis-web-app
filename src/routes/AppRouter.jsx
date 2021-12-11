@@ -34,6 +34,7 @@ import TableProposalTimes from '../components/tables/TableProposalTimes'
 import TableSignedCompanyGroup from '../components/tables/TableSignedCompanyGroup'
 import TableChangeOrders from '../components/tables/TableChangeOrders'
 import TableGEwithSlopes from '../components/tables/TableGEwithSlopes'
+import DiscussionPage from '../pages/DiscussionPage'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -98,6 +99,7 @@ export default function AppRouter() {
 				path='/groupInformationReport'
 				component={GroupInformationReport}
 			/>
+			<Route path='/discussionPage' component={DiscussionPage} />
 			<Route
 				path='/historyCreatedSheets'
 				component={HistoryCreatedSheets}
