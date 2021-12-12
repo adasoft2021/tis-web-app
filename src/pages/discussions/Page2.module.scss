@@ -5,12 +5,12 @@ body {
 }
 
 .page {
-	width: 100%;
-	margin: 0 !important ;
-	height: calc(100vh - 58px);
+	margin: 0 !important;
+	height: calc(100vh - 70px);
 }
 
 .content {
 	height: 100%;
+	padding: 0 !important;
 	overflow-y: auto;
 }

@@ -9,6 +9,8 @@ import RegisterButton from '../../components/RegisterButton'
 import { useUserCredentials } from '../../context/providers/UserCredentialsContext'
 import { userTypes } from '../../context/reducers/userCredentialsReducer'
 import styles from './Page2.module.scss'
+import Conversation from '../../components/Conversation'
+import DiscussionsList from './components/DiscussionsList'
 
 export default function Page({ children }) {
 	const [location, setLocation] = useLocation()
@@ -186,10 +188,12 @@ export default function Page({ children }) {
 					{clicState ? (
 						<Message />
 					) : (
-						console.log('Componenete Discusión')
+						<Conversation add>
+							<DiscussionsList />
+						</Conversation>
 					)}
 				</Col>
-				<Col sm={2} className={styles.content}>
+				<Col sm={2} className={`${styles.content} bg-dark`}>
 					<RightList></RightList>
 				</Col>
 			</Row>

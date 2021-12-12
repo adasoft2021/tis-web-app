@@ -189,6 +189,7 @@ export default function AppRouter() {
 					</SpaceAnswerProvider>
 				)}
 			/>
+			<Route path='/discussions' component={Discussion} />
 			<Route component={NotFoundPage} />
 		</Switch>
 	)
