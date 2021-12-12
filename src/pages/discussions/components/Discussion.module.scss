@@ -15,3 +15,43 @@
 	float: right;
 	color: rgb(85, 212, 0);
 }
+.comment {
+	margin: 20px;
+	padding: 15x;
+	width: 600px;
+}
+
+.balloon1 {
+	background-color: #0dcaf0;
+	width: 630px;
+	margin: 20px;
+	border-top-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	float: right;
+}
+.balloon2 {
+	background-color: rgb(255, 255, 255);
+	width: 630px;
+	margin: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	float: left;
+	border-style: solid;
+	border-width: 1px;
+}
+.dateballoon1 {
+	width: 630px;
+	margin-top: -19px;
+	margin-right: 20px;
+	float: right;
+	text-align: end;
+}
+.dateballoon2 {
+	width: 630px;
+	margin-top: -19px;
+	margin-left: 20px;
+	float: left;
+	text-align: end;
+}

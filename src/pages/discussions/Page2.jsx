@@ -11,11 +11,12 @@ import { userTypes } from '../../context/reducers/userCredentialsReducer'
 import styles from './Page2.module.scss'
 import Conversation from '../../components/Conversation'
 import DiscussionsList from './components/DiscussionsList'
+import CommentsList from './components/CommentsList'
 
 export default function Page({ children }) {
 	const [location, setLocation] = useLocation()
 	const { id, userType, userName } = useUserCredentials()
-	const [clicState] = useState(true)
+	const [clicState] = useState(3)
 	const ShowUser = () => {
 		if (id)
 			switch (userType) {
@@ -185,11 +186,15 @@ export default function Page({ children }) {
 					</Nav>
 				</Col>
 				<Col sm={8} className={styles.content}>
-					{clicState ? (
+					{clicState === 1 ? (
 						<Message />
-					) : (
+					) : clicState === 2 ? (
 						<Conversation add>
 							<DiscussionsList />
+						</Conversation>
+					) : (
+						<Conversation add={false}>
+							<CommentsList></CommentsList>
 						</Conversation>
 					)}
 				</Col>
