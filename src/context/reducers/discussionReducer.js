@@ -3,6 +3,7 @@ import { DISCUSSION_ACTIONS } from '../actions/discussionActions'
 export const discussionInitialState = {
 	discussions: [],
 	isLoading: false,
+	companyId: null,
 }
 
 export const discussionReducer = (state, { type, payload }) => {
@@ -22,6 +23,11 @@ export const discussionReducer = (state, { type, payload }) => {
 			return {
 				...state,
 				isLoading: false,
+			}
+		case DISCUSSION_ACTIONS.SET_COMPANY_ID:
+			return {
+				...state,
+				companyId: payload,
 			}
 		default:
 			return state

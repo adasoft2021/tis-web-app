@@ -2,9 +2,11 @@ import React from 'react'
 import { Col, Row, Nav } from 'react-bootstrap'
 import CompanyGroup from './CompanyGroup'
 import styles from './Discussion.module.scss'
+import { useActualCompanies } from '../../../context/providers/CompanyContext'
 
-export default function RightList() {
-	const companies = [
+export default function RightList({ onClickCompany }) {
+	const { companies } = useActualCompanies()
+	/* const companies = [
 		{ id: 1, src: '/logo.png', name: 'AdaSoftware', messangerState: true },
 		{
 			id: 2,
@@ -35,16 +37,20 @@ export default function RightList() {
 			name: 'Acme Company',
 			messangerState: false,
 		},
-	]
+	] */
 
 	return (
 		<div>
 			<Row className={styles.page}>
 				<Col sm={12} className='bg-dark p-0'>
-					<Nav variant='dark' className='flex-column'>
-						<div to='/announcements'>
+					<Nav
+						variant='dark'
+						className='flex-column'
+						defaultActiveKey=''
+					>
+						<div>
 							<Nav.Link
-								eventKey='/announcements'
+								eventKey=''
 								className='p-3 ps-4 border-bottom border-light text-light'
 							>
 								<h4>Grupo Empresas</h4>
@@ -54,6 +60,7 @@ export default function RightList() {
 									className={styles.page}
 									key={company.id}
 									company={company}
+									onClickCompany={onClickCompany}
 								></CompanyGroup>
 							))}
 						</div>

@@ -15,6 +15,11 @@ const DiscussionContext = createContext({
 	 * @param {{topic: string, companyId: number | null}} discussionDTO
 	 */
 	createDiscussion: async ({ discussionDTO }) => {},
+	/**
+	 *
+	 * @param {number} companyId
+	 */
+	setCompanyId: (companyId) => {},
 })
 
 export const useDiscussion = () => {
@@ -39,7 +44,7 @@ export const DiscussionProvider = ({ children }) => {
 		})
 		dispatch({ type: DISCUSSION_ACTIONS.LOAD_REQUEST })
 		try {
-			const discussion = await discussionService.createContext({
+			const discussion = await discussionService.createDiscussion({
 				token,
 				discussionDTO,
 			})
@@ -67,8 +72,16 @@ export const DiscussionProvider = ({ children }) => {
 			dispatch({ type: DISCUSSION_ACTIONS.STOP_LOADING })
 		}
 	}
+	const setCompanyId = (companyId) => {
+		dispatch({
+			type: DISCUSSION_ACTIONS.SET_COMPANY_ID,
+			payload: companyId,
+		})
+	}
 	return (
-		<DiscussionContext.Provider value={{ ...state, createDiscussion }}>
+		<DiscussionContext.Provider
+			value={{ ...state, createDiscussion, setCompanyId }}
+		>
 			{children}
 		</DiscussionContext.Provider>
 	)

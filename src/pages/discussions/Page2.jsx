@@ -16,7 +16,7 @@ import CommentsList from './components/CommentsList'
 export default function Page({ children }) {
 	const [location, setLocation] = useLocation()
 	const { id, userType, userName } = useUserCredentials()
-	const [clicState] = useState(3)
+	const [clickState, setClickState] = useState(1)
 	const ShowUser = () => {
 		if (id)
 			switch (userType) {
@@ -186,9 +186,9 @@ export default function Page({ children }) {
 					</Nav>
 				</Col>
 				<Col sm={8} className={styles.content}>
-					{clicState === 1 ? (
+					{clickState === 1 ? (
 						<Message />
-					) : clicState === 2 ? (
+					) : clickState === 2 ? (
 						<Conversation add>
 							<DiscussionsList />
 						</Conversation>
@@ -199,7 +199,9 @@ export default function Page({ children }) {
 					)}
 				</Col>
 				<Col sm={2} className={`${styles.content} bg-dark`}>
-					<RightList></RightList>
+					<RightList
+						onClickCompany={() => setClickState(2)}
+					></RightList>
 				</Col>
 			</Row>
 		</>
