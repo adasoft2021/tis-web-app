@@ -23,12 +23,22 @@ const UploadForm = (props) => {
 	const uploadFile = async (e) => {
 		const file = e.target.files[0]
 		const storageRef = app.storage().ref('PRUEBA 2')
+		showToast({
+			color: 'info',
+			message: 'El archivo PDF se esta cargando...',
+		})
 		const filePath = storageRef.child(file.name)
+
 		setfilename(file.name)
 		try {
 			await filePath.put(file)
 			const fileDownloadUrl = await filePath.getDownloadURL()
+
 			setFileUrl(fileDownloadUrl)
+			showToast({
+				color: 'info',
+				message: 'Archivo Cargado.',
+			})
 		} catch {
 			showToast({
 				color: 'danger',
