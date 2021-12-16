@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, InputGroup, Row } from 'react-bootstrap'
 import './drop-file-input.scss'
@@ -36,6 +36,12 @@ const UploadForm = (props) => {
 			})
 		}
 	}
+
+	useEffect(() => {
+		if (spaceAnswer) {
+			Swal.fire('Subido!', '', 'success')
+		}
+	}, [spaceAnswer])
 	return (
 		<>
 			<div className='mt-3 mb-3'>
@@ -88,16 +94,15 @@ const UploadForm = (props) => {
 												spaceAnswerDTO: {
 													spaceId: 1,
 													createdById: id,
-													files: fileUrl,
+													files: [
+														{
+															name: filename,
+															url: fileUrl,
+															deleted: false,
+														},
+													],
 												},
 											})
-											if (spaceAnswer) {
-												Swal.fire(
-													'Subido!',
-													'',
-													'success'
-												)
-											}
 										}
 									})
 								}
