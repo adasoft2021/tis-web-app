@@ -26,6 +26,7 @@ export const ReviewContext = createContext({
 	setQualifications: (qualifications) => {},
 	getInformationStatusReview: async () => {},
 	getReportsReviews: async ({ projectId }) => {},
+	getPossibleFinalStateReview: async ({ reviewId }) => {},
 })
 
 export const useReview = () => {
@@ -88,7 +89,14 @@ export const useCompanyReviewById = ({ reviewId }) => {
 
 	return { isLoading, review }
 }
+export const usePossibleFinalStateReview = ({ reviewId }) => {
+	const { getPossibleFinalStateReview, isLoading, review } = useReview()
+	useEffect(() => {
+		getPossibleFinalStateReview({ reviewId })
+	}, [])
 
+	return { isLoading, review }
+}
 export const useInformationStatusReview = () => {
 	const { getInformationStatusReview, isLoading, reviews } = useReview()
 	useEffect(() => {
@@ -321,6 +329,34 @@ export const ReviewProvider = ({ children }) => {
 			dispatch({ type: REVIEW_ACTIONS.STOP_LOADING })
 		}
 	}
+
+	const getPossibleFinalStateReview = async ({ reviewId }) => {
+		dispatch({ type: REVIEW_ACTIONS.LOAD_REQUEST })
+		try {
+			const review = await reviewService.getPossibleFinalStateReview({
+				reviewId,
+				token,
+			})
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_GET_SUCCESS,
+				payload: review,
+			})
+		} catch ({
+			response: {
+				data: { message },
+				status,
+			},
+		}) {
+			showToast({
+				color: 'danger',
+				message:
+					status < 500
+						? message
+						: 'Ocurrió algún error con el servidor. Intente más tarde.',
+			})
+			dispatch({ type: REVIEW_ACTIONS.STOP_LOADING })
+		}
+	}
 	return (
 		<ReviewContext.Provider
 			value={{
@@ -335,6 +371,7 @@ export const ReviewProvider = ({ children }) => {
 				updateReviewStatus,
 				getInformationStatusReview,
 				getReportsReviews,
+				getPossibleFinalStateReview,
 			}}
 		>
 			{children}
