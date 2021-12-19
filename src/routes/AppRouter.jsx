@@ -49,7 +49,6 @@ export default function AppRouter() {
 				path='/specification_sheets'
 				component={SpecificationSheet}
 			/>
-			<Route path='/prueba' component={BoardPresentationProposals} />
 			<Route
 				path='/reviews/:reviewId'
 				component={({ params: { reviewId } }) => {
@@ -80,17 +79,8 @@ export default function AppRouter() {
 				)}
 			/>
 
-			<Route
-				path='/reviews'
-				component={({ params: { spaceId, spaceTitle } }) => (
-					<SpaceAnswerProvider>
-						<BoardFileUpload
-							spaceId={spaceId}
-							spaceTitle={decodeURI(spaceTitle)}
-						/>
-					</SpaceAnswerProvider>
-				)}
-			/>
+			<Route path='/reviews' component={BoardPresentationProposals} />
+
 			<Route
 				path='/reports'
 				component={({ params: { spaceId, spaceTitle } }) => <Reports />}

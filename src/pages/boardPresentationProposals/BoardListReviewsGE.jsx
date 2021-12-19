@@ -5,18 +5,9 @@ import { MdIndeterminateCheckBox, MdCheckBox } from 'react-icons/md'
 import { Link } from 'wouter'
 
 const className = {
-	UNREVIEWED: 'btn-secondary',
-	REVIEWED: 'btn-warning',
-	QUALIFIED: 'btn-info',
-}
-
-const translate = {
-	UNREVIEWED: 'No revisado',
-	REVIEWED: 'Revisado',
-	QUALIFIED: 'Calificado',
-	CHANGE_ORDER: 'Orden de cambio',
-	PROPOSAL_ACCEPTANCE: 'Notificacion de conformidad',
-	ADDENDUM: 'Adenda',
+	'Sin Revisar': 'btn-secondary',
+	Revisado: 'btn-warning',
+	Calificado: 'btn-info',
 }
 
 function getClassNameState(state) {
@@ -32,7 +23,7 @@ function Boton({ status, published, id }) {
 		>
 			{published ? <MdCheckBox /> : <MdIndeterminateCheckBox />}
 
-			{`${published ? 'Emitido: ' : ''} ${translate[status]}`}
+			{`${published ? 'Emitido: ' : ''} ${status}`}
 		</Link>
 	)
 }
@@ -57,48 +48,8 @@ function Header({ companyName, listReviews }) {
 }
 
 const BoardListReviewsGE = () => {
-	const { isLoading } = useInformationStatusReview()
-	const reviews = [
-		[
-			{
-				id: 1,
-				status: 'UNREVIEWED',
-				companyName: 'NOMBRE G.E. 1',
-				published: false,
-			},
-		],
-		[
-			{
-				id: 2,
-				status: 'REVIEWED',
-				companyName: 'NOMBRE G.E. 2',
-				published: false,
-			},
-		],
-		[
-			{
-				id: 3,
-				status: 'QUALIFIED',
-				companyName: 'NOMBRE G.E. 3',
-				published: false,
-			},
-		],
-		[
-			{
-				id: 4,
-				status: 'CHANGE_ORDER',
-				companyName: 'NOMBRE G.E. 4',
-				published: true,
-			},
-			{
-				id: 5,
-				status: 'UNREVIEWED',
-				companyName: 'NOMBRE G.E. 4',
-				published: false,
-			},
-		],
-	]
-
+	const { reviews, isLoading } = useInformationStatusReview()
+	console.log(reviews)
 	return (
 		<>
 			{isLoading ? (
