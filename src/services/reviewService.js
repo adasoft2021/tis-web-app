@@ -51,5 +51,13 @@ export async function updateReviewStatus({ reviewId, token, newStatus }) {
 	})
 	return response.data
 }
+export async function getPossibleFinalStateReview({ reviewId, token }) {
+	const response = await reviewService.get(`/${reviewId}/publish`, {
+		headers: {
+			'X-Token': token,
+		},
+	})
+	return response.data
+}
 
 export { getCompanyReviews, getInformationStatusReview, getReportsReviews }
