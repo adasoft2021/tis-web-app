@@ -242,11 +242,13 @@ const PostForm = ({
 												Selecciona tu archivo
 											</Form.Label>
 										</div>
-										<InputGroup hasValidation>
+										<InputGroup
+											className={
+												styles['file-upload-input']
+											}
+											hasValidation
+										>
 											<Form.Control
-												className={
-													styles['file-upload-input']
-												}
 												type='file'
 												accept='application/pdf'
 												onChange={validationPDF}
