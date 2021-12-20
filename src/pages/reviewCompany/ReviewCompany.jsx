@@ -3,6 +3,7 @@ import NoteTable from '../../components/NoteTable'
 import ObservationsListView from '../../components/ObservationsListView'
 import { useCompanyReviewById } from '../../context/providers/ReviewContext'
 import Page from '../Page'
+import { useState, useEffect } from 'react'
 
 const showDate = (date) => {
 	const dateR = new Date(date)
@@ -11,7 +12,12 @@ const showDate = (date) => {
 }
 
 const ReviewCompany = ({ reviewId }) => {
-	const { isLoading, review } = useCompanyReviewById({ reviewId })
+	const { isLoading, review: reviewDTO } = useCompanyReviewById({ reviewId })
+	const [review, setReview] = useState(null)
+	useEffect(() => {
+		if (!isLoading && reviewDTO)
+			setReview({ ...reviewDTO, title: reviewDTO.status.substring(3) })
+	}, [reviewDTO])
 	return (
 		<Page>
 			{isLoading ? (

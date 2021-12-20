@@ -146,8 +146,7 @@ export default function AppRouter() {
 				path='/projects'
 				component={() => (
 					<ProjectProvider>
-						{' '}
-						<Project />{' '}
+						<Project />
 					</ProjectProvider>
 				)}
 			/>

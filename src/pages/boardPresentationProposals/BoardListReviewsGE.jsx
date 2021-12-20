@@ -16,7 +16,11 @@ function getClassNameState(state) {
 function Boton({ status, published, id }) {
 	return (
 		<Link
-			to={`/reviews/${id}/published`}
+			to={
+				published === false
+					? `/reviews/${id}`
+					: `/reviews/${id}/published`
+			}
 			className={`btn ${getClassNameState(
 				status
 			)} d-flex align-items-center gap-2`}
