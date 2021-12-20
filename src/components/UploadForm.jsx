@@ -1,145 +1,130 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'react-bootstrap'
+import { Button, Form, InputGroup, Row } from 'react-bootstrap'
 import './drop-file-input.scss'
 import Swal from 'sweetalert2'
 import { app } from '../fb'
 import { useToast } from '../context/providers/ToastContext'
-import { ImageConfig } from '../config/ImageConfig'
-import uploadImg from '../assets/cloud1.png'
 import { useSpaceAnswer } from '../context/providers/SpaceAnswerContext'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
+import styles from './PostForm.module.scss'
 
 const UploadForm = (props) => {
-	const wrapperRef = useRef(null)
 	const sprintf = require('sprintf-js').sprintf
-	const [fileList, setFileList] = useState([])
 
-	const onDragEnter = () => wrapperRef.current.classList.add('dragover')
-
-	const onDragLeave = () => wrapperRef.current.classList.remove('dragover')
-
-	const onDrop = () => wrapperRef.current.classList.remove('dragover')
-
-	const onFileDrop = (e) => {
-		const newFile = e.target.files[0]
-		if (newFile) {
-			const updatedList = [...fileList, newFile]
-			setFileList(updatedList)
-			props.onFileChange(updatedList)
-		}
-	}
-
-	const fileRemove = (file) => {
-		const updatedList = [...fileList]
-		updatedList.splice(fileList.indexOf(file), 1)
-		setFileList(updatedList)
-		props.onFileChange(updatedList)
-	}
-
-	const [fileListURL, setFileListURL] = useState([])
 	const { showToast } = useToast()
-	const handleUpload = () => {
-		const storageRef = app.storage().ref()
-		fileList.forEach(async (file) => {
-			const filePath = storageRef.child(file.name)
-			try {
-				await filePath.put(file)
-				const fileDownloadUrl = await filePath.getDownloadURL()
-				const updatedList = [
-					...fileListURL,
-					{ name: file.name, url: fileDownloadUrl, deleted: false },
-				]
-				setFileListURL(updatedList)
-			} catch {
-				showToast({
-					color: 'danger',
-					message: 'No se pudo subir el archivo',
-				})
-			}
-		})
-	}
 
 	const { spaceAnswer, createSpaceAnswer } = useSpaceAnswer()
 	const { id } = useUserCredentials()
+
+	const [fileUrl, setFileUrl] = useState('')
+	const [filename, setfilename] = useState('')
+
+	const uploadFile = async (e) => {
+		const file = e.target.files[0]
+		const storageRef = app.storage().ref('PRUEBA 2')
+		showToast({
+			color: 'info',
+			message: 'El archivo se esta cargando...',
+		})
+		const filePath = storageRef.child(file.name)
+
+		setfilename(file.name)
+		try {
+			await filePath.put(file)
+			const fileDownloadUrl = await filePath.getDownloadURL()
+
+			setFileUrl(fileDownloadUrl)
+			showToast({
+				color: 'info',
+				message: 'Archivo Cargado.',
+			})
+		} catch {
+			showToast({
+				color: 'danger',
+				message: 'No se pudo subir el archivo',
+			})
+		}
+	}
+
+	useEffect(() => {
+		if (spaceAnswer) {
+			Swal.fire('Subido!', '', 'success')
+		}
+	}, [spaceAnswer])
 	return (
 		<>
-			<div
-				ref={wrapperRef}
-				className='drop-file-input'
-				onDragEnter={onDragEnter}
-				onDragLeave={onDragLeave}
-				onDrop={onDrop}
-			>
-				<div className='drop-file-input__label'>
-					<img src={uploadImg} alt='' />
-					<p>Arrastra y suelta aqui</p>
-				</div>
-				<input type='file' value='' onChange={onFileDrop} />
-			</div>
-			{fileList.length > 0 ? (
-				<>
-					<div className='drop-file-preview'>
-						<p className='drop-file-previewtitle'>
-							Archivos a subir
-						</p>
-						{fileList.map((item, index) => (
-							<div
-								key={index}
-								className='drop-file-preview__item'
-							>
-								<img
-									src={
-										ImageConfig[item.type.split('/')[1]] ||
-										ImageConfig.default
-									}
-									alt=''
-								/>
-								<div className='drop-file-preview__item__info'>
-									<p>{item.name}</p>
-									<p>{item.size}B</p>
-								</div>
-								<span
-									className='drop-file-preview__item__del'
-									onClick={() => fileRemove(item)}
-								>
-									x
-								</span>
-							</div>
-						))}
-					</div>
-					<Button
-						className='text-light btn-success'
-						onClick={() =>
-							Swal.fire({
-								title: sprintf(
-									'Se subira %d archivos',
-									fileList.length
-								),
-								showCancelButton: true,
-								confirmButtonText: 'Subir',
-							}).then((result) => {
-								if (result.isConfirmed) {
-									handleUpload()
-									createSpaceAnswer({
-										spaceId: 1,
-										spaceAnswerDTO: {
-											spaceId: 1,
-											createdById: id,
-											files: fileListURL,
-										},
-									})
-									if (spaceAnswer) {
-										Swal.fire('Subido!', '', 'success')
-									}
-								}
-							})
-						}
+			<div className='mt-3 mb-3'>
+				<Form>
+					<Form.Label className='mb-2 fs-4'>
+						Archivo adjunto
+					</Form.Label>
+					<Row
+						className={`${styles['drag-area']} rounded bg-light text-dark p-4`}
 					>
-						Subir
-					</Button>
-				</>
-			) : null}
+						<Form.Group>
+							<div className='d-flex flex-column align-items-center'>
+								<h4>Arrastra y suelta tu archivo</h4>
+								<h4>o</h4>
+								<Form.Label className='btn btn-primary'>
+									Selecciona tu archivo
+								</Form.Label>
+							</div>
+							<InputGroup
+								className={styles['file-upload-input']}
+								hasValidation
+							>
+								<Form.Control
+									type='file'
+									onChange={uploadFile}
+								/>
+							</InputGroup>
+						</Form.Group>
+					</Row>
+					{fileUrl === '' ? null : (
+						<>
+							<p className='drop-file-previewtitle'>
+								Archivos a subir
+							</p>
+							<div className='drop-file-preview__item'>
+								<>{filename}</>
+							</div>
+							<Button
+								className='m-3'
+								variant='success'
+								onClick={() =>
+									Swal.fire({
+										title: sprintf('Se subira archivo'),
+										showCancelButton: true,
+										confirmButtonText: 'Subir',
+									}).then((result) => {
+										if (result.isConfirmed) {
+											console.log(fileUrl)
+
+											createSpaceAnswer({
+												spaceId: 1,
+												spaceAnswerDTO: {
+													spaceId: 1,
+													createdById: id,
+													files: [
+														{
+															name: filename,
+															url: fileUrl,
+															deleted: false,
+														},
+													],
+												},
+											})
+										}
+									})
+								}
+							>
+								ENVIAR
+							</Button>
+						</>
+					)}
+				</Form>
+			</div>
 		</>
 	)
 }
