@@ -34,6 +34,7 @@ import TableProposalTimes from '../components/tables/TableProposalTimes'
 import TableSignedCompanyGroup from '../components/tables/TableSignedCompanyGroup'
 import TableChangeOrders from '../components/tables/TableChangeOrders'
 import TableGEwithSlopes from '../components/tables/TableGEwithSlopes'
+import BoardPresentationProposals from '../pages/boardPresentationProposals/BoardPresentationProposals'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -48,7 +49,6 @@ export default function AppRouter() {
 				path='/specification_sheets'
 				component={SpecificationSheet}
 			/>
-
 			<Route
 				path='/reviews/:reviewId'
 				component={({ params: { reviewId } }) => {
@@ -79,17 +79,8 @@ export default function AppRouter() {
 				)}
 			/>
 
-			<Route
-				path='/reviews'
-				component={({ params: { spaceId, spaceTitle } }) => (
-					<SpaceAnswerProvider>
-						<BoardFileUpload
-							spaceId={spaceId}
-							spaceTitle={decodeURI(spaceTitle)}
-						/>
-					</SpaceAnswerProvider>
-				)}
-			/>
+			<Route path='/reviews' component={BoardPresentationProposals} />
+
 			<Route
 				path='/reports'
 				component={({ params: { spaceId, spaceTitle } }) => <Reports />}
