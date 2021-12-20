@@ -77,6 +77,17 @@ export default function AppRouter() {
 			/>
 
 			<Route
+				path='/reviews/:reviewId/published/preview'
+				component={({ params: { reviewId } }) => (
+					<ObservationProvider>
+						<ReviewProvider>
+							<ReviewCompany reviewId={reviewId} />
+						</ReviewProvider>
+					</ObservationProvider>
+				)}
+			/>
+
+			<Route
 				path='/spaces'
 				component={() => (
 					<SpaceProvider>
