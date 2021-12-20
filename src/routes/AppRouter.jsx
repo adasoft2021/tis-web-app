@@ -25,6 +25,8 @@ import {
 	Project,
 	ReviewCompany,
 	SpaceAnswer,
+	PublishedReviewPage,
+	BoardPresentationProposals,
 	Discussion,
 } from '../pages'
 import { useUserCredentials } from '../context/providers/UserCredentialsContext'
@@ -35,7 +37,6 @@ import TableProposalTimes from '../components/tables/TableProposalTimes'
 import TableSignedCompanyGroup from '../components/tables/TableSignedCompanyGroup'
 import TableChangeOrders from '../components/tables/TableChangeOrders'
 import TableGEwithSlopes from '../components/tables/TableGEwithSlopes'
-import BoardPresentationProposals from '../pages/boardPresentationProposals/BoardPresentationProposals'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -69,6 +70,22 @@ export default function AppRouter() {
 						</ObservationProvider>
 					)
 				}}
+			/>
+
+			<Route
+				path='/reviews/:reviewId/published'
+				component={PublishedReviewPage}
+			/>
+
+			<Route
+				path='/reviews/:reviewId/published/preview'
+				component={({ params: { reviewId } }) => (
+					<ObservationProvider>
+						<ReviewProvider>
+							<ReviewCompany reviewId={reviewId} />
+						</ReviewProvider>
+					</ObservationProvider>
+				)}
 			/>
 
 			<Route
@@ -131,8 +148,7 @@ export default function AppRouter() {
 				path='/projects'
 				component={() => (
 					<ProjectProvider>
-						{' '}
-						<Project />{' '}
+						<Project />
 					</ProjectProvider>
 				)}
 			/>

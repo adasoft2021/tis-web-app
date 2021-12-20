@@ -11,6 +11,8 @@ import BoardFileUpload from './boardFileUpload'
 import Project from './project'
 import ReviewCompany from './reviewCompany'
 import SpaceAnswer from './spaceAnswer'
+import PublishedReviewPage from './publishedReview'
+import BoardPresentationProposals from './boardPresentationProposals'
 import Discussion from './discussions'
 
 export {
@@ -27,5 +29,7 @@ export {
 	Project,
 	ReviewCompany,
 	SpaceAnswer,
+	PublishedReviewPage,
+	BoardPresentationProposals,
 	Discussion,
 }

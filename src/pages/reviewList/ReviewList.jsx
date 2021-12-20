@@ -15,7 +15,12 @@ const ReviewList = () => {
 				<DisplayLinkList
 					title='Revisiones'
 					description=''
-					linkList={reviews}
+					linkList={reviews.map((review) => {
+						return {
+							...review,
+							title: review.status.substring(3),
+						}
+					})}
 					emptyMessage='Aún no hay revisiones'
 				/>
 			)}

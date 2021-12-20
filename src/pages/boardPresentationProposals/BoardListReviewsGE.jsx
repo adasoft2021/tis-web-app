@@ -16,7 +16,11 @@ function getClassNameState(state) {
 function Boton({ status, published, id }) {
 	return (
 		<Link
-			to={`/reviews/${id}/published`}
+			to={
+				published === false
+					? `/reviews/${id}`
+					: `/reviews/${id}/published`
+			}
 			className={`btn ${getClassNameState(
 				status
 			)} d-flex align-items-center gap-2`}
@@ -29,7 +33,6 @@ function Boton({ status, published, id }) {
 }
 
 function Header({ companyName, listReviews }) {
-	console.log({ listReviews })
 	return (
 		<div className='d-flex justify-content-between align-items-center'>
 			<span>{companyName}</span>
@@ -49,7 +52,6 @@ function Header({ companyName, listReviews }) {
 
 const BoardListReviewsGE = () => {
 	const { reviews, isLoading } = useInformationStatusReview()
-	console.log(reviews)
 	return (
 		<>
 			{isLoading ? (
