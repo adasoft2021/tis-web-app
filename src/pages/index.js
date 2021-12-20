@@ -11,6 +11,7 @@ import BoardFileUpload from './boardFileUpload'
 import Project from './project'
 import ReviewCompany from './reviewCompany'
 import SpaceAnswer from './spaceAnswer'
+import PublishedReviewPage from './publishedReview'
 
 export {
 	Announcement,
@@ -26,4 +27,5 @@ export {
 	Project,
 	ReviewCompany,
 	SpaceAnswer,
+	PublishedReviewPage,
 }

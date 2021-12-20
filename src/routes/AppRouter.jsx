@@ -34,6 +34,7 @@ import TableProposalTimes from '../components/tables/TableProposalTimes'
 import TableSignedCompanyGroup from '../components/tables/TableSignedCompanyGroup'
 import TableChangeOrders from '../components/tables/TableChangeOrders'
 import TableGEwithSlopes from '../components/tables/TableGEwithSlopes'
+import PublishedReview from '../pages/publishedReview/components/PublishedReview'
 
 export default function AppRouter() {
 	const { userType } = useUserCredentials()
@@ -68,6 +69,11 @@ export default function AppRouter() {
 						</ObservationProvider>
 					)
 				}}
+			/>
+
+			<Route
+				path='/reviews/:reviewId/published'
+				component={PublishedReview}
 			/>
 
 			<Route
