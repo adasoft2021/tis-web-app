@@ -13,19 +13,21 @@ export default function PublishedReview({ params: { reviewId } }) {
 	}
 	return (
 		<Container>
-			<p className='h2'>{review.state}</p>
+			<p className='h2 text-center'>{review.status}</p>
 			<Row>
 				<Col sm={6}>
 					<p className='h3'>{review.companyName}</p>
-					{review.spaceAnswers.map(({ files }) => {
-						return files.map(({ name, url }) => (
-							<FileLink key={name} name={name} url={url} />
-						))
-					})}
+					<div className='d-flex flex-column gap-3'>
+						{review.spaceAnswers.map(({ files }) => {
+							return files.map(({ name, url }) => (
+								<FileLink key={name} name={name} url={url} />
+							))
+						})}
+					</div>
 				</Col>
 				<Col sm={6}>
 					<p className='h3'>Emitido</p>
-					<FileLink name={`Documento ${review.state}`} url='' />
+					<FileLink name={`Documento ${review.status}`} url='' />
 				</Col>
 			</Row>
 		</Container>

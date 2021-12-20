@@ -12,6 +12,7 @@ import Project from './project'
 import ReviewCompany from './reviewCompany'
 import SpaceAnswer from './spaceAnswer'
 import PublishedReviewPage from './publishedReview'
+import BoardPresentationProposals from './boardPresentationProposals'
 
 export {
 	Announcement,
@@ -28,4 +29,5 @@ export {
 	ReviewCompany,
 	SpaceAnswer,
 	PublishedReviewPage,
+	BoardPresentationProposals,
 }

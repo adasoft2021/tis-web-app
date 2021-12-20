@@ -2,11 +2,11 @@ import { ReviewProvider } from '../../context/providers/ReviewContext'
 import Page from '../Page'
 import PublishedReview from './components/PublishedReview'
 
-export default function PublishedReviewPage() {
+export default function PublishedReviewPage(props) {
 	return (
 		<Page>
 			<ReviewProvider>
-				<PublishedReview />
+				<PublishedReview {...props} />
 			</ReviewProvider>
 		</Page>
 	)
