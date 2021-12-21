@@ -38,6 +38,7 @@ export async function getCompanyReviews({ companyId, token }) {
 export async function getCompanySpaces({ companyId, token }) {
 	const response = await companyService.get(`/${companyId}/spaces`, {
 		headers: { 'X-Token': token },
+		params: { spaceType: 'ALL' },
 	})
 	return response.data
 }

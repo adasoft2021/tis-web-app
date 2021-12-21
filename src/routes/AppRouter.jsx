@@ -152,6 +152,7 @@ export default function AppRouter() {
 					</ProjectProvider>
 				)}
 			/>
+			<Route path='/spaces/:spaceId' component={SpaceAnswer} />
 
 			<Route
 				path='/proposals-presentation/:spaceId'
@@ -174,6 +175,7 @@ export default function AppRouter() {
 					</SpaceAnswerProvider>
 				)}
 			/>
+
 			<Route
 				path='/project-development/:spaceTitle/:spaceId'
 				component={({ params: { spaceId, spaceTitle } }) => (

@@ -3,21 +3,35 @@ import { useCompanySpaces } from '../../context/providers/SpaceContext'
 import Page from '../Page'
 import { SPACE_TYPE } from './SpaceType'
 import { Spinner } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
 const SpacesSubmitLinkList = () => {
 	const { isLoading, spaces } = useCompanySpaces()
-	const proposalSpaces = []
-	const deliverableSpaces = []
-	const finalEvaluationSpaces = []
 
-	spaces.forEach((item) => {
-		if (item.spaceType === SPACE_TYPE.PROPOSAL) {
-			proposalSpaces.push({ item })
-		} else if (item.spaceType === SPACE_TYPE.DELIVERABLE) {
-			deliverableSpaces.push({ item })
-		} else if (item.spaceType === SPACE_TYPE.END_EVALUATION) {
-			finalEvaluationSpaces.push({ item })
-		}
-	})
+	const [proposalSpaces, setProposalSpaces] = useState([])
+	const [deliverableSpaces, setDeliverableSpaces] = useState([])
+	const [finalEvaluationSpaces, setFinalEvaluationSpaces] = useState([])
+	const addProposalSpace = ({ item }) => {
+		setProposalSpaces((array) => [...array, item])
+	}
+	const addDeliverableSpaces = ({ item }) => {
+		setDeliverableSpaces((array) => [...array, item])
+	}
+
+	const addfinalEvaluationSpaces = ({ item }) => {
+		setFinalEvaluationSpaces((array) => [...array, item])
+	}
+
+	useEffect(() => {
+		spaces.forEach((item) => {
+			if (item.spaceType === SPACE_TYPE.PROPOSALS_PRESENTATION) {
+				addProposalSpace({ item })
+			} else if (item.spaceType === SPACE_TYPE.PROJECT_DEVELOPMENT) {
+				addDeliverableSpaces({ item })
+			} else if (item.spaceType === SPACE_TYPE.FINAL_EVALUATION) {
+				addfinalEvaluationSpaces({ item })
+			}
+		})
+	}, [spaces])
 
 	return (
 		<Page>
