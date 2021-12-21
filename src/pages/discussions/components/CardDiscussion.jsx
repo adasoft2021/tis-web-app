@@ -9,7 +9,8 @@ function useClassName(userId) {
 }
 
 function showDate(date) {
-	return new Date(date).toLocaleDateString()
+	const d = new Date(date)
+	return d.toLocaleDateString()
 }
 
 export default function CardDiscussion({ id, title, createdAt, createdById }) {

@@ -4,7 +4,7 @@ import CompanyGroup from './CompanyGroup'
 import styles from './Discussion.module.scss'
 import { useActualCompanies } from '../../../context/providers/CompanyContext'
 
-export default function RightList({ onClickCompany }) {
+export default function RightList({ onClickCompany, reset }) {
 	const { companies } = useActualCompanies()
 	/* const companies = [
 		{ id: 1, src: '/logo.png', name: 'AdaSoftware', messangerState: true },
@@ -46,12 +46,13 @@ export default function RightList({ onClickCompany }) {
 					<Nav
 						variant='dark'
 						className='flex-column'
-						defaultActiveKey=''
+						defaultActiveKey='0'
 					>
 						<div>
 							<Nav.Link
-								eventKey=''
+								eventKey='0'
 								className='p-3 ps-4 border-bottom border-light text-light'
+								onClick={reset}
 							>
 								<h4>Grupo Empresas</h4>
 							</Nav.Link>
