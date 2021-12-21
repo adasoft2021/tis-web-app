@@ -1,5 +1,7 @@
+import { useDiscussion } from '../../../context/providers/DiscussionContext'
 import CardDiscussion from './CardDiscussion'
 
+/*
 const discussions = [
 	{
 		id: 1,
@@ -25,20 +27,21 @@ const discussions = [
 		createdAt: '2021-08-10T22:47:33.461Z',
 		createdById: 2,
 	},
-]
+] */
 
 export default function DiscussionsList() {
+	const { discussions } = useDiscussion()
 	return (
 		<div className='container'>
 			<p className='h3 mb-4'>Temas de Discusión</p>
 			<div className='d-flex flex-column gap-3'>
-				{discussions.map(({ createdAt, createdById, id, title }) => (
+				{discussions.map(({ createdAt, createdById, id, topic }) => (
 					<CardDiscussion
 						key={id}
 						createdAt={createdAt}
 						createdById={createdById}
 						id={id}
-						title={title}
+						title={topic}
 					/>
 				))}
 			</div>
