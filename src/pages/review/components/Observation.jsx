@@ -20,6 +20,7 @@ export default function Observation({
 	id = null,
 	description = null,
 	title = null,
+	fileId = null,
 }) {
 	const {
 		createObservation,
@@ -64,8 +65,12 @@ export default function Observation({
 				return
 			}
 			await createObservation({
-				reviewId: review.id,
-				observationDTO: { description, title },
+				observationDTO: {
+					description,
+					title,
+					reviewId: review.id,
+					fileId,
+				},
 			})
 
 			formik.setValues({

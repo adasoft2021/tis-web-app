@@ -2,6 +2,26 @@ import { Accordion, Container, Spinner } from 'react-bootstrap'
 import { useReview } from '../../../context/providers/ReviewContext'
 
 import styles from './PdfFrame.module.scss'
+import gridStyles from './Grid.module.scss'
+import ObservationsList from './ObservationsList'
+import Split from 'react-split-grid'
+
+const FileObservation = ({ file }) => (
+	<Split
+		minSize={100}
+		cursor='ew-resize'
+		render={({ getGridProps, getGutterProps }) => (
+			<div className={gridStyles.grid} {...getGridProps()}>
+				<iframe className={styles.pdf} src={file.url} />
+				<div
+					className={gridStyles['vertical-gutter']}
+					{...getGutterProps('column', 1)}
+				/>
+				<ObservationsList fileId={file.id} fileName={file.name} />
+			</div>
+		)}
+	/>
+)
 
 export default function PdfFrame() {
 	const { error, isLoading, review } = useReview()
@@ -49,10 +69,7 @@ export default function PdfFrame() {
 											<p>{file.name}</p>
 										</Accordion.Header>
 										<Accordion.Body>
-											<iframe
-												className={styles.pdf}
-												src={file.url}
-											/>
+											<FileObservation file={file} />
 										</Accordion.Body>
 									</Accordion.Item>
 								))}

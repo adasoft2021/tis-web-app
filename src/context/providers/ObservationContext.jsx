@@ -9,7 +9,7 @@ import { useUserCredentials } from './UserCredentialsContext'
 
 export const ObservationContext = createContext({
 	...observationInitialState,
-	createObservation: async ({ reviewId, observationDTO }) => {},
+	createObservation: async ({ observationDTO }) => {},
 	deleteObservation: async ({ observationId }) => {},
 	getAllReviewObservations: async ({ reviewId }) => {},
 	updateObservation: async ({ observationId, observationDTO }) => {},
@@ -47,12 +47,11 @@ export const ObservationProvider = ({ children }) => {
 		observationInitialState
 	)
 
-	const createObservation = async ({ reviewId, observationDTO }) => {
+	const createObservation = async ({ observationDTO }) => {
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_CREATE })
 		try {
 			const observation = await observationService.createObservation({
 				token,
-				reviewId,
 				observationDTO,
 			})
 			dispatch({

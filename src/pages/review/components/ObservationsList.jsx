@@ -1,13 +1,26 @@
+import { useEffect, useState } from 'react'
 import { Container, Spinner } from 'react-bootstrap'
 import { useObservationsList } from '../../../context/providers/ObservationContext'
+import { useReview } from '../../../context/providers/ReviewContext'
 import Observation from './Observation'
 
 import styles from './ObservationsList.module.scss'
 
-export default function ObservationsList() {
-	const { errorObservationList, isLoadingObservationsList, observations } =
-		useObservationsList(1)
-
+export default function ObservationsList({ fileId, fileName }) {
+	const { review } = useReview()
+	const {
+		errorObservationList,
+		isLoadingObservationsList,
+		observations: reviewObservations,
+	} = useObservationsList(review.id)
+	const [observations, setObservations] = useState(
+		reviewObservations.filter((o) => o.fileName === fileName)
+	)
+	useEffect(() => {
+		setObservations(
+			reviewObservations.filter((o) => o.fileName === fileName)
+		)
+	}, [reviewObservations, review])
 	if (isLoadingObservationsList || errorObservationList) {
 		return (
 			<Container className='d-flex justify-content-center my-3'>
@@ -33,7 +46,7 @@ export default function ObservationsList() {
 						description={description}
 					/>
 				))}
-				<Observation />
+				<Observation fileId={fileId} />
 			</Container>
 		</div>
 	)
