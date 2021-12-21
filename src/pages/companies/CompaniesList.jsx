@@ -7,6 +7,7 @@ import {
 	FormControl,
 	Button,
 	Col,
+	Container,
 } from 'react-bootstrap'
 import { useAllCompanies } from '../../context/providers/CompanyContext'
 import React, { useState } from 'react'
@@ -29,7 +30,10 @@ function Header({ company }) {
 				<span className='fw-bold'>Sociedad: </span>
 				{company.companyType}
 			</Col>
-			<Col sm={1} className='d-flex justify-content-center p-0'>
+			<Col
+				sm={1}
+				className='d-flex justify-content-center align-items-center p-0'
+			>
 				<ContextAwareToggle eventKey='1'>Ver más</ContextAwareToggle>
 			</Col>
 		</>
@@ -43,7 +47,7 @@ function Body({ company }) {
 				<span className='fw-bold'>Socios: </span>
 				<ol>
 					{company.partners.map((partner, i) => (
-						<li key={i}>{partner}</li>
+						<li key={i}>{partner.name}</li>
 					))}
 				</ol>
 			</Col>
@@ -124,16 +128,18 @@ export default function CompaniesList({ title = 'Lista de GE' }) {
 
 	return (
 		<Page>
-			<h1>{title}</h1>
-			{isLoading ? (
-				<div className='d-flex m-5 justify-content-center align-items-center'>
-					<Spinner animation='border' />
-				</div>
-			) : userType === userTypes.ADVISER ? (
-				<CompaniesAccordion companies={companies} />
-			) : (
-				<CompaniesGE dataList={companies} />
-			)}
+			<Container className='mb-3'>
+				<h1 className='my-3'>{title}</h1>
+				{isLoading ? (
+					<div className='d-flex m-5 justify-content-center align-items-center'>
+						<Spinner animation='border' />
+					</div>
+				) : userType === userTypes.ADVISER ? (
+					<CompaniesAccordion companies={companies} />
+				) : (
+					<CompaniesGE dataList={companies} />
+				)}
+			</Container>
 		</Page>
 	)
 }
