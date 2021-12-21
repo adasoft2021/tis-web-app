@@ -31,8 +31,11 @@ export default function ConversationForm({ add = false }) {
 					})
 				/* usar metodo para crear comentario si add===false */
 			}}
+			validateOnMount
+			validateOnBlur
+			validateOnChange
 		>
-			{({ errors, touched, handleSubmit, handleChange }) => (
+			{({ errors, touched, handleSubmit, handleChange, handleBlur }) => (
 				<Form
 					onSubmit={handleSubmit}
 					className={`${styles.form} bg-info p-4 d-flex gap-4 align-items-end`}
@@ -48,8 +51,12 @@ export default function ConversationForm({ add = false }) {
 						}`}
 						rows={4}
 						onChange={handleChange}
+						onBlur={handleBlur}
+						isInvalid={touched.text && errors.text}
 					/>
-
+					<Form.Control.Feedback type='invalid'>
+						{errors.text}
+					</Form.Control.Feedback>
 					<Button
 						className='rounded-pill'
 						type='submit'
