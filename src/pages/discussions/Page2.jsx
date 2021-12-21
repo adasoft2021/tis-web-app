@@ -201,6 +201,7 @@ export default function Page({ children }) {
 				<Col sm={2} className={`${styles.content} bg-dark`}>
 					<RightList
 						onClickCompany={() => setClickState(2)}
+						reset={() => setClickState(1)}
 					></RightList>
 				</Col>
 			</Row>
