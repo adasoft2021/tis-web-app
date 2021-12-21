@@ -5,6 +5,7 @@ import { useDiscussion } from '../context/providers/DiscussionContext'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import styles from './ConversationForm.module.scss'
+import swal from 'sweetalert'
 
 export default function ConversationForm({ add = false }) {
 	const { createDiscussion, companyId } = useDiscussion()
@@ -24,13 +25,24 @@ export default function ConversationForm({ add = false }) {
 		<Formik
 			initialValues={{ text: '' }}
 			validationSchema={conversationSchema}
-			onSubmit={(values) => {
-				if (add)
-					createDiscussion({
-						discussionDTO: { topic: values.text, companyId },
-					})
-				/* usar metodo para crear comentario si add===false */
-			}}
+			onSubmit={(values) =>
+				swal({
+					text: '¿Seguro de lo va que a enviar?',
+					icon: 'warning',
+					buttons: ['Seguir editando', 'Si'],
+				}).then((answer) => {
+					if (answer) {
+						if (add)
+							createDiscussion({
+								discussionDTO: {
+									topic: values.text,
+									companyId,
+								},
+							})
+						/* usar metodo para crear comentario si add===false */
+					}
+				})
+			}
 			validateOnMount
 			validateOnBlur
 			validateOnChange
