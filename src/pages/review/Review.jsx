@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button, Container, Nav, Navbar, Spinner } from 'react-bootstrap'
 import { useReviewById, useReview } from '../../context/providers/ReviewContext'
-import Grid from './components/Grid'
+import PdfFrame from './components/PdfFrame'
 import Popup from './components/Popup'
 
 export default function Review({ reviewId }) {
@@ -82,7 +82,7 @@ export default function Review({ reviewId }) {
 				</Container>
 			</Navbar>
 			<Popup show={showPopup} onHide={() => setShowPopup(false)} />
-			<Grid />
+			<PdfFrame />
 		</>
 	)
 }

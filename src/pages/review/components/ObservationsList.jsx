@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Container, Spinner } from 'react-bootstrap'
-import { useObservationsList } from '../../../context/providers/ObservationContext'
+import { useObservation } from '../../../context/providers/ObservationContext'
 import { useReview } from '../../../context/providers/ReviewContext'
 import Observation from './Observation'
 
@@ -11,16 +11,13 @@ export default function ObservationsList({ fileId, fileName }) {
 	const {
 		errorObservationList,
 		isLoadingObservationsList,
-		observations: reviewObservations,
-	} = useObservationsList(review.id)
-	const [observations, setObservations] = useState(
-		reviewObservations.filter((o) => o.fileName === fileName)
-	)
+		observations,
+		getAllReviewObservations,
+	} = useObservation()
+
 	useEffect(() => {
-		setObservations(
-			reviewObservations.filter((o) => o.fileName === fileName)
-		)
-	}, [reviewObservations, review])
+		getAllReviewObservations({ reviewId: review.id })
+	}, [])
 	if (isLoadingObservationsList || errorObservationList) {
 		return (
 			<Container className='d-flex justify-content-center my-3'>
@@ -38,14 +35,20 @@ export default function ObservationsList({ fileId, fileName }) {
 	return (
 		<div className={styles.list}>
 			<Container className='my-3 d-flex flex-column gap-3'>
-				{observations.map(({ id, title, description }) => (
-					<Observation
-						key={id}
-						id={id}
-						title={title}
-						description={description}
-					/>
-				))}
+				{observations
+					.filter(
+						(observation) =>
+							observation.fileName &&
+							observation.fileName.localeCompare(fileName) === 0
+					)
+					.map(({ id, title, description }) => (
+						<Observation
+							key={id}
+							id={id}
+							title={title}
+							description={description}
+						/>
+					))}
 				<Observation fileId={fileId} />
 			</Container>
 		</div>

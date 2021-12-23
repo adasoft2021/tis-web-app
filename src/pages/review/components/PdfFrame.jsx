@@ -6,16 +6,16 @@ import gridStyles from './Grid.module.scss'
 import ObservationsList from './ObservationsList'
 import Split from 'react-split-grid'
 
-const FileObservation = ({ file }) => (
+const FileObservation = ({ file, ...props }) => (
 	<Split
 		minSize={100}
 		cursor='ew-resize'
-		render={({ getGridProps, getGutterProps }) => (
-			<div className={gridStyles.grid} {...getGridProps()}>
+		render={(props) => (
+			<div className={gridStyles.grid} {...props.getGridProps()}>
 				<iframe className={styles.pdf} src={file.url} />
 				<div
 					className={gridStyles['vertical-gutter']}
-					{...getGutterProps('column', 1)}
+					{...props.getGutterProps('column', 1)}
 				/>
 				<ObservationsList fileId={file.id} fileName={file.name} />
 			</div>
@@ -23,7 +23,7 @@ const FileObservation = ({ file }) => (
 	/>
 )
 
-export default function PdfFrame() {
+export default function PdfFrame({ ...props }) {
 	const { error, isLoading, review } = useReview()
 
 	if (isLoading || !review) {
@@ -69,7 +69,10 @@ export default function PdfFrame() {
 											<p>{file.name}</p>
 										</Accordion.Header>
 										<Accordion.Body>
-											<FileObservation file={file} />
+											<FileObservation
+												file={file}
+												{...props}
+											/>
 										</Accordion.Body>
 									</Accordion.Item>
 								))}
