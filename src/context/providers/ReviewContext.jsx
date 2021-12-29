@@ -114,7 +114,7 @@ export const useReportsReviews = ({ projectId }) => {
 	return { isLoading, reviews }
 }
 export const ReviewProvider = ({ children }) => {
-	const { showToast } = useToast()
+	const { showToast, closeToast } = useToast()
 	const { token, id } = useUserCredentials()
 	const [state, dispatch] = useReducer(reviewReducer, reviewInitialState)
 
@@ -175,7 +175,15 @@ export const ReviewProvider = ({ children }) => {
 			message: 'Su solicitud está siendo procesada.',
 		})
 		try {
-			await reviewService.publishReview({ reviewId, token })
+			const review = await reviewService.publishReview({
+				reviewId,
+				token,
+			})
+			dispatch({
+				type: REVIEW_ACTIONS.LOAD_UPDATE_SUCCESS,
+				payload: review,
+			})
+			closeToast()
 			return true
 		} catch ({
 			response: {

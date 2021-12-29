@@ -43,12 +43,14 @@ export default function Review({ reviewId }) {
 
 					{!errorReview && (
 						<Navbar.Collapse id='basic-navbar-nav'>
-							<Nav className='ms-auto'>
-								<p>
-									{review && review.published
-										? 'EMITIDA'
-										: 'SIN EMITIR'}
-								</p>
+							<Nav className='ms-auto text-light d-flex align-items-center'>
+								<span>
+									{review &&
+										review.published &&
+										`Emitida como ${review.status
+											.split('En ')
+											.join('')}`}
+								</span>
 							</Nav>
 							{review.qualifications.length ? (
 								<Nav className='ms-auto'>
