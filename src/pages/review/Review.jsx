@@ -43,28 +43,29 @@ export default function Review({ reviewId }) {
 
 					{!errorReview && (
 						<Navbar.Collapse id='basic-navbar-nav'>
-							<Nav className='ms-auto text-light d-flex align-items-center'>
-								<span>
-									{review &&
-										review.published &&
-										`Emitida como ${review.status
+							<Nav className='ms-auto text-light d-flex align-items-center gap-3'>
+								{review && review.published && (
+									<span>
+										{`Emitida como ${review.status
 											.split('En ')
 											.join('')}`}
-								</span>
-							</Nav>
-							{review.qualifications.length ? (
-								<Nav className='ms-auto'>
+									</span>
+								)}
+								{review.qualifications.length &&
+								(review.status === 'Sin Revisar' ||
+									review.status === 'Revisada' ||
+									review.status === 'Calificada') ? (
 									<Button
 										className='fw-bold rounded-pill'
 										variant='info'
 										onClick={() => setShowPopup(true)}
 									>
-										CALIFICAR
+										{review.status === 'Calificada'
+											? 'CALIFICACIÓN'
+											: 'CALIFICAR'}
 									</Button>
-								</Nav>
-							) : null}
-							{review && !review.published ? (
-								<Nav className='ms-auto'>
+								) : null}
+								{review && !review.published ? (
 									<Button
 										className='fw-bold rounded-pill'
 										variant='success'
@@ -77,8 +78,8 @@ export default function Review({ reviewId }) {
 									>
 										EMITIR
 									</Button>
-								</Nav>
-							) : null}
+								) : null}
+							</Nav>
 						</Navbar.Collapse>
 					)}
 				</Container>
