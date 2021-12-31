@@ -6,6 +6,7 @@ import Page from '../Page'
 
 import BoardListReviewsGE from './BoardListReviewsGE'
 import ReviewList from '../reviewList/ReviewList'
+import { Container } from 'react-bootstrap'
 
 const BoardPresentationProposals = () => {
 	const { userType } = useUserCredentials()
@@ -18,10 +19,12 @@ const BoardPresentationProposals = () => {
 	return (
 		<>
 			<Page>
-				<h2>Presentacion de Propuestas TIS</h2>
-				<ReviewProvider>
-					<BoardListReviewsGE />
-				</ReviewProvider>
+				<Container className='my-3'>
+					<h2>Presentacion de Propuestas TIS</h2>
+					<ReviewProvider>
+						<BoardListReviewsGE />
+					</ReviewProvider>
+				</Container>
 			</Page>
 		</>
 	)

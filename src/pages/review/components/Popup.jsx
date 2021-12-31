@@ -35,7 +35,10 @@ export default function Popup(props) {
 			centered
 		>
 			<Formik
-				initialValues={qualificationIntialState}
+				initialValues={{
+					...qualificationIntialState,
+					comentario: review ? review.comment : '',
+				}}
 				onSubmit={async ({ comentario, ...rest }, { resetForm }) => {
 					const reviewDTO = {
 						comment: comentario || null,

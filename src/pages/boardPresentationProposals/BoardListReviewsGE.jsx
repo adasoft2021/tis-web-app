@@ -6,8 +6,8 @@ import { Link } from 'wouter'
 
 const className = {
 	'Sin Revisar': 'btn-secondary',
-	Revisado: 'btn-warning',
-	Calificado: 'btn-info',
+	Revisada: 'btn-warning',
+	Calificada: 'btn-info',
 }
 
 function getClassNameState(state) {

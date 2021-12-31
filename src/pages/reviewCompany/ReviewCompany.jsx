@@ -1,4 +1,4 @@
-import { Spinner } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap'
 import NoteTable from '../../components/NoteTable'
 import ObservationsListView from '../../components/ObservationsListView'
 import { useCompanyReviewById } from '../../context/providers/ReviewContext'
@@ -20,31 +20,33 @@ const ReviewCompany = ({ reviewId }) => {
 	}, [reviewDTO])
 	return (
 		<Page>
-			{isLoading ? (
-				<div className='d-flex m-5 justify-content-center align-items-center'>
-					<Spinner animation='border' />
-				</div>
-			) : review ? (
-				<div className='d-flex align-items-center flex-column'>
-					<h2> {review.title} </h2>
-					<p> {review.adviserName} </p>
-					<p> {showDate(review.createdAt)} </p>
+			<Container className='my-3'>
+				{isLoading ? (
+					<div className='d-flex m-5 justify-content-center align-items-center'>
+						<Spinner animation='border' />
+					</div>
+				) : review ? (
+					<div className='d-flex align-items-center flex-column'>
+						<h2> {review.title} </h2>
+						<p> {review.adviserName} </p>
+						<p> {showDate(review.createdAt)} </p>
 
-					{review.qualifications.length > 0 && (
-						<NoteTable qualifications={review.qualifications} />
-					)}
+						{review.qualifications.length > 0 && (
+							<NoteTable qualifications={review.qualifications} />
+						)}
 
-					{review.observations.length > 0 && (
-						<ObservationsListView
-							observations={review.observations}
-						/>
-					)}
+						{review.observations.length > 0 && (
+							<ObservationsListView
+								observations={review.observations}
+							/>
+						)}
 
-					<p> {review.comment} </p>
-				</div>
-			) : (
-				<p>No existe la revision</p>
-			)}
+						<p> {review.comment} </p>
+					</div>
+				) : (
+					<p>No existe la revision</p>
+				)}
+			</Container>
 		</Page>
 	)
 }
