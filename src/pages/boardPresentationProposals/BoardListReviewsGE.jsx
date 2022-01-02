@@ -37,14 +37,18 @@ function Header({ companyName, listReviews }) {
 		<div className='d-flex justify-content-between align-items-center'>
 			<span>{companyName}</span>
 			<div className='d-flex justify-content-center gap-2'>
-				{listReviews.map((review) => (
-					<Boton
-						status={review.status}
-						published={review.published}
-						id={review.id}
-						key={review.id}
-					/>
-				))}
+				{listReviews
+					.sort(({ createdAt: ca1 }, { createdAt: ca2 }) => {
+						return new Date(ca1) - new Date(ca2)
+					})
+					.map((review) => (
+						<Boton
+							status={review.status}
+							published={review.published}
+							id={review.id}
+							key={review.id}
+						/>
+					))}
 			</div>
 		</div>
 	)
@@ -63,6 +67,14 @@ const BoardListReviewsGE = () => {
 					{reviews.length !== 0 ? (
 						reviews
 							.filter((answer) => answer.length > 0)
+							.sort(
+								(
+									[{ companyName: name1 }],
+									[{ companyName: name2 }]
+								) => {
+									return name1.localeCompare(name2)
+								}
+							)
 							.map((answer, index) => (
 								<AccordionItem
 									header={
