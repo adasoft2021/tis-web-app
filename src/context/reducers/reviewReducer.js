@@ -13,7 +13,7 @@ export const reviewInitialState = {
 
 const getReview = ({ qualifications, ...rest }) => {
 	qualifications = qualifications.sort(
-		({ description: d1 }, { description: d2 }) => d2.length - d1.length
+		({ description: d1 }, { description: d2 }) => d1.localeCompare(d2)
 	)
 
 	return {

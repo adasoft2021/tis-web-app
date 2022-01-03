@@ -37,7 +37,7 @@ export default function Popup(props) {
 			<Formik
 				initialValues={{
 					...qualificationIntialState,
-					comentario: review ? review.comment : '',
+					comentario: review.comment ? review.comment : '',
 				}}
 				onSubmit={async ({ comentario, ...rest }, { resetForm }) => {
 					const reviewDTO = {
@@ -88,7 +88,9 @@ export default function Popup(props) {
 											points={maxScore}
 											name={`field-${id}`}
 											onChange={handleChange}
-											disabled={review.published}
+											disabled={
+												review.status === 'Calificada'
+											}
 										/>
 									)
 								)}
@@ -110,11 +112,7 @@ export default function Popup(props) {
 											{'/'}
 											{getTotalScore(
 												review.qualifications.map(
-													({
-														id,
-														description,
-														maxScore,
-													}) => maxScore
+													({ maxScore }) => maxScore
 												)
 											)}
 										</p>
@@ -128,7 +126,7 @@ export default function Popup(props) {
 									name='comentario'
 									value={comentario}
 									onChange={handleChange}
-									disabled={review.published}
+									disabled={review.status === 'Calificada'}
 								></textarea>
 								{touched.comentario && errors.comentario && (
 									<div className='error text-danger'>

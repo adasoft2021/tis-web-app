@@ -5,11 +5,12 @@ import {
 	observationInitialState,
 	observationReducer,
 } from '../reducers/observationReducer'
+import { useToast } from './ToastContext'
 import { useUserCredentials } from './UserCredentialsContext'
 
 export const ObservationContext = createContext({
 	...observationInitialState,
-	createObservation: async ({ reviewId, observationDTO }) => {},
+	createObservation: async ({ observationDTO }) => {},
 	deleteObservation: async ({ observationId }) => {},
 	getAllReviewObservations: async ({ reviewId }) => {},
 	updateObservation: async ({ observationId, observationDTO }) => {},
@@ -41,19 +42,27 @@ export const useObservationsList = (reviewId) => {
 }
 
 export const ObservationProvider = ({ children }) => {
+	const { showToast } = useToast()
 	const { token } = useUserCredentials()
 	const [state, dispatch] = useReducer(
 		observationReducer,
 		observationInitialState
 	)
 
-	const createObservation = async ({ reviewId, observationDTO }) => {
+	const createObservation = async ({ observationDTO }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada',
+		})
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_CREATE })
 		try {
 			const observation = await observationService.createObservation({
 				token,
-				reviewId,
 				observationDTO,
+			})
+			showToast({
+				color: 'success',
+				message: 'La observación fue creada con éxito',
 			})
 			dispatch({
 				type: OBSERVATION_ACTIONS.LOAD_CREATE_SUCCESS,
@@ -71,11 +80,19 @@ export const ObservationProvider = ({ children }) => {
 	}
 
 	const deleteObservation = async ({ observationId }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada',
+		})
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_DELETE })
 		try {
 			await observationService.deleteObservation({
 				token,
 				observationId,
+			})
+			showToast({
+				color: 'success',
+				message: 'La observación fue eliminada con éxito',
 			})
 			dispatch({
 				type: OBSERVATION_ACTIONS.LOAD_DELETE_SUCCESS,
@@ -116,12 +133,20 @@ export const ObservationProvider = ({ children }) => {
 	}
 
 	const updateObservation = async ({ observationId, observationDTO }) => {
+		showToast({
+			color: 'info',
+			message: 'Su solicitud está siendo procesada',
+		})
 		dispatch({ type: OBSERVATION_ACTIONS.LOAD_UPDATE })
 		try {
 			const observation = await observationService.updateObservation({
 				token,
 				observationId,
 				observationDTO,
+			})
+			showToast({
+				color: 'success',
+				message: 'La observación fue actualizada con éxito',
 			})
 			dispatch({
 				type: OBSERVATION_ACTIONS.LOAD_UPDATE_SUCCESS,

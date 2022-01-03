@@ -2,13 +2,10 @@ import createInstance from './http'
 
 const observationService = createInstance({ url: '/observations' })
 
-export async function createObservation({ token, reviewId, observationDTO }) {
+export async function createObservation({ token, observationDTO }) {
 	const response = await observationService.post('', observationDTO, {
 		headers: {
 			'X-Token': token,
-		},
-		params: {
-			reviewId: reviewId,
 		},
 	})
 	return response.data
